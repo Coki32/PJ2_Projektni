@@ -1,0 +1,22 @@
+{
+  "fieldWidth": 50,
+  "fieldHeight": 50,
+  "spawnTimeMin": 1,
+  "spawnTimeMax": 5,
+  "speedMin": 1,
+  "speedMax": 3,
+  "maxHeight": 3000,
+  "heightDivisions": 6,
+  "sharedFileName": "map.txt",
+  "sharedFileUpdateInterval": 3,
+  "foreignMilitary": false,
+  "homeMilitary": false,
+  "models": [
+    "Boeing 707",
+    "Airbus A380",
+    "Airbus A320",
+    "Boeing 727",
+    "Boeing 767",
+    "Boeing 757"
+  ]
+}
