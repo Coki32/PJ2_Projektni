@@ -10,14 +10,16 @@ import java.util.logging.Level;
 
 public class SimulatorPreferences implements Serializable {
 
-    private int fieldWidth, fieldHeight, spawnTimeMin, spawnTimeMax, speedMin, speedMax;
-    private int maxHeight, heightDivisions;
-    private String sharedFileName;
-    private int sharedFileUpdateInterval;
-    private int foreignMilitary, homeMilitary;
-    private String[] models;
+    public int fieldWidth, fieldHeight, spawnTimeMin, spawnTimeMax, speedMin, speedMax;
+    public int maxHeight, heightDivisions;
+    public String sharedFileName;
+    public int sharedFileUpdateInterval;
+    public int foreignMilitary, homeMilitary;
+    public String[] models;
 
+    private void attachChangeWatcher(){
 
+    }
 
     private static SimulatorPreferences initHardcoded() {
         SimulatorPreferences sp = new SimulatorPreferences();

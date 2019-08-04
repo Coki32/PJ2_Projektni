@@ -10,7 +10,8 @@ import java.util.Scanner;
 public class Simulator {
     private static final SimulatorPreferences properties = SimulatorPreferences.load();
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
+
         Runtime.getRuntime().addShutdownHook(new Thread(()->{
             System.out.println("Zatvaram loggere...");
             GenericLogger.closeHandlers();

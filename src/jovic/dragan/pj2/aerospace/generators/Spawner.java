@@ -1,9 +1,12 @@
 package jovic.dragan.pj2.aerospace.generators;
 
+import jovic.dragan.pj2.Simulator.Simulator;
 import jovic.dragan.pj2.aerospace.Aerospace;
 import jovic.dragan.pj2.aerospace.AerospaceObject;
 import jovic.dragan.pj2.aerospace.BomberPlane;
 import jovic.dragan.pj2.logger.GenericLogger;
+import jovic.dragan.pj2.preferences.Constants;
+import jovic.dragan.pj2.preferences.PreferenceWatcher;
 import jovic.dragan.pj2.preferences.SimulatorPreferences;
 import jovic.dragan.pj2.util.Direction;
 
@@ -36,20 +39,19 @@ class SpawningRunnable implements Runnable {
 
     private boolean paused;
     private Aerospace aerospace;
-    private int minInterval, maxInterval;
     private Random rng;
     private RandomPlaneGenerator rpg;
-
-    private WatchService ws;
-
+    private SimulatorPreferences preferences;
+    private PreferenceWatcher<SimulatorPreferences> watcher;
 
     public SpawningRunnable(SimulatorPreferences preferences, Aerospace aerospace) {
         this.paused = false;
-        this.minInterval = preferences.getSpawnTimeMin();
-        this.maxInterval = preferences.getSpawnTimeMax();
+        this.preferences = preferences;
         this.aerospace = aerospace;
         this.rng = new Random();
         rpg = new RandomPlaneGenerator(BomberPlane.class);
+        watcher = new PreferenceWatcher<>(preferences, Constants.SIMULATOR_PROPERTIES_FILENAME, SimulatorPreferences::load);
+        watcher.start();
     }
 
     public synchronized void setPaused(boolean value){
@@ -61,6 +63,11 @@ class SpawningRunnable implements Runnable {
     }
 
     private AerospaceObject randomObject(){
+        if(watcher.isChanged()){
+            System.out.println("Ucitano u spawneru");
+            preferences = watcher.getOriginal();
+            watcher.setChanged(false);
+        }
         int x=0,y=0;
         Direction direction;
         if(rng.nextBoolean()) {
@@ -77,13 +84,16 @@ class SpawningRunnable implements Runnable {
 
     @Override
     public void run() {
+        //noinspection InfiniteLoopStatement
         while (true) {
+            int minSpawn = preferences.getSpawnTimeMin(),
+                    maxSpawn = preferences.getSpawnTimeMax();
             if(!paused) {
                 AerospaceObject ao = randomObject();
                 aerospace.addAerospaceObject(ao);
             }
             try {
-                int pauza = rng.nextInt(maxInterval - minInterval) + minInterval;
+                int pauza = rng.nextInt(maxSpawn-minSpawn) + minSpawn;
                 Thread.sleep(pauza*1000);
             } catch (InterruptedException ex) {
                 GenericLogger.log(this.getClass(), Level.SEVERE, "Spawner thread prekinut na spavanju!", ex);

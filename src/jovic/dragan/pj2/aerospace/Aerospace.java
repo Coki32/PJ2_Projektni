@@ -1,10 +1,17 @@
 package jovic.dragan.pj2.aerospace;
 
+import jovic.dragan.pj2.Simulator.Simulator;
+import jovic.dragan.pj2.logger.GenericLogger;
+import jovic.dragan.pj2.preferences.Constants;
+import jovic.dragan.pj2.preferences.PreferenceWatcher;
+import jovic.dragan.pj2.preferences.SimulatorPreferences;
 import jovic.dragan.pj2.util.Pair;
 
+import javax.swing.*;
+import java.security.PrivateKey;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.Timer;
+import java.util.concurrent.*;
 
 public class Aerospace {
 
@@ -13,6 +20,8 @@ public class Aerospace {
     private UpdatingTask timerTask;
     private Timer updatingTimer;
     private boolean flightAllowed = true;
+    private SimulatorPreferences preferences;
+    private PreferenceWatcher<SimulatorPreferences> watcher;
 
     public Aerospace(int height, int width, int maxHeight, int heightDivs) {
         this.height = height;
@@ -21,8 +30,12 @@ public class Aerospace {
         this.heightDivs = heightDivs;
         map = new ConcurrentHashMap<>();
         updatingTimer = new Timer("positionUpdater", false);
-        timerTask = new UpdatingTask(map);
-        //start();
+
+        preferences = SimulatorPreferences.load();
+        watcher = new PreferenceWatcher<>(preferences, Constants.PREFERENCES_FOLDERNAME,SimulatorPreferences::load);
+
+        timerTask = new UpdatingTask(map,watcher);
+        watcher.start();
     }
 
     public synchronized void banFlight() {
@@ -68,11 +81,14 @@ public class Aerospace {
 class UpdatingTask extends TimerTask {
 
     private Map<Integer, Map<Integer, ConcurrentLinkedDeque<AerospaceObject>>> map;
-
     private boolean paused = false;
+    private PreferenceWatcher<SimulatorPreferences> watcher;
+    private SimulatorPreferences preferences;
 
-    UpdatingTask(Map<Integer, Map<Integer, ConcurrentLinkedDeque<AerospaceObject>>> map) {
+    UpdatingTask(Map<Integer, Map<Integer, ConcurrentLinkedDeque<AerospaceObject>>> map, PreferenceWatcher<SimulatorPreferences> watcher) {
         this.map = map;
+        this.watcher = watcher;
+        preferences = watcher.getOriginal();
     }
 
     synchronized void setPaused(boolean value) {
@@ -83,18 +99,18 @@ class UpdatingTask extends TimerTask {
     public synchronized void run() {
         long start = System.currentTimeMillis();
         int count = 0;
+        if(watcher.isChanged()){
+            preferences= watcher.getOriginal();
+            watcher.setChanged(false);
+            System.out.println("Ucitan novi pref u aerospace!");
+        }
         if (!paused) {
-            //Iterator<Map<Integer, ConcurrentLinkedDeque<AerospaceObject>>> mapsIter = map.values().iterator();
             var mapsIter = map.values().iterator();
             while (mapsIter.hasNext()) {
-                //Map<Integer, ConcurrentLinkedDeque<AerospaceObject>> subMap = mapsIter.next();
                 var subMap = mapsIter.next();
-                //Iterator<ConcurrentLinkedDeque<AerospaceObject>> subMapIter = subMap.values().iterator();
                 var subMapIter = subMap.values().iterator();
                 while (subMapIter.hasNext()) {
-                    //ConcurrentLinkedDeque<AerospaceObject> list = subMapIter.next();
                     var list = subMapIter.next();
-                    //Iterator<AerospaceObject> listIter = list.iterator();
                     var listIter = list.iterator();
                     while (listIter.hasNext()) {
                         AerospaceObject ao = listIter.next();
