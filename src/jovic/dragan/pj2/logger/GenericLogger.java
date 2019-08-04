@@ -1,5 +1,7 @@
 package jovic.dragan.pj2.logger;
 
+import jovic.dragan.pj2.preferences.PreferencesHelper;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,7 +29,8 @@ public class GenericLogger {
         if(logger.getHandlers().length==0)
             try {
                 if(!handlers.containsKey(C.getName())) {
-                    Handler handler = new FileHandler(C.getName()+".log");
+                    PreferencesHelper.createFolderIfNotExists("./logs/");
+                    Handler handler = new FileHandler("./logs/"+C.getName()+".log");
                     handlers.put(C.getName(),handler);
                     logger.addHandler(handler);
                 }

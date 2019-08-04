@@ -2,3 +2,5 @@
 /out/
 /preferences/
 *.log
+*.lck
+/logs/
