@@ -7,6 +7,11 @@ import jovic.dragan.pj2.logger.GenericLogger;
 import jovic.dragan.pj2.preferences.SimulatorPreferences;
 import jovic.dragan.pj2.util.Direction;
 
+import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.WatchService;
 import java.util.Random;
 import java.util.logging.Level;
 
@@ -35,10 +40,13 @@ class SpawningRunnable implements Runnable {
     private Random rng;
     private RandomPlaneGenerator rpg;
 
-    public SpawningRunnable(SimulatorPreferences properties, Aerospace aerospace) {
+    private WatchService ws;
+
+
+    public SpawningRunnable(SimulatorPreferences preferences, Aerospace aerospace) {
         this.paused = false;
-        this.minInterval = properties.getSpawnTimeMin();
-        this.maxInterval = properties.getSpawnTimeMax();
+        this.minInterval = preferences.getSpawnTimeMin();
+        this.maxInterval = preferences.getSpawnTimeMax();
         this.aerospace = aerospace;
         this.rng = new Random();
         rpg = new RandomPlaneGenerator(BomberPlane.class);

@@ -1,11 +1,16 @@
 package jovic.dragan.pj2.logger;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.FileHandler;
+import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class GenericLogger {
+
+    private static Map<String, Handler> handlers = new HashMap<>();
 
     /**
      * Logs the exception with the default level of WARNING
@@ -21,11 +26,21 @@ public class GenericLogger {
         Logger logger = Logger.getLogger(C.getName());
         if(logger.getHandlers().length==0)
             try {
-                logger.addHandler(new FileHandler(C.getName() + ".log"));
+                if(!handlers.containsKey(C.getName())) {
+                    Handler handler = new FileHandler(C.getName()+".log");
+                    handlers.put(C.getName(),handler);
+                    logger.addHandler(handler);
+                }
             }
             catch (IOException exc){
                 exc.printStackTrace();
             }
         logger.log(level,msg,thrown);
+    }
+
+    public static void closeHandlers(){
+        for (Handler handler : handlers.values()) {
+            handler.close();
+        }
     }
 }

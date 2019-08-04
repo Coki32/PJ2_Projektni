@@ -4,6 +4,7 @@ package jovic.dragan.pj2.preferences;
 import jovic.dragan.pj2.logger.GenericLogger;
 
 import java.io.*;
+import java.nio.file.Paths;
 import java.util.logging.Level;
 
 
@@ -13,8 +14,10 @@ public class SimulatorPreferences implements Serializable {
     private int maxHeight, heightDivisions;
     private String sharedFileName;
     private int sharedFileUpdateInterval;
-    private boolean foreignMilitary, homeMilitary;
+    private int foreignMilitary, homeMilitary;
     private String[] models;
+
+
 
     private static SimulatorPreferences initHardcoded() {
         SimulatorPreferences sp = new SimulatorPreferences();
@@ -22,6 +25,8 @@ public class SimulatorPreferences implements Serializable {
         sp.fieldHeight = Constants.SIMULATOR_DEFAULT_SIZE;
         sp.spawnTimeMax = Constants.SIMULATOR_DEFAULT_SPAWN_MAX;
         sp.spawnTimeMin = Constants.SIMULATOR_DEFAULT_SPAWN_MIN;
+        sp.foreignMilitary = Constants.SIMULATOR_DEFAULT_FOREIGN_MIL;
+        sp.homeMilitary = Constants.SIMULATOR_DEFAULT_HOME_MIL;
         sp.speedMin = Constants.SIMULATOR_DEFAULT_SPEED_MIN;
         sp.speedMax = Constants.SIMULATOR_DEFAULT_SPEED_MAX;
         sp.maxHeight = Constants.SIMULATOR_HEIGHT_MAX;
@@ -43,6 +48,7 @@ public class SimulatorPreferences implements Serializable {
     public static SimulatorPreferences load(){
         SimulatorPreferences sp = null;
         try {
+            PreferencesHelper.createFolderIfNotExists(Constants.PREFERENCES_FOLDERNAME);
             sp = (new com.google.gson.Gson().fromJson(new FileReader(Constants.SIMULATOR_PROPERTIES_FILENAME), SimulatorPreferences.class));
         }
         catch (FileNotFoundException ex){
@@ -92,11 +98,11 @@ public class SimulatorPreferences implements Serializable {
         return sharedFileUpdateInterval;
     }
 
-    public boolean isForeignMilitary() {
+    public int isForeignMilitary() {
         return foreignMilitary;
     }
 
-    public boolean isHomeMilitary() {
+    public int isHomeMilitary() {
         return homeMilitary;
     }
 
