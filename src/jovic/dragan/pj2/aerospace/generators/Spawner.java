@@ -58,6 +58,10 @@ class SpawningRunnable implements Runnable {
         this.paused = value;
     }
 
+    private int randomBetween(int min, int max){
+        return rng.nextInt(max-min+1)+min;
+    }
+
     private Direction oneOf(Direction... sides){
         return sides[rng.nextInt(sides.length)];
     }
@@ -69,17 +73,18 @@ class SpawningRunnable implements Runnable {
             watcher.setChanged(false);
         }
         int x=0,y=0;
-        Direction direction;
-        if(rng.nextBoolean()) {
-            x = rng.nextInt(100);
-            direction = (x==0) ? oneOf(Direction.UP, Direction.RIGHT):
-                    oneOf(Direction.UP, Direction.LEFT, Direction.RIGHT);
-        }
-        else {
-            y = rng.nextInt(100);
-            direction = oneOf(Direction.UP, Direction.DOWN);
-        }
-        return rpg.getRandom(x,y,rng.nextInt(500),1,direction);
+
+        //bice glupo tipa spawningFrom bude LEFT pa to znaci sa lijeve ivice ide do desne
+        Direction spawningFrom = Direction.fromInt(rng.nextInt(4));
+        if(spawningFrom == Direction.LEFT || spawningFrom == Direction.RIGHT)
+            y=rng.nextInt(preferences.getFieldHeight());
+        else
+            x = rng.nextInt(preferences.getFieldWidth());
+
+        return rpg.getRandom(x,y,
+                rng.nextInt(500),
+                randomBetween(preferences.getSpeedMin(),preferences.getSpeedMax()),
+                spawningFrom.opposite());
     }
 
     @Override

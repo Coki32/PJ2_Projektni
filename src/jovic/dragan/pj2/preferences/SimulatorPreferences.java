@@ -11,11 +11,12 @@ import java.util.logging.Level;
 public class SimulatorPreferences implements Serializable {
 
     public int fieldWidth, fieldHeight, spawnTimeMin, spawnTimeMax, speedMin, speedMax;
-    public int maxHeight, heightDivisions;
-    public String sharedFileName;
+    public int[] heightOptions;
+    public String sharedFolder, sharedFileName, sharedFullName;
     public int sharedFileUpdateInterval;
     public int foreignMilitary, homeMilitary;
     public String[] models;
+
 
     private void attachChangeWatcher(){
 
@@ -31,16 +32,14 @@ public class SimulatorPreferences implements Serializable {
         sp.homeMilitary = Constants.SIMULATOR_DEFAULT_HOME_MIL;
         sp.speedMin = Constants.SIMULATOR_DEFAULT_SPEED_MIN;
         sp.speedMax = Constants.SIMULATOR_DEFAULT_SPEED_MAX;
-        sp.maxHeight = Constants.SIMULATOR_HEIGHT_MAX;
-        sp.heightDivisions = Constants.SIMULATOR_HEIGHT_DIVS;
+        sp.heightOptions = Constants.SIMULATOR_HEIGHT_OPTIONS;
         sp.sharedFileName = Constants.SIMULATOR_SHARED_FILENAME;
+        sp.sharedFolder = Constants.SIMULATOR_SHARED_FOLDERNAME;
+        sp.sharedFullName = Constants.SIMULATOR_SHARED_FILE_FULL_NAME;
         sp.sharedFileUpdateInterval = Constants.SIMULATOR_DEFAULT_SHARED_UPDATE_INTERVAL;
         sp.models = Constants.SIMULATOR_MODELS;
-        try {
-            PrintWriter pw = new PrintWriter(Constants.SIMULATOR_PROPERTIES_FILENAME);
+        try (PrintWriter pw = new PrintWriter(Constants.SIMULATOR_PROPERTIES_FULL_NAME)){
             pw.println(new com.google.gson.GsonBuilder().setPrettyPrinting().create().toJson(sp));
-            pw.flush();
-            pw.close();
         } catch (FileNotFoundException ex) {
             GenericLogger.log(SimulatorPreferences.class, ex);
         }
@@ -51,7 +50,7 @@ public class SimulatorPreferences implements Serializable {
         SimulatorPreferences sp = null;
         try {
             PreferencesHelper.createFolderIfNotExists(Constants.PREFERENCES_FOLDERNAME);
-            sp = (new com.google.gson.Gson().fromJson(new FileReader(Constants.SIMULATOR_PROPERTIES_FILENAME), SimulatorPreferences.class));
+            sp = (new com.google.gson.Gson().fromJson(new FileReader(Constants.SIMULATOR_PROPERTIES_FULL_NAME), SimulatorPreferences.class));
         }
         catch (FileNotFoundException ex){
             GenericLogger.log(SimulatorPreferences.class,Level.INFO,"Config file does not exist, creating new one...",ex);
@@ -84,12 +83,8 @@ public class SimulatorPreferences implements Serializable {
         return speedMax;
     }
 
-    public int getMaxHeight() {
-        return maxHeight;
-    }
-
-    public int getHeightDivisions() {
-        return heightDivisions;
+    public int[] getHeightOptions(){
+        return heightOptions;
     }
 
     public String getSharedFileName() {
@@ -98,14 +93,6 @@ public class SimulatorPreferences implements Serializable {
 
     public int getSharedFileUpdateInterval() {
         return sharedFileUpdateInterval;
-    }
-
-    public int isForeignMilitary() {
-        return foreignMilitary;
-    }
-
-    public int isHomeMilitary() {
-        return homeMilitary;
     }
 
     public String[] getModels() {

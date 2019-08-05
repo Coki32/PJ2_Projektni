@@ -16,15 +16,20 @@ public class Simulator {
             System.out.println("Zatvaram loggere...");
             GenericLogger.closeHandlers();
         }));
-        Aerospace aerospace = new Aerospace(properties.getFieldHeight(),
-                properties.getFieldWidth(),
-                properties.getMaxHeight(),
-                properties.getHeightDivisions());
+        Aerospace aerospace = new Aerospace(properties);
         Spawner spawner = new Spawner(properties, aerospace);
         aerospace.start();
         new Thread(()->{
-            int a = new Scanner(System.in).nextInt();
-            System.exit(0);
+            while(true) {
+                int a = new Scanner(System.in).nextInt();
+                if(a==0){
+                    aerospace.banFlight();
+                }
+                else if (a==-1)
+                    aerospace.resumeFlight();
+                else
+                    System.exit(0);
+            }
         }).start();
     }
 }

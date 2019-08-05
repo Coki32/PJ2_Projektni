@@ -16,9 +16,11 @@ public class PreferenceWatcher <T> extends Thread {
     private boolean changed;
     private WatchService watchService;
     private Supplier<T> loader;
-    public PreferenceWatcher(T original, String pathString, Supplier<T> loader) {
+    private String fileName;
+    public PreferenceWatcher(T original, String fileName, Supplier<T> loader) {
         this.original = original;
         changed = false;
+        this.fileName = fileName;
         trackingFields = new ArrayList<>();
         Path path = Paths.get(Constants.PREFERENCES_FOLDERNAME);
         watchService = null;
@@ -52,10 +54,9 @@ public class PreferenceWatcher <T> extends Thread {
             }
             if (key != null) {
                 for (WatchEvent<?> event : key.pollEvents()) {
-                    WatchEvent.Kind<?> kind = event.kind();
                     WatchEvent<Path> pathEv = (WatchEvent<Path>) event;
-                    Path filename = pathEv.context();
-                    if (filename.toString().trim().endsWith("simulator.preferences")) {
+                    Path changedFileName = pathEv.context();
+                    if (changedFileName.toString().trim().endsWith(this.fileName)) {
                         T newPrefs = loader.get();
                         System.out.println("==================>Desio se edit...");
                         changed = true;

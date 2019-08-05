@@ -5,7 +5,9 @@ import jovic.dragan.pj2.logger.GenericLogger;
 import jovic.dragan.pj2.preferences.Constants;
 import jovic.dragan.pj2.preferences.PreferenceWatcher;
 import jovic.dragan.pj2.preferences.SimulatorPreferences;
+import jovic.dragan.pj2.util.Direction;
 import jovic.dragan.pj2.util.Pair;
+import jovic.dragan.pj2.util.Vector2D;
 
 import javax.swing.*;
 import java.security.PrivateKey;
@@ -15,7 +17,6 @@ import java.util.concurrent.*;
 
 public class Aerospace {
 
-    private int height, width, maxHeight, heightDivs;
     private Map<Integer, Map<Integer, ConcurrentLinkedDeque<AerospaceObject>>> map;
     private UpdatingTask timerTask;
     private Timer updatingTimer;
@@ -23,15 +24,11 @@ public class Aerospace {
     private SimulatorPreferences preferences;
     private PreferenceWatcher<SimulatorPreferences> watcher;
 
-    public Aerospace(int height, int width, int maxHeight, int heightDivs) {
-        this.height = height;
-        this.width = width;
-        this.maxHeight = maxHeight;
-        this.heightDivs = heightDivs;
+    public Aerospace(SimulatorPreferences preferences) {
         map = new ConcurrentHashMap<>();
         updatingTimer = new Timer("positionUpdater", false);
 
-        preferences = SimulatorPreferences.load();
+        this.preferences = preferences;
         watcher = new PreferenceWatcher<>(preferences, Constants.PREFERENCES_FOLDERNAME,SimulatorPreferences::load);
 
         timerTask = new UpdatingTask(map,watcher);
@@ -40,8 +37,19 @@ public class Aerospace {
 
     public synchronized void banFlight() {
         if (flightAllowed) {
-            System.out.println("Postavljan zabranu leta na true");
-            timerTask.setPaused(true);
+            int mapWidth = preferences.getFieldWidth();
+            int mapHeight = preferences.getFieldHeight();
+            System.out.println("Postavljan zabranu svi izlaze najkraicm putem");
+            synchronized (map) {
+                map.values().forEach(yMap -> yMap.values().forEach(q -> q.forEach(ao -> {
+                    int x = ao.getX();
+                    int y = ao.getY();
+                    int exitLeft = x, exitRight = mapWidth-x, exitUp = mapHeight-y, exitDown = y;
+//                UP DOWN LEFT RIGHT
+//                0    1    2    3
+
+                })));
+            }
             flightAllowed = false;
             System.out.println("Postavljeno!");
         }
@@ -50,18 +58,17 @@ public class Aerospace {
     public synchronized void resumeFlight() {
         if (!flightAllowed) {
             System.out.println("Postavljan zabranu leta na false");
-            timerTask.setPaused(false);
             flightAllowed = true;
-            System.out.println("Postavljeno");
         }
     }
 
     public void start() {
+        //TODO: dodaj u preference update frequency
         updatingTimer.schedule(timerTask, 0, 1000);
     }
 
     public void addAerospaceObject(AerospaceObject object) {
-        if(object!=null) {
+        if(object!=null && flightAllowed) {
             int x = object.getX(), y = object.getY();
             if (!map.containsKey(x)) {
                 map.put(x, new ConcurrentHashMap<>());
@@ -75,13 +82,14 @@ public class Aerospace {
             }
             map.get(x).get(y).add(object);
         }
+        else
+            System.out.println("Zabranjen let, ne dodajem trazeni objekt!");
     }
 }
 
 class UpdatingTask extends TimerTask {
 
     private Map<Integer, Map<Integer, ConcurrentLinkedDeque<AerospaceObject>>> map;
-    private boolean paused = false;
     private PreferenceWatcher<SimulatorPreferences> watcher;
     private SimulatorPreferences preferences;
 
@@ -91,49 +99,52 @@ class UpdatingTask extends TimerTask {
         preferences = watcher.getOriginal();
     }
 
-    synchronized void setPaused(boolean value) {
-        paused = value;
+    private boolean isInsideOfMap(int x, int y, int width, int height){
+        return x<=width && y<=height && x>=0 && y>=0;
     }
 
     @Override
-    public synchronized void run() {
+    public void run() {
         long start = System.currentTimeMillis();
         int count = 0;
-        if(watcher.isChanged()){
-            preferences= watcher.getOriginal();
+        if (watcher.isChanged()) {
+            preferences = watcher.getOriginal();
             watcher.setChanged(false);
             System.out.println("Ucitan novi pref u aerospace!");
         }
-        if (!paused) {
-            var mapsIter = map.values().iterator();
-            while (mapsIter.hasNext()) {
-                var subMap = mapsIter.next();
-                var subMapIter = subMap.values().iterator();
-                while (subMapIter.hasNext()) {
-                    var list = subMapIter.next();
-                    var listIter = list.iterator();
-                    while (listIter.hasNext()) {
-                        AerospaceObject ao = listIter.next();
-                        int oldX = ao.getX(), oldY = ao.getY();
-                        Pair<Integer, Integer> nextPosition = ao.getNextPosition();
-                        if (oldX != nextPosition.getFirst() || oldY != nextPosition.getSecond()) {
-                            ao.setSkip(true);
-                            listIter.remove();
-                            count++;
-                            if (!map.containsKey(ao.getX()))
-                                map.put(ao.getX(), new ConcurrentHashMap<>());
-                            if (!map.get(ao.getX()).containsKey(ao.getY()))
-                                map.get(ao.getX()).put(ao.getY(), new ConcurrentLinkedDeque<>());
-                            map.get(ao.getX()).get(ao.getY()).add(ao);
-                        }
+        int mapWidth = preferences.getFieldWidth(), mapHeight = preferences.getFieldHeight();
+        var mapsIter = map.values().iterator();
+        while (mapsIter.hasNext()) {
+            var subMap = mapsIter.next();
+            var subMapIter = subMap.values().iterator();
+            while (subMapIter.hasNext()) {
+                var list = subMapIter.next();
+                var listIter = list.iterator();
+                while (listIter.hasNext()) {
+                    AerospaceObject ao = listIter.next();
+                    int oldX = ao.getX(), oldY = ao.getY();
+                    Pair<Integer, Integer> nextPosition = ao.getNextPosition();
+                    if(!isInsideOfMap(nextPosition.getFirst(), nextPosition.getSecond(),mapWidth,mapHeight))
+                    {
+                        listIter.remove();
+                        System.out.println(ao+" izbacen iz simulacije...");
+                    }
+                    else if (oldX != nextPosition.getFirst() || oldY != nextPosition.getSecond()) {
+                        ao.setSkip(true);
+                        listIter.remove();
+                        count++;
+                        if (!map.containsKey(ao.getX()))
+                            map.put(ao.getX(), new ConcurrentHashMap<>());
+                        if (!map.get(ao.getX()).containsKey(ao.getY()))
+                            map.get(ao.getX()).put(ao.getY(), new ConcurrentLinkedDeque<>());
+                        map.get(ao.getX()).get(ao.getY()).add(ao);
                     }
                 }
             }
-            map.values().parallelStream().forEach((yMap) -> yMap.values().forEach(q -> q.forEach(ao -> ao.setSkip(false))));
-            long end = System.currentTimeMillis();
-            System.out.println(System.currentTimeMillis() + ": Update gotov za " + (end - start) + "ms (" + count + " aviona)");
-            //System.out.println(map);
-        } else
-            System.out.println("Pauziran let...");
+        }
+        map.values().parallelStream().forEach((yMap) -> yMap.values().forEach(q -> q.forEach(ao -> ao.setSkip(false))));
+        long end = System.currentTimeMillis();
+        System.out.println(System.currentTimeMillis() + ": Update gotov za " + (end - start) + "ms (" + count + " aviona)");
+
     }
 }

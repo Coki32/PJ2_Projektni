@@ -45,6 +45,13 @@ public abstract class AerospaceObject {
         ID++;
     }
 
+    public Vector2D getDirection(){
+        return direction;
+    }
+
+    public void setDirection(Direction dir){
+        direction = dir.getDirectionVector();
+    }
 
     public AerospaceObject(Vector3D position, Direction side) {
         this(position, side.getDirectionVector());
@@ -66,7 +73,7 @@ public abstract class AerospaceObject {
 
     @Override
     public String toString() {
-        return "(" + name+", "+x+","+y+")";
+        return "(" + name+", "+x+","+y+"," + direction+")";
     }
 
     public void setX(int x) {
