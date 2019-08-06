@@ -56,10 +56,6 @@ class SpawningRunnable implements Runnable {
         return rng.nextInt(max-min+1)+min;
     }
 
-    private Direction oneOf(Direction... sides){
-        return sides[rng.nextInt(sides.length)];
-    }
-
     private AerospaceObject randomObject(){
         if(watcher.isChanged()){
             System.out.println("Ucitano u spawneru");
@@ -67,7 +63,6 @@ class SpawningRunnable implements Runnable {
             watcher.setChanged(false);
         }
         int x=0,y=0;
-
         //bice glupo tipa spawningFrom bude LEFT pa to znaci sa lijeve ivice ide do desne
         Direction spawningFrom = Direction.fromInt(rng.nextInt(4));
         if(spawningFrom == Direction.LEFT || spawningFrom == Direction.RIGHT) {
@@ -78,7 +73,6 @@ class SpawningRunnable implements Runnable {
             x = rng.nextInt(preferences.getFieldWidth());
             y = spawningFrom == Direction.UP ? preferences.getFieldHeight() : 0;
         }
-        //System.out.println("Spawned at "+spawningFrom + " ("+x+","+y+") going + " + spawningFrom.opposite());
         return rpg.getRandom(x,y,
                 rng.nextInt(500),
                 randomBetween(preferences.getSpeedMin(),preferences.getSpeedMax()),

@@ -12,7 +12,8 @@ public abstract class Rocket extends AerospaceObject implements Serializable {
 
     private int range;
 
-    public Rocket(){
-        super(new Vector3D(), Direction.UP);
+    public Rocket(int x, int y, int altitiude, int speed, Direction direction){
+        super(x,y,altitiude,speed,direction);
     }
+
 }

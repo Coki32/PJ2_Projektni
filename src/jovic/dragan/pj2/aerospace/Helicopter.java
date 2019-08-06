@@ -10,11 +10,8 @@ import java.io.Serializable;
  */
 public abstract class Helicopter extends Aircraft implements Serializable {
 
-    /**
-     * Default constructor
-     */
-    public Helicopter() {
-        super(new Vector3D(), Direction.DOWN);
+    public Helicopter(int x, int y, int altitude, int speed, Direction direction){
+        super(x,y,altitude,speed,direction);
     }
 
 }

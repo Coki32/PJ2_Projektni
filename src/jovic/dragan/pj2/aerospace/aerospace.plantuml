@@ -1,0 +1,277 @@
+@startuml
+
+title __AEROSPACE's Class Diagram__\n
+
+  namespace jovic.dragan.pj2.aerospace {
+    abstract class jovic.dragan.pj2.aerospace.Aeroplane {
+        + Aeroplane()
+        + Aeroplane()
+    }
+  }
+  
+
+  namespace jovic.dragan.pj2.aerospace {
+    class jovic.dragan.pj2.aerospace.Aerospace {
+        - flightAllowed : boolean
+        - map : Map<Integer, Map<Integer, ConcurrentLinkedDeque<AerospaceObject>>>
+        - updatingTimer : Timer
+        - watcher : PreferenceWatcher<SimulatorPreferences>
+        + Aerospace()
+        + addAerospaceObject()
+        + banFlight()
+        + resumeFlight()
+        + start()
+    }
+  }
+  
+
+  namespace jovic.dragan.pj2.aerospace {
+    abstract class jovic.dragan.pj2.aerospace.AerospaceObject {
+        {static} - ID : int
+        - altitude : int
+        - name : String
+        - skip : boolean
+        - speed : Integer
+        - ticks : int
+        - x : int
+        - y : int
+        + AerospaceObject()
+        + AerospaceObject()
+        + AerospaceObject()
+        + export()
+        + getAltitude()
+        + getDirection()
+        + getNextPosition()
+        + getX()
+        + getY()
+        + setDirection()
+        + setSkip()
+        + setX()
+        + setY()
+        + toString()
+    }
+  }
+  
+
+  namespace jovic.dragan.pj2.aerospace {
+    abstract class jovic.dragan.pj2.aerospace.Aircraft {
+        # model : String
+        - ID : int
+        - characteristics : Map<String, String>
+        - crew : List<Person>
+        + Aircraft()
+        + addCharacteristic()
+        + addCrew()
+        + getCharacteristics()
+        + getCrew()
+        + getID()
+        + getModel()
+        + setCharacteristics()
+        + setCrew()
+        + setModel()
+    }
+  }
+  
+
+  namespace jovic.dragan.pj2.aerospace {
+    class jovic.dragan.pj2.aerospace.AntiHailRocket {
+        + AntiHailRocket()
+    }
+  }
+  
+
+  namespace jovic.dragan.pj2.aerospace {
+    class jovic.dragan.pj2.aerospace.BomberPlane {
+        + BomberPlane()
+        + attack()
+        # generateRandomWeapons()
+    }
+  }
+  
+
+  namespace jovic.dragan.pj2.aerospace {
+    class jovic.dragan.pj2.aerospace.FighterPlane {
+        + FighterPlane()
+        + attack()
+        + follow()
+        # generateRandomWeapons()
+    }
+  }
+  
+
+  namespace jovic.dragan.pj2.aerospace {
+    class jovic.dragan.pj2.aerospace.FirefighterHelicopter {
+        + FirefighterHelicopter()
+    }
+  }
+  
+
+  namespace jovic.dragan.pj2.aerospace {
+    class jovic.dragan.pj2.aerospace.FirefighterPlane {
+        - WaterCapacity : Integer
+        + FirefighterPlane()
+        + extinguishFire()
+    }
+  }
+  
+
+  namespace jovic.dragan.pj2.aerospace {
+    abstract class jovic.dragan.pj2.aerospace.Helicopter {
+        + Helicopter()
+    }
+  }
+  
+
+  namespace jovic.dragan.pj2.aerospace {
+    abstract class jovic.dragan.pj2.aerospace.MilitaryAircraft {
+        # foreign : boolean
+        + MilitaryAircraft()
+        + export()
+        + isForeign()
+        + setForeign()
+    }
+  }
+  
+
+  namespace jovic.dragan.pj2.aerospace {
+    abstract class jovic.dragan.pj2.aerospace.MilitaryPlane {
+        {static} # weaponPreferences : WeaponPreferences
+        - weapons : List<Weapon>
+        + MilitaryPlane()
+        + addWeapon()
+        {abstract} # generateRandomWeapons()
+    }
+  }
+  
+
+  namespace jovic.dragan.pj2.aerospace {
+    enum WeaponType {
+      BOMBER
+      PLANE
+    }
+  }
+  
+
+  namespace jovic.dragan.pj2.aerospace {
+    class jovic.dragan.pj2.aerospace.MilitaryRocket {
+        + MilitaryRocket()
+        + attack()
+    }
+  }
+  
+
+  namespace jovic.dragan.pj2.aerospace {
+    class jovic.dragan.pj2.aerospace.PassengerHelicopter {
+        + PassengerHelicopter()
+    }
+  }
+  
+
+  namespace jovic.dragan.pj2.aerospace {
+    class jovic.dragan.pj2.aerospace.PassengerPlane {
+        - numberOfSeats : int
+        + PassengerPlane()
+        + getNumberOfSeats()
+        + getPassengers()
+    }
+  }
+  
+
+  namespace jovic.dragan.pj2.aerospace {
+    abstract class jovic.dragan.pj2.aerospace.Rocket {
+        - range : int
+        + Rocket()
+    }
+  }
+  
+
+  namespace jovic.dragan.pj2.aerospace {
+    class jovic.dragan.pj2.aerospace.TransportHelicopter {
+        + TransportHelicopter()
+    }
+  }
+  
+
+  namespace jovic.dragan.pj2.aerospace {
+    abstract class jovic.dragan.pj2.aerospace.TransportPlane {
+        - MaxCargoWeight : Integer
+        + TransportPlane()
+    }
+  }
+  
+
+  namespace jovic.dragan.pj2.aerospace {
+    abstract class jovic.dragan.pj2.aerospace.UnmannedAircraft {
+        + UnmannedAircraft()
+    }
+  }
+  
+
+  namespace jovic.dragan.pj2.aerospace {
+    class jovic.dragan.pj2.aerospace.UpdatingTask {
+        - map : Map<Integer, Map<Integer, ConcurrentLinkedDeque<AerospaceObject>>>
+        - watcher : PreferenceWatcher<SimulatorPreferences>
+        + run()
+        ~ UpdatingTask()
+        - isInsideOfMap()
+    }
+  }
+  
+
+  jovic.dragan.pj2.aerospace.Aeroplane .up.|> java.io.Serializable
+  jovic.dragan.pj2.aerospace.Aeroplane -up-|> jovic.dragan.pj2.aerospace.Aircraft
+  jovic.dragan.pj2.aerospace.Aerospace o-- jovic.dragan.pj2.preferences.SimulatorPreferences : preferences
+  jovic.dragan.pj2.aerospace.Aerospace o-- jovic.dragan.pj2.aerospace.UpdatingTask : timerTask
+  jovic.dragan.pj2.aerospace.AerospaceObject .up.|> java.io.Serializable
+  jovic.dragan.pj2.aerospace.AerospaceObject o-- jovic.dragan.pj2.util.Vector2D : direction
+  jovic.dragan.pj2.aerospace.Aircraft .up.|> java.io.Serializable
+  jovic.dragan.pj2.aerospace.Aircraft -up-|> jovic.dragan.pj2.aerospace.AerospaceObject
+  jovic.dragan.pj2.aerospace.AntiHailRocket .up.|> java.io.Serializable
+  jovic.dragan.pj2.aerospace.AntiHailRocket -up-|> jovic.dragan.pj2.aerospace.Rocket
+  jovic.dragan.pj2.aerospace.BomberPlane .up.|> java.io.Serializable
+  jovic.dragan.pj2.aerospace.BomberPlane -up-|> jovic.dragan.pj2.aerospace.MilitaryPlane
+  jovic.dragan.pj2.aerospace.FighterPlane .up.|> java.io.Serializable
+  jovic.dragan.pj2.aerospace.FighterPlane -up-|> jovic.dragan.pj2.aerospace.MilitaryPlane
+  jovic.dragan.pj2.aerospace.FirefighterHelicopter .up.|> java.io.Serializable
+  jovic.dragan.pj2.aerospace.FirefighterHelicopter -up-|> jovic.dragan.pj2.aerospace.Helicopter
+  jovic.dragan.pj2.aerospace.FirefighterPlane .up.|> java.io.Serializable
+  jovic.dragan.pj2.aerospace.FirefighterPlane .up.|> jovic.dragan.pj2.Interfaces.Firefighter
+  jovic.dragan.pj2.aerospace.FirefighterPlane -up-|> jovic.dragan.pj2.aerospace.Aeroplane
+  jovic.dragan.pj2.aerospace.Helicopter .up.|> java.io.Serializable
+  jovic.dragan.pj2.aerospace.Helicopter -up-|> jovic.dragan.pj2.aerospace.Aircraft
+  jovic.dragan.pj2.aerospace.MilitaryAircraft .up.|> jovic.dragan.pj2.Interfaces.Military
+  jovic.dragan.pj2.aerospace.MilitaryAircraft -up-|> jovic.dragan.pj2.aerospace.Aircraft
+  jovic.dragan.pj2.aerospace.MilitaryPlane .up.|> java.io.Serializable
+  jovic.dragan.pj2.aerospace.MilitaryPlane -up-|> jovic.dragan.pj2.aerospace.MilitaryAircraft
+  jovic.dragan.pj2.aerospace.MilitaryPlane +-down- jovic.dragan.pj2.aerospace.MilitaryPlane.WeaponType
+  jovic.dragan.pj2.aerospace.MilitaryRocket .up.|> java.io.Serializable
+  jovic.dragan.pj2.aerospace.MilitaryRocket .up.|> jovic.dragan.pj2.Interfaces.Military
+  jovic.dragan.pj2.aerospace.MilitaryRocket -up-|> jovic.dragan.pj2.aerospace.Rocket
+  jovic.dragan.pj2.aerospace.PassengerHelicopter .up.|> java.io.Serializable
+  jovic.dragan.pj2.aerospace.PassengerHelicopter -up-|> jovic.dragan.pj2.aerospace.Helicopter
+  jovic.dragan.pj2.aerospace.PassengerPlane .up.|> java.io.Serializable
+  jovic.dragan.pj2.aerospace.PassengerPlane .up.|> jovic.dragan.pj2.Interfaces.PassengerCarrier
+  jovic.dragan.pj2.aerospace.PassengerPlane -up-|> jovic.dragan.pj2.aerospace.Aeroplane
+  jovic.dragan.pj2.aerospace.Rocket .up.|> java.io.Serializable
+  jovic.dragan.pj2.aerospace.Rocket -up-|> jovic.dragan.pj2.aerospace.AerospaceObject
+  jovic.dragan.pj2.aerospace.TransportHelicopter .up.|> java.io.Serializable
+  jovic.dragan.pj2.aerospace.TransportHelicopter -up-|> jovic.dragan.pj2.aerospace.Helicopter
+  jovic.dragan.pj2.aerospace.TransportPlane .up.|> java.io.Serializable
+  jovic.dragan.pj2.aerospace.TransportPlane .up.|> jovic.dragan.pj2.Interfaces.Transporter
+  jovic.dragan.pj2.aerospace.TransportPlane -up-|> jovic.dragan.pj2.aerospace.Aeroplane
+  jovic.dragan.pj2.aerospace.TransportPlane o-- jovic.dragan.pj2.aerospace.equipment.Cargo : cargo
+  jovic.dragan.pj2.aerospace.UnmannedAircraft .up.|> java.io.Serializable
+  jovic.dragan.pj2.aerospace.UnmannedAircraft -up-|> jovic.dragan.pj2.aerospace.Aircraft
+  jovic.dragan.pj2.aerospace.UpdatingTask -up-|> java.util.TimerTask
+  jovic.dragan.pj2.aerospace.UpdatingTask o-- jovic.dragan.pj2.radar.RadarExporter : exporter
+  jovic.dragan.pj2.aerospace.UpdatingTask o-- jovic.dragan.pj2.preferences.SimulatorPreferences : preferences
+
+
+right footer
+
+
+PlantUML diagram generated by SketchIt! (https://bitbucket.org/pmesmeur/sketch.it)
+For more information about this tool, please contact philippe.mesmeur@gmail.com
+endfooter
+
+@enduml

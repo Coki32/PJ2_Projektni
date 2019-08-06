@@ -13,21 +13,15 @@ import java.util.*;
 public abstract class Aircraft extends AerospaceObject implements Serializable {
 
     private final int ID = 5;
-    private String model;
+    protected String model;
     private Map<String,String> characteristics;
     private List<Person> crew;
-
-    public Aircraft(Vector3D position, Direction direction) {
-        super(position,direction);
-        model ="RandomGeneratorUtilsUtils.randomModel()";
-        characteristics = new HashMap<>();
-        crew = new ArrayList<>();
-    }
 
     public Aircraft(int x, int y, int altitude, int speed, Direction direction) {
         super(x, y, altitude, speed, direction);
         characteristics = new HashMap<>();
         crew = new ArrayList<>();
+
     }
 
 

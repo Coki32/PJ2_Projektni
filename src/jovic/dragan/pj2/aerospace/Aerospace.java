@@ -8,7 +8,9 @@ import jovic.dragan.pj2.radar.RadarExporter;
 import jovic.dragan.pj2.util.Direction;
 import jovic.dragan.pj2.util.Pair;
 import jovic.dragan.pj2.util.Util;
+import jovic.dragan.pj2.util.Watcher;
 
+import java.nio.file.StandardWatchEventKinds;
 import java.util.*;
 import java.util.Timer;
 import java.util.concurrent.*;
@@ -27,14 +29,10 @@ public class Aerospace {
         updatingTimer = new Timer("positionUpdater", false);
 
         this.preferences = preferences;
-        watcher = new PreferenceWatcher<>(preferences, Constants.PREFERENCES_FOLDERNAME,SimulatorPreferences::load);
+        watcher = new PreferenceWatcher<>(preferences, Constants.SIMULATOR_PROPERTIES_FILENAME,SimulatorPreferences::load);
 
         timerTask = new UpdatingTask(map,watcher);
         watcher.start();
-    }
-
-    private int minIdx(int[] ints){
-    return 0;
     }
 
     public synchronized void banFlight() {
@@ -82,10 +80,10 @@ public class Aerospace {
             } else if (!map.get(x).containsKey(y)) {
                 map.get(x).put(y, new ConcurrentLinkedDeque<>());
             }
-            if (map.get(x).get(y).stream().anyMatch((ao) -> ao.getAltitude() == object.getAltitude())) {
-                System.out.println("Sudar pri dodavanju, malo vjerovatno.... nece se dodati");
-                return;
-            }
+//            if (map.get(x).get(y).stream().anyMatch((ao) -> ao.getAltitude() == object.getAltitude())) {
+//                System.out.println("Sudar pri dodavanju, malo vjerovatno.... nece se dodati");
+//                return;
+//            }
             map.get(x).get(y).add(object);
         }
         else
@@ -99,8 +97,6 @@ class UpdatingTask extends TimerTask {
     private PreferenceWatcher<SimulatorPreferences> watcher;
     private SimulatorPreferences preferences;
 
-    private RadarPreferences radarPreferences;
-    private PreferenceWatcher<RadarPreferences> radarPreferencesPreferenceWatcher;
 
     private RadarExporter exporter;
 
@@ -108,10 +104,9 @@ class UpdatingTask extends TimerTask {
         this.map = map;
         this.watcher = watcher;
         preferences = watcher.getOriginal();
-        this.radarPreferences = RadarPreferences.load();
-        this.radarPreferencesPreferenceWatcher = new PreferenceWatcher<>(radarPreferences,Constants.RADAR_PROPERTIES_FULL_NAME, RadarPreferences::load);
+        RadarPreferences radarPreferences = RadarPreferences.load();
 
-        exporter = new RadarExporter(map,radarPreferences.getFileUpdateTime());
+        exporter = new RadarExporter(map);
         exporter.start();
     }
 
@@ -161,6 +156,5 @@ class UpdatingTask extends TimerTask {
         map.values().parallelStream().forEach((yMap) -> yMap.values().forEach(q -> q.forEach(ao -> ao.setSkip(false))));
         System.out.println(map);
         long end = System.currentTimeMillis();
-        //System.out.println(System.currentTimeMillis() + ": Update gotov za " + (end - start) + "ms (" + count + " aviona)");
     }
 }

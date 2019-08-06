@@ -60,7 +60,7 @@ public abstract class AerospaceObject implements Serializable {
     }
 
     public String export(){
-        return "("+x+","+y+","+altitude+")";
+        return x+","+y+","+altitude;
     }
 
     public Pair<Integer, Integer> getNextPosition() {

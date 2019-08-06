@@ -11,11 +11,12 @@ import java.util.*;
  * 
  */
 public class PassengerPlane extends Aeroplane implements PassengerCarrier, Serializable {
+
     private int numberOfSeats;
 
+    public PassengerPlane(int x, int y, int altitude, int speed, Direction direction){
+        super(x,y,altitude,speed,direction);
 
-    public PassengerPlane() {
-        super(0,0, Direction.UP);
     }
 
 

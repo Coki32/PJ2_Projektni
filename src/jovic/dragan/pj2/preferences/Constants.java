@@ -16,6 +16,11 @@ public class Constants {
     public static final String SIMULATOR_SHARED_FILENAME = "map.txt";
     public static final String SIMULATOR_SHARED_FILE_FULL_NAME = SIMULATOR_SHARED_FOLDERNAME + separator + "map.txt";
     public static final String[] SIMULATOR_MODELS = new String[]{"Boeing 707", "Airbus A380", "Airbus A320", "Boeing 727", "Boeing 767", "Boeing 757"};
+
+    public static final String ALERTS_FOLDER_PATH = "."+separator+"alerts";
+
+    public static final String EVENTS_FOLDER_PATH = "."+separator+"events";
+
     public static final int SIMULATOR_DEFAULT_SIZE = 50;
     public static final int SIMULATOR_DEFAULT_SPEED_MIN = 1;
     public static final int SIMULATOR_DEFAULT_SPEED_MAX = 3;

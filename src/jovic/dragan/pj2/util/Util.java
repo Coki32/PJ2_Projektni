@@ -1,6 +1,12 @@
 package jovic.dragan.pj2.util;
 
+import java.nio.file.Paths;
+import java.util.Random;
+
 public class Util {
+
+    private static Random random = new Random();
+
     public static  <T extends Comparable<T>>  int  minIdx(T[] array){
         if(array==null)
             return -1;
@@ -10,4 +16,20 @@ public class Util {
                 minIdx = i;
         return  minIdx;
     }
+
+    public static void createFolderIfNotExists(String path){
+        if(!Paths.get(path).toFile().exists()) {
+            Paths.get(path).toFile().mkdir();
+        }
+    }
+
+    /**
+     * @param min minimum number the generator may return
+     * @param max maximum number the generator may return, inclusive
+     * @return random number in range [min, max]
+     */
+    public static int randomBetween(int min, int max){
+        return random.nextInt(max-min+1)+min;
+    }
+
 }
