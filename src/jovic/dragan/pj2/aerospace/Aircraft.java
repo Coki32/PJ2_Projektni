@@ -3,12 +3,14 @@ package jovic.dragan.pj2.aerospace;
 import jovic.dragan.pj2.personel.Person;
 import jovic.dragan.pj2.util.Direction;
 import jovic.dragan.pj2.util.Vector3D;
+
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * 
  */
-public abstract class Aircraft extends AerospaceObject {
+public abstract class Aircraft extends AerospaceObject implements Serializable {
 
     private final int ID = 5;
     private String model;

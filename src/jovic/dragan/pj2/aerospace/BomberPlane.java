@@ -3,12 +3,13 @@ package jovic.dragan.pj2.aerospace;
 import jovic.dragan.pj2.aerospace.equipment.Weapon;
 import jovic.dragan.pj2.util.Direction;
 
+import java.io.Serializable;
 import java.util.Random;
 
 /**
  * 
  */
-public class BomberPlane extends MilitaryPlane {
+public class BomberPlane extends MilitaryPlane implements Serializable {
 
     public BomberPlane(int x, int y, Direction s) {
         super(x,y,s);

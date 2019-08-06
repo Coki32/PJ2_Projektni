@@ -1,6 +1,5 @@
 package jovic.dragan.pj2.aerospace.generators;
 
-import jovic.dragan.pj2.Simulator.Simulator;
 import jovic.dragan.pj2.aerospace.Aerospace;
 import jovic.dragan.pj2.aerospace.AerospaceObject;
 import jovic.dragan.pj2.aerospace.BomberPlane;
@@ -10,11 +9,6 @@ import jovic.dragan.pj2.preferences.PreferenceWatcher;
 import jovic.dragan.pj2.preferences.SimulatorPreferences;
 import jovic.dragan.pj2.util.Direction;
 
-import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.WatchService;
 import java.util.Random;
 import java.util.logging.Level;
 
@@ -76,11 +70,15 @@ class SpawningRunnable implements Runnable {
 
         //bice glupo tipa spawningFrom bude LEFT pa to znaci sa lijeve ivice ide do desne
         Direction spawningFrom = Direction.fromInt(rng.nextInt(4));
-        if(spawningFrom == Direction.LEFT || spawningFrom == Direction.RIGHT)
-            y=rng.nextInt(preferences.getFieldHeight());
-        else
+        if(spawningFrom == Direction.LEFT || spawningFrom == Direction.RIGHT) {
+            x = spawningFrom == Direction.LEFT ? 0 : preferences.getFieldWidth();
+            y = rng.nextInt(preferences.getFieldHeight());
+        }
+        else {
             x = rng.nextInt(preferences.getFieldWidth());
-
+            y = spawningFrom == Direction.UP ? preferences.getFieldHeight() : 0;
+        }
+        //System.out.println("Spawned at "+spawningFrom + " ("+x+","+y+") going + " + spawningFrom.opposite());
         return rpg.getRandom(x,y,
                 rng.nextInt(500),
                 randomBetween(preferences.getSpeedMin(),preferences.getSpeedMax()),

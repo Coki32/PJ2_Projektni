@@ -4,19 +4,17 @@ package jovic.dragan.pj2.preferences;
 import jovic.dragan.pj2.logger.GenericLogger;
 
 import java.io.*;
-import java.nio.file.Paths;
 import java.util.logging.Level;
 
 
 public class SimulatorPreferences implements Serializable {
 
-    public int fieldWidth, fieldHeight, spawnTimeMin, spawnTimeMax, speedMin, speedMax;
-    public int[] heightOptions;
-    public String sharedFolder, sharedFileName, sharedFullName;
-    public int sharedFileUpdateInterval;
-    public int foreignMilitary, homeMilitary;
-    public String[] models;
-
+    private int fieldWidth, fieldHeight, spawnTimeMin, spawnTimeMax, speedMin, speedMax;
+    private int[] heightOptions;
+    private String sharedFolder, sharedFileName, sharedFullName;
+    private int sharedFileUpdateInterval;
+    private int foreignMilitary, homeMilitary;
+    private String[] models;
 
     private void attachChangeWatcher(){
 
@@ -36,7 +34,7 @@ public class SimulatorPreferences implements Serializable {
         sp.sharedFileName = Constants.SIMULATOR_SHARED_FILENAME;
         sp.sharedFolder = Constants.SIMULATOR_SHARED_FOLDERNAME;
         sp.sharedFullName = Constants.SIMULATOR_SHARED_FILE_FULL_NAME;
-        sp.sharedFileUpdateInterval = Constants.SIMULATOR_DEFAULT_SHARED_UPDATE_INTERVAL;
+        sp.sharedFileUpdateInterval = Constants.DEFAULT_SHARED_UPDATE_INTERVAL;
         sp.models = Constants.SIMULATOR_MODELS;
         try (PrintWriter pw = new PrintWriter(Constants.SIMULATOR_PROPERTIES_FULL_NAME)){
             pw.println(new com.google.gson.GsonBuilder().setPrettyPrinting().create().toJson(sp));

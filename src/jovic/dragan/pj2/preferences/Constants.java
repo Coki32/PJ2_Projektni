@@ -21,14 +21,22 @@ public class Constants {
     public static final int SIMULATOR_DEFAULT_SPEED_MAX = 3;
     public static final int SIMULATOR_DEFAULT_SPAWN_MIN = 1;
     public static final int SIMULATOR_DEFAULT_SPAWN_MAX = 5;
-    public static final int SIMULATOR_DEFAULT_SHARED_UPDATE_INTERVAL = 3;
+    public static final int DEFAULT_SHARED_UPDATE_INTERVAL = 3;
     public static final int[] SIMULATOR_HEIGHT_OPTIONS = new int[]{500, 1000, 1500, 2000};
     public static final int SIMULATOR_DEFAULT_FOREIGN_MIL = -1;
     public static final int SIMULATOR_DEFAULT_HOME_MIL = -1;
+
+    public static final String RADAR_PROPERTIES_FILENAME = "radar.properties";
+    public static final String RADAR_PROPERTIES_FULL_NAME = PREFERENCES_FOLDERNAME+separator+RADAR_PROPERTIES_FILENAME;
+
+
     public static final String[] BOMBER_WEAPONS = new String[]{"B28", "B39", "B53", "Daisy cutter", "Disney bomb"};
     public static final String[] PLANE_WEAPONS = new String[]{"GAU-12 Equalizer", "GIAT 30", "GSh-6-30", "GSh-30-2", "COW 37mm"};
     public static final String WEAPONS_PROPERTIES_FILENAME = "weapons.json";
     public static final String WEAPONS_PROPERTIES_FULL_NAME = PREFERENCES_FOLDERNAME + separator + WEAPONS_PROPERTIES_FILENAME;
+
     public static final int BOMBER_CARRY_LIMIT = 3;
     public static final int PLANE_CARRY_LIMIT = 3;
+
+
 }

@@ -1,16 +1,14 @@
 package jovic.dragan.pj2.aerospace;
 
-import jovic.dragan.pj2.Simulator.Simulator;
-import jovic.dragan.pj2.logger.GenericLogger;
 import jovic.dragan.pj2.preferences.Constants;
 import jovic.dragan.pj2.preferences.PreferenceWatcher;
+import jovic.dragan.pj2.preferences.RadarPreferences;
 import jovic.dragan.pj2.preferences.SimulatorPreferences;
+import jovic.dragan.pj2.radar.RadarExporter;
 import jovic.dragan.pj2.util.Direction;
 import jovic.dragan.pj2.util.Pair;
-import jovic.dragan.pj2.util.Vector2D;
+import jovic.dragan.pj2.util.Util;
 
-import javax.swing.*;
-import java.security.PrivateKey;
 import java.util.*;
 import java.util.Timer;
 import java.util.concurrent.*;
@@ -35,21 +33,29 @@ public class Aerospace {
         watcher.start();
     }
 
+    private int minIdx(int[] ints){
+    return 0;
+    }
+
     public synchronized void banFlight() {
         if (flightAllowed) {
             int mapWidth = preferences.getFieldWidth();
             int mapHeight = preferences.getFieldHeight();
             System.out.println("Postavljan zabranu svi izlaze najkraicm putem");
-            synchronized (map) {
-                map.values().forEach(yMap -> yMap.values().forEach(q -> q.forEach(ao -> {
+            Integer[] exit = new Integer[4];
+//            synchronized (map) {
+                map.values().parallelStream().forEach(yMap -> yMap.values().forEach(q -> q.forEach(ao -> {
                     int x = ao.getX();
                     int y = ao.getY();
-                    int exitLeft = x, exitRight = mapWidth-x, exitUp = mapHeight-y, exitDown = y;
-//                UP DOWN LEFT RIGHT
-//                0    1    2    3
-
+                    exit[0] = mapHeight-y; //Distance to upper edge
+                    exit[1] = y;//distance to the bottom edge
+                    exit[2] = x;//distance to left edge
+                    exit[3] = mapWidth-x;//distance to right edge
+                    Direction newDirection = Direction.fromInt(Util.minIdx(exit));
+                    System.out.println(ao+" ide ka " + newDirection);
+                    ao.setDirection(newDirection);
                 })));
-            }
+            //}
             flightAllowed = false;
             System.out.println("Postavljeno!");
         }
@@ -93,10 +99,20 @@ class UpdatingTask extends TimerTask {
     private PreferenceWatcher<SimulatorPreferences> watcher;
     private SimulatorPreferences preferences;
 
+    private RadarPreferences radarPreferences;
+    private PreferenceWatcher<RadarPreferences> radarPreferencesPreferenceWatcher;
+
+    private RadarExporter exporter;
+
     UpdatingTask(Map<Integer, Map<Integer, ConcurrentLinkedDeque<AerospaceObject>>> map, PreferenceWatcher<SimulatorPreferences> watcher) {
         this.map = map;
         this.watcher = watcher;
         preferences = watcher.getOriginal();
+        this.radarPreferences = RadarPreferences.load();
+        this.radarPreferencesPreferenceWatcher = new PreferenceWatcher<>(radarPreferences,Constants.RADAR_PROPERTIES_FULL_NAME, RadarPreferences::load);
+
+        exporter = new RadarExporter(map,radarPreferences.getFileUpdateTime());
+        exporter.start();
     }
 
     private boolean isInsideOfMap(int x, int y, int width, int height){
@@ -143,8 +159,8 @@ class UpdatingTask extends TimerTask {
             }
         }
         map.values().parallelStream().forEach((yMap) -> yMap.values().forEach(q -> q.forEach(ao -> ao.setSkip(false))));
+        System.out.println(map);
         long end = System.currentTimeMillis();
-        System.out.println(System.currentTimeMillis() + ": Update gotov za " + (end - start) + "ms (" + count + " aviona)");
-
+        //System.out.println(System.currentTimeMillis() + ": Update gotov za " + (end - start) + "ms (" + count + " aviona)");
     }
 }

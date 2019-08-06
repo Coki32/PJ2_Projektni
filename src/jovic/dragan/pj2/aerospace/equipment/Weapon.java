@@ -1,6 +1,8 @@
 package jovic.dragan.pj2.aerospace.equipment;
 
-public class Weapon {
+import java.io.Serializable;
+
+public class Weapon implements Serializable {
     private String name;
 
     public String getName() {

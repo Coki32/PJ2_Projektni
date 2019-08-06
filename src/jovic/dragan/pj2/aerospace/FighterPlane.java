@@ -2,12 +2,13 @@ package jovic.dragan.pj2.aerospace;
 
 import jovic.dragan.pj2.util.Direction;
 
+import java.io.Serializable;
 import java.util.Random;
 
 /**
  * 
  */
-public class FighterPlane extends MilitaryPlane {
+public class FighterPlane extends MilitaryPlane implements Serializable {
 
     public FighterPlane() {
         super(0,0, Direction.UP);

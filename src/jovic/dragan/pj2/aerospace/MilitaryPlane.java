@@ -7,17 +7,18 @@ import jovic.dragan.pj2.preferences.WeaponPreferences;
 import jovic.dragan.pj2.util.Direction;
 import jovic.dragan.pj2.util.Vector3D;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
 /**
  * 
  */
-public abstract class MilitaryPlane extends Aeroplane implements Military {
+public abstract class MilitaryPlane extends Aeroplane implements Military, Serializable {
 
     private List<Weapon> weapons;
     protected static WeaponPreferences weaponPreferences = WeaponPreferences.load();
-
+    private boolean foreign;
     protected enum WeaponType{BOMBER, PLANE}
 
     public MilitaryPlane(int x, int y, Direction s) {
@@ -29,6 +30,11 @@ public abstract class MilitaryPlane extends Aeroplane implements Military {
         weapons = new ArrayList<>();
     }
 
+
+    @Override
+    public String export() {
+        return super.export()+"(military, foreign:"+foreign+")";
+    }
 
     protected void generateRandomWeapons(WeaponType type, int count){
         Random random = new Random();
@@ -45,4 +51,13 @@ public abstract class MilitaryPlane extends Aeroplane implements Military {
     public void attack(Vector3D position) {
 
     }
+
+    public boolean isForeign() {
+        return foreign;
+    }
+
+    public void setForeign(boolean foreign) {
+        this.foreign = foreign;
+    }
+
 }

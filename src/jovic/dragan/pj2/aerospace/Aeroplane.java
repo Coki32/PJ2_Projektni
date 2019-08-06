@@ -3,10 +3,12 @@ package jovic.dragan.pj2.aerospace;
 import jovic.dragan.pj2.util.Direction;
 import jovic.dragan.pj2.util.Vector3D;
 
+import java.io.Serializable;
+
 /**
  * 
  */
-public abstract class Aeroplane extends Aircraft {
+public abstract class Aeroplane extends Aircraft implements Serializable {
 
     public Aeroplane(int x, int y, Direction s) {
         super(new Vector3D(x,y,0), s);

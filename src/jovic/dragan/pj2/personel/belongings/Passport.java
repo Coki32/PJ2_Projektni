@@ -2,9 +2,10 @@ package jovic.dragan.pj2.personel.belongings;
 
 import jovic.dragan.pj2.personel.Person;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class Passport {
+public class Passport implements Serializable {
     public Passport() {
     }
     private String ID;

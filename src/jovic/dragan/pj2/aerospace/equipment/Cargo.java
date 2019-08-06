@@ -1,11 +1,12 @@
 package jovic.dragan.pj2.aerospace.equipment;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * 
  */
-public class Cargo {
+public class Cargo implements Serializable {
     private int weight;
     private String name;
 

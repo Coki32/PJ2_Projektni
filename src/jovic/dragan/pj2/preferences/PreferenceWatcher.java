@@ -17,6 +17,7 @@ public class PreferenceWatcher <T> extends Thread {
     private WatchService watchService;
     private Supplier<T> loader;
     private String fileName;
+
     public PreferenceWatcher(T original, String fileName, Supplier<T> loader) {
         this.original = original;
         changed = false;
@@ -31,16 +32,6 @@ public class PreferenceWatcher <T> extends Thread {
         } catch (IOException ex) {
             GenericLogger.log(this.getClass(), ex);
         }
-    }
-
-    private Object handledGet(Field f, Object source){
-        try{
-            return f.get(source);
-        }
-        catch (IllegalAccessException ex){
-            GenericLogger.log(this.getClass(),ex);
-        }
-        return null;
     }
 
     @Override

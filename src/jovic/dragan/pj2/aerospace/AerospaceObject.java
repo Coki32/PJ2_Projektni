@@ -6,10 +6,12 @@ import jovic.dragan.pj2.util.Pair;
 import jovic.dragan.pj2.util.Vector2D;
 import jovic.dragan.pj2.util.Vector3D;
 
+import java.io.Serializable;
+
 /**
  * 
  */
-public abstract class AerospaceObject {
+public abstract class AerospaceObject implements Serializable {
 
     private static int ID = 1;
     private String name;
@@ -55,6 +57,10 @@ public abstract class AerospaceObject {
 
     public AerospaceObject(Vector3D position, Direction side) {
         this(position, side.getDirectionVector());
+    }
+
+    public String export(){
+        return "("+x+","+y+","+altitude+")";
     }
 
     public Pair<Integer, Integer> getNextPosition() {
