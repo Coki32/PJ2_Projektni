@@ -19,7 +19,7 @@ title __INTERFACES's Class Diagram__\n
 
   namespace jovic.dragan.pj2.Interfaces {
     interface jovic.dragan.pj2.Interfaces.Military {
-        {abstract} + attack()
+        + attack()
     }
   }
   

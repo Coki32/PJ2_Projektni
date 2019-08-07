@@ -2,6 +2,7 @@ package jovic.dragan.pj2.aerospace;
 
 import jovic.dragan.pj2.Interfaces.Firefighter;
 import jovic.dragan.pj2.util.Direction;
+import jovic.dragan.pj2.util.Util;
 
 import java.io.Serializable;
 
@@ -10,23 +11,18 @@ import java.io.Serializable;
  */
 public class FirefighterPlane extends Aeroplane implements Firefighter, Serializable {
 
-    /**
-     * Default constructor
-     */
-    public FirefighterPlane() {
-        super(0,0, Direction.UP);
+    private int waterCapacity;
+    private static int ID = 1000;
+
+    public FirefighterPlane(int x, int y, int altitude, int speed, Direction direction){
+        super(x,y,altitude,speed,direction);
+        waterCapacity = Util.randomBetween(1000, 5000);
+        setModel("PPA-"+ID);
+        ID+=100;
     }
 
-    /**
-     * 
-     */
-    private Integer WaterCapacity;
-
-    /**
-     * 
-     */
     public void extinguishFire() {
-        // TODO implement here
+        System.out.println("PPA gasi pozar!");
     }
 
 }

@@ -11,28 +11,13 @@ import java.util.*;
  */
 public class FlyingLicence implements Serializable {
 
-    /**
-     * Default constructor
-     */
-    public FlyingLicence() {
-    }
+    private int ID;
+    private static int count = 0;
+    private Pilot owner;
 
-    /**
-     * 
-     */
-    private Integer ID;
-
-    /**
-     * 
-     */
-    private Pilot Owner;
-
-
-    /**
-     * @param Person owner
-     */
-    public void FlyingLicence(Person owner) {
-        // TODO implement here
+    public FlyingLicence(Pilot owner) {
+        this.owner = owner;
+        ID = ++count;
     }
 
 }

@@ -12,10 +12,17 @@ public class Constants {
     public static final String SIMULATOR_PROPERTIES_FILENAME = "simulator.preferences";
     public static final String SIMULATOR_PROPERTIES_FULL_NAME = PREFERENCES_FOLDERNAME + separator + SIMULATOR_PROPERTIES_FILENAME;
 
+    public static final String MODELS_FILENAME = "models.preferences";
+    public static final String MODELS_FULL_NAME = PREFERENCES_FOLDERNAME+separator+MODELS_FILENAME;
+
     public static final String SIMULATOR_SHARED_FOLDERNAME = "." + separator + "shared";
     public static final String SIMULATOR_SHARED_FILENAME = "map.txt";
     public static final String SIMULATOR_SHARED_FILE_FULL_NAME = SIMULATOR_SHARED_FOLDERNAME + separator + "map.txt";
-    public static final String[] SIMULATOR_MODELS = new String[]{"Boeing 707", "Airbus A380", "Airbus A320", "Boeing 727", "Boeing 767", "Boeing 757"};
+
+    public static final String[] MODELS_PLANES = new String[]{"Boeing 707", "Airbus A380", "Airbus A320", "Boeing 727", "Boeing 767", "Boeing 757"};
+    public static final String[] MODELS_HELICOPTERS = new String[]{"Focke-Wulf Fw-61", "Sikorsky R-4", "The Bell 47", "Bell UH-1 Iroquois"};
+    public static final String[] MODELS_MILITARY_PLANES = new String[]{"Hawker Hurricane","U-2", "F-16", "MiG-21", "Bf 109"};
+    public static final String[] MODELS_MILITARY_BOMBERS = new String[]{"B-52","Tupolev Tu-95", "B-21 Raider"};
 
     public static final String ALERTS_FOLDER_PATH = "."+separator+"alerts";
 
@@ -30,6 +37,10 @@ public class Constants {
     public static final int[] SIMULATOR_HEIGHT_OPTIONS = new int[]{500, 1000, 1500, 2000};
     public static final int SIMULATOR_DEFAULT_FOREIGN_MIL = -1;
     public static final int SIMULATOR_DEFAULT_HOME_MIL = -1;
+
+
+    public static final int HELICOPTER_CREW_LIMIT = 12;
+    public static final int PLANE_CREW_LIMIT = 220;
 
     public static final String RADAR_PROPERTIES_FILENAME = "radar.properties";
     public static final String RADAR_PROPERTIES_FULL_NAME = PREFERENCES_FOLDERNAME+separator+RADAR_PROPERTIES_FILENAME;

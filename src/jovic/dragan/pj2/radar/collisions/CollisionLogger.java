@@ -14,6 +14,7 @@ public class CollisionLogger {
                 new FileOutputStream(
                 new File(Constants.ALERTS_FOLDER_PATH+File.separator+System.currentTimeMillis()+".sudar")))){
             pw.writeObject(info.getSerializible());
+            System.out.println(info.getSerializible());
         }
         catch (IOException ex){
             GenericLogger.log(CollisionLogger.class,ex);

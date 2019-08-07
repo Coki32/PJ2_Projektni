@@ -3,12 +3,13 @@ package jovic.dragan.pj2.radar.collisions;
 import jovic.dragan.pj2.radar.ObjectInfo;
 
 import java.util.List;
+import java.util.Queue;
 
 public class CollisionChecker implements Runnable {
 
-    private List<ObjectInfo> infoList;
+    private Queue<ObjectInfo> infoList;
 
-    public CollisionChecker(List<ObjectInfo> infoList){
+    public CollisionChecker(Queue<ObjectInfo> infoList){
         this.infoList = infoList;
     }
 
@@ -34,6 +35,7 @@ public class CollisionChecker implements Runnable {
                     }
                 }
                 if (info.getNumberOfPlanes() >= 2) {
+                    System.out.println(info.getSerializible());
                     CollisionLogger.logCollision(info);
                 }
             }

@@ -5,7 +5,6 @@ title __AEROSPACE's Class Diagram__\n
   namespace jovic.dragan.pj2.aerospace {
     abstract class jovic.dragan.pj2.aerospace.Aeroplane {
         + Aeroplane()
-        + Aeroplane()
     }
   }
   
@@ -19,6 +18,9 @@ title __AEROSPACE's Class Diagram__\n
         + Aerospace()
         + addAerospaceObject()
         + banFlight()
+        + clearPosition()
+        + getField()
+        + getPreferences()
         + resumeFlight()
         + start()
     }
@@ -35,8 +37,6 @@ title __AEROSPACE's Class Diagram__\n
         - ticks : int
         - x : int
         - y : int
-        + AerospaceObject()
-        + AerospaceObject()
         + AerospaceObject()
         + export()
         + getAltitude()
@@ -56,15 +56,15 @@ title __AEROSPACE's Class Diagram__\n
   namespace jovic.dragan.pj2.aerospace {
     abstract class jovic.dragan.pj2.aerospace.Aircraft {
         # model : String
-        - ID : int
+        {static} # modelPreferences : ModelPreferences
         - characteristics : Map<String, String>
         - crew : List<Person>
+        - maxCrew : int
         + Aircraft()
         + addCharacteristic()
         + addCrew()
         + getCharacteristics()
         + getCrew()
-        + getID()
         + getModel()
         + setCharacteristics()
         + setCrew()
@@ -101,14 +101,17 @@ title __AEROSPACE's Class Diagram__\n
 
   namespace jovic.dragan.pj2.aerospace {
     class jovic.dragan.pj2.aerospace.FirefighterHelicopter {
+        {static} - ID : int
         + FirefighterHelicopter()
+        + extinguishFire()
     }
   }
   
 
   namespace jovic.dragan.pj2.aerospace {
     class jovic.dragan.pj2.aerospace.FirefighterPlane {
-        - WaterCapacity : Integer
+        {static} - ID : int
+        - waterCapacity : int
         + FirefighterPlane()
         + extinguishFire()
     }
@@ -220,10 +223,14 @@ title __AEROSPACE's Class Diagram__\n
 
   jovic.dragan.pj2.aerospace.Aeroplane .up.|> java.io.Serializable
   jovic.dragan.pj2.aerospace.Aeroplane -up-|> jovic.dragan.pj2.aerospace.Aircraft
+  jovic.dragan.pj2.aerospace.Aerospace o-- jovic.dragan.pj2.util.Watcher : collisionWatcher
+  jovic.dragan.pj2.aerospace.Aerospace o-- jovic.dragan.pj2.util.Watcher : invasionWatcher
   jovic.dragan.pj2.aerospace.Aerospace o-- jovic.dragan.pj2.preferences.SimulatorPreferences : preferences
+  jovic.dragan.pj2.aerospace.Aerospace o-- jovic.dragan.pj2.aerospace.generators.Spawner : spawner
   jovic.dragan.pj2.aerospace.Aerospace o-- jovic.dragan.pj2.aerospace.UpdatingTask : timerTask
   jovic.dragan.pj2.aerospace.AerospaceObject .up.|> java.io.Serializable
-  jovic.dragan.pj2.aerospace.AerospaceObject o-- jovic.dragan.pj2.util.Vector2D : direction
+  jovic.dragan.pj2.aerospace.AerospaceObject o-- jovic.dragan.pj2.util.Direction : direction
+  jovic.dragan.pj2.aerospace.AerospaceObject o-- jovic.dragan.pj2.util.Vector2D : directionVector
   jovic.dragan.pj2.aerospace.Aircraft .up.|> java.io.Serializable
   jovic.dragan.pj2.aerospace.Aircraft -up-|> jovic.dragan.pj2.aerospace.AerospaceObject
   jovic.dragan.pj2.aerospace.AntiHailRocket .up.|> java.io.Serializable
@@ -233,6 +240,7 @@ title __AEROSPACE's Class Diagram__\n
   jovic.dragan.pj2.aerospace.FighterPlane .up.|> java.io.Serializable
   jovic.dragan.pj2.aerospace.FighterPlane -up-|> jovic.dragan.pj2.aerospace.MilitaryPlane
   jovic.dragan.pj2.aerospace.FirefighterHelicopter .up.|> java.io.Serializable
+  jovic.dragan.pj2.aerospace.FirefighterHelicopter .up.|> jovic.dragan.pj2.Interfaces.Firefighter
   jovic.dragan.pj2.aerospace.FirefighterHelicopter -up-|> jovic.dragan.pj2.aerospace.Helicopter
   jovic.dragan.pj2.aerospace.FirefighterPlane .up.|> java.io.Serializable
   jovic.dragan.pj2.aerospace.FirefighterPlane .up.|> jovic.dragan.pj2.Interfaces.Firefighter

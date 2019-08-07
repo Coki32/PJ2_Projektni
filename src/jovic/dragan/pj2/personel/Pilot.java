@@ -10,16 +10,12 @@ import java.util.*;
  */
 public class Pilot extends Person implements Serializable {
 
-    /**
-     * Default constructor
-     */
-    public Pilot() {
+
+    private FlyingLicence licence;
+
+    public Pilot(String name, String lastName) {
+        super(name,lastName);
+        licence = new FlyingLicence(this);
     }
-
-    /**
-     * 
-     */
-    private FlyingLicence Licence;
-
 
 }

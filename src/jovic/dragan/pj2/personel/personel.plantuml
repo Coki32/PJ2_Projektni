@@ -11,8 +11,8 @@ title __PERSONEL's Class Diagram__\n
 
   namespace jovic.dragan.pj2.personel {
     class jovic.dragan.pj2.personel.Person {
-        + LastName : String
-        - Name : String
+        + lastName : String
+        - name : String
         + Person()
     }
   }
@@ -31,7 +31,7 @@ title __PERSONEL's Class Diagram__\n
   jovic.dragan.pj2.personel.Person .up.|> java.io.Serializable
   jovic.dragan.pj2.personel.Pilot .up.|> java.io.Serializable
   jovic.dragan.pj2.personel.Pilot -up-|> jovic.dragan.pj2.personel.Person
-  jovic.dragan.pj2.personel.Pilot o-- jovic.dragan.pj2.personel.belongings.FlyingLicence : Licence
+  jovic.dragan.pj2.personel.Pilot o-- jovic.dragan.pj2.personel.belongings.FlyingLicence : licence
 
 
 right footer

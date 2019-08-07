@@ -10,7 +10,7 @@ import java.io.Serializable;
  */
 public abstract class UnmannedAircraft extends Aircraft implements Serializable {
 
-    public UnmannedAircraft(){
-        super(new Vector3D(), Direction.DOWN);
+    public UnmannedAircraft(int x, int y, int altitude, int speed, Direction direction){
+        super(x,y,altitude,speed,direction);
     }
 }

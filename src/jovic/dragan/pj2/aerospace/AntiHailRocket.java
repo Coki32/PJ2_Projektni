@@ -9,4 +9,6 @@ public class AntiHailRocket extends Rocket implements Serializable {
     public AntiHailRocket(int x, int y, int altitude, int speed, Direction direction){
         super(x,y,altitude,speed,direction);
     }
+
+
 }

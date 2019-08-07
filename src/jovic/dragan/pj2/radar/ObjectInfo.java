@@ -1,22 +1,34 @@
 package jovic.dragan.pj2.radar;
 
+import jovic.dragan.pj2.util.Direction;
+
 import java.io.Serializable;
 
 public class ObjectInfo implements Serializable {
     private int x,y,altitude;
+    private Direction direction;
     private boolean military,foreign;
 
     public ObjectInfo(String... fields) {
         x = Integer.parseInt(fields[0]);
         y = Integer.parseInt(fields[1]);
         altitude = Integer.parseInt(fields[2]);
-        if(fields.length>3){
+        direction = Direction.valueOf(fields[3]);
+        if(fields.length>4){
             military = true;
-            foreign = Boolean.parseBoolean(fields[3]);
+            foreign = Boolean.parseBoolean(fields[4]);
         }
         else {
             military = foreign = false;
         }
+    }
+
+    public Direction getDirection() {
+        return direction;
+    }
+
+    public void setDirection(Direction direction) {
+        this.direction = direction;
     }
 
     public int getX() {

@@ -11,8 +11,8 @@ import java.io.Serializable;
  */
 public abstract class TransportPlane extends Aeroplane implements Transporter, Serializable {
 
-    public TransportPlane() {
-        super(0,0, Direction.UP);
+    public TransportPlane(int x, int y, int altitude, int speed, Direction direction) {
+        super(x,y,altitude,speed,direction);
     }
 
     private Cargo cargo;

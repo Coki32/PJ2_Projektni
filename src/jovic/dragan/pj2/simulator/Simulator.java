@@ -14,7 +14,6 @@ public class Simulator {
             GenericLogger.closeHandlers();
         }));
         Aerospace aerospace = new Aerospace(properties);
-        Spawner spawner = new Spawner(properties, aerospace);
         aerospace.start();
         new Thread(()->{
             while(true) {

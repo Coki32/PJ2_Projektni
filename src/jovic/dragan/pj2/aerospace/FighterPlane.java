@@ -16,6 +16,8 @@ public class FighterPlane extends MilitaryPlane implements Serializable {
     public FighterPlane(int x, int y, int altitude, int speed, Direction direction){
         super(x,y,altitude,speed,direction);
         generateRandomWeapons(Util.randomBetween(0,weaponPreferences.getPlaneCarryLimit()));
+        String[] models = modelPreferences.getMilitaryPlanes();
+        setModel(models[Util.randomBetween(0,models.length-1)]);
     }
 
     @Override
@@ -26,8 +28,8 @@ public class FighterPlane extends MilitaryPlane implements Serializable {
     }
 
     @Override
-    public void attack(Vector3D position) {
-        System.out.println("Vojni avion napada " + position);
+    public void attack(int x, int y, int altitude) {
+        System.out.println("Vojni avion napada (x,y,z)=(" + x+","+y+","+altitude+")");
     }
 
     public void follow(Aircraft target) {

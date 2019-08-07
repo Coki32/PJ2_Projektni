@@ -192,6 +192,22 @@ title __PROJEKT's Class Diagram__\n
   }
   
 
+  namespace jovic.dragan.pj2.aerospace {
+    namespace handlers {
+      class jovic.dragan.pj2.aerospace.handlers.CollisionHandler {
+      }
+    }
+  }
+  
+
+  namespace jovic.dragan.pj2.aerospace {
+    namespace handlers {
+      class jovic.dragan.pj2.aerospace.handlers.InvasionHandler {
+      }
+    }
+  }
+  
+
   namespace jovic.dragan.pj2.logger {
     class jovic.dragan.pj2.logger.GenericLogger {
     }
@@ -240,6 +256,12 @@ title __PROJEKT's Class Diagram__\n
 
   namespace jovic.dragan.pj2.preferences {
     class jovic.dragan.pj2.preferences.GenericPreferences {
+    }
+  }
+  
+
+  namespace jovic.dragan.pj2.preferences {
+    class jovic.dragan.pj2.preferences.ModelPreferences {
     }
   }
   
@@ -384,10 +406,14 @@ title __PROJEKT's Class Diagram__\n
 
   jovic.dragan.pj2.aerospace.Aeroplane .up.|> java.io.Serializable
   jovic.dragan.pj2.aerospace.Aeroplane -up-|> jovic.dragan.pj2.aerospace.Aircraft
+  jovic.dragan.pj2.aerospace.Aerospace o-- jovic.dragan.pj2.util.Watcher : collisionWatcher
+  jovic.dragan.pj2.aerospace.Aerospace o-- jovic.dragan.pj2.util.Watcher : invasionWatcher
   jovic.dragan.pj2.aerospace.Aerospace o-- jovic.dragan.pj2.preferences.SimulatorPreferences : preferences
+  jovic.dragan.pj2.aerospace.Aerospace o-- jovic.dragan.pj2.aerospace.generators.Spawner : spawner
   jovic.dragan.pj2.aerospace.Aerospace o-- jovic.dragan.pj2.aerospace.UpdatingTask : timerTask
   jovic.dragan.pj2.aerospace.AerospaceObject .up.|> java.io.Serializable
-  jovic.dragan.pj2.aerospace.AerospaceObject o-- jovic.dragan.pj2.util.Vector2D : direction
+  jovic.dragan.pj2.aerospace.AerospaceObject o-- jovic.dragan.pj2.util.Direction : direction
+  jovic.dragan.pj2.aerospace.AerospaceObject o-- jovic.dragan.pj2.util.Vector2D : directionVector
   jovic.dragan.pj2.aerospace.Aircraft .up.|> java.io.Serializable
   jovic.dragan.pj2.aerospace.Aircraft -up-|> jovic.dragan.pj2.aerospace.AerospaceObject
   jovic.dragan.pj2.aerospace.AntiHailRocket .up.|> java.io.Serializable
@@ -397,6 +423,7 @@ title __PROJEKT's Class Diagram__\n
   jovic.dragan.pj2.aerospace.FighterPlane .up.|> java.io.Serializable
   jovic.dragan.pj2.aerospace.FighterPlane -up-|> jovic.dragan.pj2.aerospace.MilitaryPlane
   jovic.dragan.pj2.aerospace.FirefighterHelicopter .up.|> java.io.Serializable
+  jovic.dragan.pj2.aerospace.FirefighterHelicopter .up.|> jovic.dragan.pj2.Interfaces.Firefighter
   jovic.dragan.pj2.aerospace.FirefighterHelicopter -up-|> jovic.dragan.pj2.aerospace.Helicopter
   jovic.dragan.pj2.aerospace.FirefighterPlane .up.|> java.io.Serializable
   jovic.dragan.pj2.aerospace.FirefighterPlane .up.|> jovic.dragan.pj2.Interfaces.Firefighter
@@ -435,21 +462,27 @@ title __PROJEKT's Class Diagram__\n
   jovic.dragan.pj2.aerospace.generators.SpawningRunnable o-- jovic.dragan.pj2.aerospace.Aerospace : aerospace
   jovic.dragan.pj2.aerospace.generators.SpawningRunnable o-- jovic.dragan.pj2.preferences.SimulatorPreferences : preferences
   jovic.dragan.pj2.aerospace.generators.SpawningRunnable o-- jovic.dragan.pj2.aerospace.generators.RandomPlaneGenerator : rpg
+  jovic.dragan.pj2.aerospace.handlers.CollisionHandler .up.|> java.util.function.Consumer
+  jovic.dragan.pj2.aerospace.handlers.CollisionHandler o-- jovic.dragan.pj2.aerospace.Aerospace : aerospace
+  jovic.dragan.pj2.aerospace.handlers.InvasionHandler .up.|> java.util.function.Consumer
+  jovic.dragan.pj2.aerospace.handlers.InvasionHandler o-- jovic.dragan.pj2.aerospace.Aerospace : aerospace
   jovic.dragan.pj2.personel.Passenger .up.|> java.io.Serializable
   jovic.dragan.pj2.personel.Passenger -up-|> jovic.dragan.pj2.personel.Person
   jovic.dragan.pj2.personel.Passenger o-- jovic.dragan.pj2.personel.belongings.Passport : passport
   jovic.dragan.pj2.personel.Person .up.|> java.io.Serializable
   jovic.dragan.pj2.personel.Pilot .up.|> java.io.Serializable
   jovic.dragan.pj2.personel.Pilot -up-|> jovic.dragan.pj2.personel.Person
-  jovic.dragan.pj2.personel.Pilot o-- jovic.dragan.pj2.personel.belongings.FlyingLicence : Licence
+  jovic.dragan.pj2.personel.Pilot o-- jovic.dragan.pj2.personel.belongings.FlyingLicence : licence
   jovic.dragan.pj2.personel.belongings.FlyingLicence .up.|> java.io.Serializable
-  jovic.dragan.pj2.personel.belongings.FlyingLicence o-- jovic.dragan.pj2.personel.Pilot : Owner
+  jovic.dragan.pj2.personel.belongings.FlyingLicence o-- jovic.dragan.pj2.personel.Pilot : owner
   jovic.dragan.pj2.personel.belongings.Passport .up.|> java.io.Serializable
-  jovic.dragan.pj2.personel.belongings.Passport o-- jovic.dragan.pj2.personel.Person : Owner
+  jovic.dragan.pj2.personel.belongings.Passport o-- jovic.dragan.pj2.personel.Person : owner
   jovic.dragan.pj2.preferences.GenericPreferences o-- T : preferences
+  jovic.dragan.pj2.preferences.ModelPreferences .up.|> java.io.Serializable
   jovic.dragan.pj2.preferences.PreferenceWatcher o-- T : original
   jovic.dragan.pj2.preferences.SimulatorPreferences .up.|> java.io.Serializable
   jovic.dragan.pj2.radar.ObjectInfo .up.|> java.io.Serializable
+  jovic.dragan.pj2.radar.ObjectInfo o-- jovic.dragan.pj2.util.Direction : direction
   jovic.dragan.pj2.radar.RadarExporter o-- jovic.dragan.pj2.preferences.RadarPreferences : radarPreferences
   jovic.dragan.pj2.radar.collisions.CollisionChecker .up.|> java.lang.Runnable
   jovic.dragan.pj2.radar.collisions.TextCollisionInfo .up.|> java.io.Serializable

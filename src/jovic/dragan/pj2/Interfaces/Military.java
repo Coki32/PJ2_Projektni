@@ -9,9 +9,8 @@ import java.util.*;
  */
 public interface Military {
 
-    /**
-     * @param Position
-     */
-    void attack(Vector3D position);
+    default void attack(int x, int y, int altitude){
+        System.out.println("Vojska napada (x,y,z)=("+x+","+y+","+altitude+")");
+    }
 
 }

@@ -5,7 +5,7 @@ title __COLLISIONS's Class Diagram__\n
   namespace jovic.dragan.pj2.radar {
     namespace collisions {
       class jovic.dragan.pj2.radar.collisions.CollisionChecker {
-          - infoList : List<ObjectInfo>
+          - infoList : Queue<ObjectInfo>
           + CollisionChecker()
           + run()
           - isCollide()
@@ -52,6 +52,10 @@ title __COLLISIONS's Class Diagram__\n
           - pozicija : String
           - vrijeme : String
           + TextCollisionInfo()
+          + getOpis()
+          + getPozicija()
+          + getVrijeme()
+          + toString()
       }
     }
   }

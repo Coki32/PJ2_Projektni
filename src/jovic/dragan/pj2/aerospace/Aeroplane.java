@@ -10,10 +10,6 @@ import java.io.Serializable;
  */
 public abstract class Aeroplane extends Aircraft implements Serializable {
 
-    public Aeroplane(int x, int y, Direction s) {
-        super(new Vector3D(x,y,0), s);
-    }
-
     public Aeroplane(int x, int y, int altitude, int speed, Direction direction) {
         super(x, y, altitude, speed, direction);
     }

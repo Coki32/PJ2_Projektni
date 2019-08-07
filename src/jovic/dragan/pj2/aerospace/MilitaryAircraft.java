@@ -1,12 +1,8 @@
 package jovic.dragan.pj2.aerospace;
 
 import jovic.dragan.pj2.Interfaces.Military;
-import jovic.dragan.pj2.aerospace.equipment.Weapon;
-import jovic.dragan.pj2.preferences.WeaponPreferences;
 import jovic.dragan.pj2.util.Direction;
 
-import java.util.List;
-import java.util.Random;
 
 public abstract class MilitaryAircraft extends Aircraft implements Military {
 
@@ -20,7 +16,6 @@ public abstract class MilitaryAircraft extends Aircraft implements Military {
     public String export() {
         return super.export()+","+foreign;
     }
-
 
     public boolean isForeign() {
         return foreign;

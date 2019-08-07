@@ -5,7 +5,7 @@ title __INVASIONS's Class Diagram__\n
   namespace jovic.dragan.pj2.radar {
     namespace invasions {
       class jovic.dragan.pj2.radar.invasions.InvasionsChecker {
-          - infoList : List<ObjectInfo>
+          - infoList : Queue<ObjectInfo>
           + InvasionsChecker()
           + run()
       }

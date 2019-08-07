@@ -16,25 +16,16 @@ public abstract class AerospaceObject implements Serializable {
     private static int ID = 1;
     private String name;
     private Integer speed;
-    private Vector2D direction;
+    private Vector2D directionVector;
+    private Direction direction;
+
+
 
     //altitude je bolje, preimenuj kasnije
     private int altitude, x, y;
-
     private boolean skip;
     private int ticks;
 
-    public AerospaceObject(Vector3D position, Vector2D direction) {
-        ticks = 0;
-        speed = 1;
-        skip = false;
-        x=position.getX();
-        y=position.getY();
-        altitude =position.getZ();
-        this.direction = direction;
-        name = "avion"+ID;
-        ID++;
-    }
 
     public AerospaceObject(int x, int y, int altitude, int speed, Direction dir){
         ticks=0;
@@ -42,25 +33,23 @@ public abstract class AerospaceObject implements Serializable {
         this.x = x;
         this.y = y;
         this.altitude = altitude;
-        this.direction = dir.getDirectionVector();
+        this.direction = dir;
+        this.directionVector = dir.getDirectionVector();
         name = "Avion"+ID;
         ID++;
     }
 
-    public Vector2D getDirection(){
+    public Direction getDirection(){
         return direction;
     }
 
     public void setDirection(Direction dir){
-        direction = dir.getDirectionVector();
-    }
-
-    public AerospaceObject(Vector3D position, Direction side) {
-        this(position, side.getDirectionVector());
+        direction = dir;
+        directionVector = dir.getDirectionVector();
     }
 
     public String export(){
-        return x+","+y+","+altitude;
+        return x+","+y+","+altitude+","+direction;
     }
 
     public Pair<Integer, Integer> getNextPosition() {
@@ -70,8 +59,8 @@ public abstract class AerospaceObject implements Serializable {
         }
         ticks++;
         if (ticks % speed == 0) {
-            x += direction.getX();
-            y += direction.getY();
+            x += directionVector.getX();
+            y += directionVector.getY();
             ticks = 0;
         }
         return new Pair<>(x, y);

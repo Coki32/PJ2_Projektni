@@ -9,8 +9,8 @@ import java.io.Serializable;
 public class MilitaryRocket extends Rocket implements Serializable, Military {
 
     @Override
-    public void attack(Vector3D position) {
-        System.out.println("Raketa napada "+position);
+    public void attack(int x, int y, int altitude) {
+        System.out.println("Raketa napada (x,y,z)=(" + x+","+y+","+altitude+")");
     }
 
     public MilitaryRocket(int x, int y, int altitude, int speed, Direction direction){

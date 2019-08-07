@@ -1,13 +1,12 @@
 package jovic.dragan.pj2.aerospace.generators;
 
-import jovic.dragan.pj2.aerospace.Aerospace;
-import jovic.dragan.pj2.aerospace.AerospaceObject;
-import jovic.dragan.pj2.aerospace.BomberPlane;
+import jovic.dragan.pj2.aerospace.*;
 import jovic.dragan.pj2.logger.GenericLogger;
 import jovic.dragan.pj2.preferences.Constants;
 import jovic.dragan.pj2.preferences.PreferenceWatcher;
 import jovic.dragan.pj2.preferences.SimulatorPreferences;
 import jovic.dragan.pj2.util.Direction;
+import jovic.dragan.pj2.util.Util;
 
 import java.util.Random;
 import java.util.logging.Level;
@@ -57,26 +56,39 @@ class SpawningRunnable implements Runnable {
     }
 
     private AerospaceObject randomObject(){
+        boolean invader = false;
         if(watcher.isChanged()){
             System.out.println("Ucitano u spawneru");
+            int oldForeign = preferences.getForeignMilitary();
             preferences = watcher.getOriginal();
+            int newForeign = preferences.getForeignMilitary();
             watcher.setChanged(false);
+            invader = newForeign>oldForeign;
         }
+        AerospaceObject spawned = null;
         int x=0,y=0;
         //bice glupo tipa spawningFrom bude LEFT pa to znaci sa lijeve ivice ide do desne
         Direction spawningFrom = Direction.fromInt(rng.nextInt(4));
         if(spawningFrom == Direction.LEFT || spawningFrom == Direction.RIGHT) {
             x = spawningFrom == Direction.LEFT ? 0 : preferences.getFieldWidth();
-            y = rng.nextInt(preferences.getFieldHeight());
+            y = rng.nextInt(preferences.getFieldHeight()) > 100 ? 5 : 15;
         }
         else {
-            x = rng.nextInt(preferences.getFieldWidth());
+            x = rng.nextInt(preferences.getFieldWidth()) > 100 ? 5 : 15;
             y = spawningFrom == Direction.UP ? preferences.getFieldHeight() : 0;
         }
-        return rpg.getRandom(x,y,
-                rng.nextInt(500),
-                randomBetween(preferences.getSpeedMin(),preferences.getSpeedMax()),
-                spawningFrom.opposite());
+        if(invader)
+        {
+            spawned = new FighterPlane(x,y,5,1,spawningFrom);
+            ((MilitaryAircraft)spawned).setForeign(true);
+            System.out.println("Spawned invaders!");
+        }
+        else
+            spawned =  rpg.getRandom(x,y,
+                   5, //rng.nextInt(500),
+                    Util.randomBetween(preferences.getSpeedMin(),preferences.getSpeedMax()),
+                    spawningFrom.opposite());
+        return spawned;
     }
 
     @Override
@@ -90,7 +102,7 @@ class SpawningRunnable implements Runnable {
                 aerospace.addAerospaceObject(ao);
             }
             try {
-                int pauza = rng.nextInt(maxSpawn-minSpawn) + minSpawn;
+                int pauza = Util.randomBetween(minSpawn,maxSpawn);
                 Thread.sleep(pauza*1000);
             } catch (InterruptedException ex) {
                 GenericLogger.log(this.getClass(), Level.SEVERE, "Spawner thread prekinut na spavanju!", ex);

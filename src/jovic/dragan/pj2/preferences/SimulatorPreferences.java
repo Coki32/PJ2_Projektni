@@ -2,6 +2,7 @@ package jovic.dragan.pj2.preferences;
 
 
 import jovic.dragan.pj2.logger.GenericLogger;
+import jovic.dragan.pj2.util.Util;
 
 import java.io.*;
 import java.util.logging.Level;
@@ -12,13 +13,8 @@ public class SimulatorPreferences implements Serializable {
     private int fieldWidth, fieldHeight, spawnTimeMin, spawnTimeMax, speedMin, speedMax;
     private int[] heightOptions;
     private String sharedFolder, sharedFileName, sharedFullName;
-    private int sharedFileUpdateInterval;
     private int foreignMilitary, homeMilitary;
-    private String[] models;
 
-    private void attachChangeWatcher(){
-
-    }
 
     private static SimulatorPreferences initHardcoded() {
         SimulatorPreferences sp = new SimulatorPreferences();
@@ -34,8 +30,6 @@ public class SimulatorPreferences implements Serializable {
         sp.sharedFileName = Constants.SIMULATOR_SHARED_FILENAME;
         sp.sharedFolder = Constants.SIMULATOR_SHARED_FOLDERNAME;
         sp.sharedFullName = Constants.SIMULATOR_SHARED_FILE_FULL_NAME;
-        sp.sharedFileUpdateInterval = Constants.DEFAULT_SHARED_UPDATE_INTERVAL;
-        sp.models = Constants.SIMULATOR_MODELS;
         try (PrintWriter pw = new PrintWriter(Constants.SIMULATOR_PROPERTIES_FULL_NAME)){
             pw.println(new com.google.gson.GsonBuilder().setPrettyPrinting().create().toJson(sp));
         } catch (FileNotFoundException ex) {
@@ -47,7 +41,7 @@ public class SimulatorPreferences implements Serializable {
     public static SimulatorPreferences load(){
         SimulatorPreferences sp = null;
         try {
-            PreferencesHelper.createFolderIfNotExists(Constants.PREFERENCES_FOLDERNAME);
+            Util.createFolderIfNotExists(Constants.PREFERENCES_FOLDERNAME);
             sp = (new com.google.gson.Gson().fromJson(new FileReader(Constants.SIMULATOR_PROPERTIES_FULL_NAME), SimulatorPreferences.class));
         }
         catch (FileNotFoundException ex){
@@ -89,12 +83,11 @@ public class SimulatorPreferences implements Serializable {
         return sharedFileName;
     }
 
-    public int getSharedFileUpdateInterval() {
-        return sharedFileUpdateInterval;
+    public int getForeignMilitary() {
+        return foreignMilitary;
     }
 
-    public String[] getModels() {
-        return models;
+    public int getHomeMilitary() {
+        return homeMilitary;
     }
-
 }

@@ -5,8 +5,8 @@ title __BELONGINGS's Class Diagram__\n
   namespace jovic.dragan.pj2.personel {
     namespace belongings {
       class jovic.dragan.pj2.personel.belongings.FlyingLicence {
-          - ID : Integer
-          + FlyingLicence()
+          - ID : int
+          {static} - count : int
           + FlyingLicence()
       }
     }
@@ -16,8 +16,8 @@ title __BELONGINGS's Class Diagram__\n
   namespace jovic.dragan.pj2.personel {
     namespace belongings {
       class jovic.dragan.pj2.personel.belongings.Passport {
-          - ID : String
-          + Passport()
+          - ID : int
+          {static} - count : int
           + Passport()
       }
     }
@@ -25,9 +25,9 @@ title __BELONGINGS's Class Diagram__\n
   
 
   jovic.dragan.pj2.personel.belongings.FlyingLicence .up.|> java.io.Serializable
-  jovic.dragan.pj2.personel.belongings.FlyingLicence o-- jovic.dragan.pj2.personel.Pilot : Owner
+  jovic.dragan.pj2.personel.belongings.FlyingLicence o-- jovic.dragan.pj2.personel.Pilot : owner
   jovic.dragan.pj2.personel.belongings.Passport .up.|> java.io.Serializable
-  jovic.dragan.pj2.personel.belongings.Passport o-- jovic.dragan.pj2.personel.Person : Owner
+  jovic.dragan.pj2.personel.belongings.Passport o-- jovic.dragan.pj2.personel.Person : owner
 
 
 right footer

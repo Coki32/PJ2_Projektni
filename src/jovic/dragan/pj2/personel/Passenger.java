@@ -10,15 +10,11 @@ import java.util.*;
  */
 public class Passenger extends Person implements Serializable {
 
-    /**
-     * Default constructor
-     */
-    public Passenger() {
-    }
-
-    /**
-     * 
-     */
     private Passport passport;
+
+    public Passenger(String name, String lastName) {
+        super(name,lastName);
+        passport = new Passport(this);
+    }
 
 }

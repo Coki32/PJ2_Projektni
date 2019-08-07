@@ -17,7 +17,7 @@ public class InvasionsLogger {
         try(PrintWriter pw =
                     new PrintWriter(Constants.EVENTS_FOLDER_PATH +
                             File.separator + LocalDateTime.now().toLocalTime().toString().replace(':','.')+".txt")){
-        pw.println(info.getX()+","+info.getY());
+        pw.println(info.getX()+","+info.getY()+","+info.getAltitude()+","+info.getDirection());
         }catch (FileNotFoundException ex){
             GenericLogger.log(InvasionsChecker.class,ex);
         }

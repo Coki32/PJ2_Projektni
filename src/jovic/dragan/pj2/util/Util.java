@@ -1,5 +1,6 @@
 package jovic.dragan.pj2.util;
 
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Random;
 
@@ -21,6 +22,10 @@ public class Util {
         if(!Paths.get(path).toFile().exists()) {
             Paths.get(path).toFile().mkdir();
         }
+    }
+
+    public Path pathResolver(String folder, Path path){
+        return (Paths.get(folder).resolve(path));
     }
 
     /**

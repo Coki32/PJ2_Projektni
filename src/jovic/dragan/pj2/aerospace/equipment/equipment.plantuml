@@ -23,8 +23,7 @@ title __EQUIPMENT's Class Diagram__\n
           - name : String
           + Weapon()
           + Weapon()
-          + getName()
-          + setName()
+          + toString()
       }
     }
   }

@@ -1,6 +1,7 @@
 package jovic.dragan.pj2.aerospace;
 
 import jovic.dragan.pj2.personel.Person;
+import jovic.dragan.pj2.preferences.ModelPreferences;
 import jovic.dragan.pj2.util.Direction;
 import jovic.dragan.pj2.util.Vector3D;
 
@@ -12,21 +13,17 @@ import java.util.*;
  */
 public abstract class Aircraft extends AerospaceObject implements Serializable {
 
-    private final int ID = 5;
     protected String model;
     private Map<String,String> characteristics;
     private List<Person> crew;
+    private int maxCrew;
+
+    protected static ModelPreferences modelPreferences = ModelPreferences.load();
 
     public Aircraft(int x, int y, int altitude, int speed, Direction direction) {
         super(x, y, altitude, speed, direction);
         characteristics = new HashMap<>();
         crew = new ArrayList<>();
-
-    }
-
-
-    public int getID() {
-        return ID;
     }
 
     public String getModel() {
@@ -64,7 +61,5 @@ public abstract class Aircraft extends AerospaceObject implements Serializable {
             characteristics.put(name, value);
         return true;
     }
-
-
 
 }

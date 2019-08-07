@@ -15,11 +15,13 @@ public class BomberPlane extends MilitaryPlane implements Serializable {
     public BomberPlane(int x, int y, int altitude, int speed, Direction direction) {
         super(x, y, altitude, speed, direction);
         generateRandomWeapons(Util.randomBetween(0,weaponPreferences.getBomberCarryLimit()));
+        String[] models = modelPreferences.getMilitaryBombers();
+        setModel(models[Util.randomBetween(0,models.length-1)]);
     }
 
     @Override
-    public void attack(Vector3D position) {
-        System.out.println("Bombarder bombarduje " + position);
+    public void attack(int x, int y, int altitude) {
+        System.out.println("Bombarder bombarduje (x,y,z)=(" + x+","+y+","+altitude+")");
     }
 
     @Override

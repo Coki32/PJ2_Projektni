@@ -11,11 +11,13 @@ title __RADAR's Class Diagram__\n
         - y : int
         + ObjectInfo()
         + getAltitude()
+        + getDirection()
         + getX()
         + getY()
         + isForeign()
         + isMilitary()
         + setAltitude()
+        + setDirection()
         + setForeign()
         + setMilitary()
         + setX()
@@ -42,6 +44,7 @@ title __RADAR's Class Diagram__\n
   
 
   jovic.dragan.pj2.radar.ObjectInfo .up.|> java.io.Serializable
+  jovic.dragan.pj2.radar.ObjectInfo o-- jovic.dragan.pj2.util.Direction : direction
   jovic.dragan.pj2.radar.RadarExporter o-- jovic.dragan.pj2.preferences.RadarPreferences : radarPreferences
 
 

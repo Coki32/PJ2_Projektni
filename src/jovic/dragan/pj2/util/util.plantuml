@@ -28,6 +28,7 @@ title __UTIL's Class Diagram__\n
         {static} - random : Random
         {static} + createFolderIfNotExists()
         {static} + minIdx()
+        + pathResolver()
         {static} + randomBetween()
     }
   }

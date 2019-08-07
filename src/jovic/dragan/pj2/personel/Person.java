@@ -10,20 +10,12 @@ import java.util.*;
  */
 public class Person implements Serializable {
 
-    /**
-     * Default constructor
-     */
-    public Person() {
+    public Person(String name, String lastName) {
+        this.name = name;
+        this.lastName = lastName;
     }
 
-    /**
-     * 
-     */
-    private String Name;
-
-    /**
-     * 
-     */
-    public String LastName;
+    private String name;
+    public String lastName;
 
 }

@@ -6,13 +6,14 @@ import java.io.Serializable;
 import java.util.*;
 
 public class Passport implements Serializable {
-    public Passport() {
-    }
-    private String ID;
-    private Person Owner;
 
-    public void Passport(Person owner) {
-        // TODO implement here
+    private int ID;
+    private Person owner;
+    private static int count = 0;
+
+    public Passport(Person owner) {
+        this.owner = owner;
+        this.ID = ++count;
     }
 
 }

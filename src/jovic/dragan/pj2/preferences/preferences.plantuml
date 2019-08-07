@@ -9,7 +9,15 @@ title __PREFERENCES's Class Diagram__\n
         {static} + BOMBER_WEAPONS : String[]
         {static} + DEFAULT_SHARED_UPDATE_INTERVAL : int
         {static} + EVENTS_FOLDER_PATH : String
+        {static} + HELICOPTER_CREW_LIMIT : int
+        {static} + MODELS_FILENAME : String
+        {static} + MODELS_FULL_NAME : String
+        {static} + MODELS_HELICOPTERS : String[]
+        {static} + MODELS_MILITARY_BOMBERS : String[]
+        {static} + MODELS_MILITARY_PLANES : String[]
+        {static} + MODELS_PLANES : String[]
         {static} + PLANE_CARRY_LIMIT : int
+        {static} + PLANE_CREW_LIMIT : int
         {static} + PLANE_WEAPONS : String[]
         {static} + PREFERENCES_FOLDERNAME : String
         {static} + RADAR_PROPERTIES_FILENAME : String
@@ -22,7 +30,6 @@ title __PREFERENCES's Class Diagram__\n
         {static} + SIMULATOR_DEFAULT_SPEED_MAX : int
         {static} + SIMULATOR_DEFAULT_SPEED_MIN : int
         {static} + SIMULATOR_HEIGHT_OPTIONS : int[]
-        {static} + SIMULATOR_MODELS : String[]
         {static} + SIMULATOR_PROPERTIES_FILENAME : String
         {static} + SIMULATOR_PROPERTIES_FULL_NAME : String
         {static} + SIMULATOR_SHARED_FILENAME : String
@@ -39,6 +46,22 @@ title __PREFERENCES's Class Diagram__\n
     class jovic.dragan.pj2.preferences.GenericPreferences {
         - filename : String
         + GenericPreferences()
+    }
+  }
+  
+
+  namespace jovic.dragan.pj2.preferences {
+    class jovic.dragan.pj2.preferences.ModelPreferences {
+        - helicopters : String[]
+        - militaryBombers : String[]
+        - militaryPlanes : String[]
+        - planes : String[]
+        + getHelicopters()
+        + getMilitaryBombers()
+        + getMilitaryPlanes()
+        + getPlanes()
+        {static} + load()
+        {static} - initHardcoded()
     }
   }
   
@@ -84,9 +107,7 @@ title __PREFERENCES's Class Diagram__\n
         - foreignMilitary : int
         - heightOptions : int[]
         - homeMilitary : int
-        - models : String[]
         - sharedFileName : String
-        - sharedFileUpdateInterval : int
         - sharedFolder : String
         - sharedFullName : String
         - spawnTimeMax : int
@@ -96,15 +117,12 @@ title __PREFERENCES's Class Diagram__\n
         + getFieldHeight()
         + getFieldWidth()
         + getHeightOptions()
-        + getModels()
         + getSharedFileName()
-        + getSharedFileUpdateInterval()
         + getSpawnTimeMax()
         + getSpawnTimeMin()
         + getSpeedMax()
         + getSpeedMin()
         {static} + load()
-        - attachChangeWatcher()
         {static} - initHardcoded()
     }
   }
@@ -127,6 +145,7 @@ title __PREFERENCES's Class Diagram__\n
   
 
   jovic.dragan.pj2.preferences.GenericPreferences o-- T : preferences
+  jovic.dragan.pj2.preferences.ModelPreferences .up.|> java.io.Serializable
   jovic.dragan.pj2.preferences.PreferenceWatcher o-- T : original
   jovic.dragan.pj2.preferences.SimulatorPreferences .up.|> java.io.Serializable
 

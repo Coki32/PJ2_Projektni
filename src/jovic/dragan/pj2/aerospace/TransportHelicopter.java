@@ -9,9 +9,6 @@ import java.io.Serializable;
  */
 public class TransportHelicopter extends Helicopter implements Serializable {
 
-    /**
-     * Default constructor
-     */
     public TransportHelicopter(int x, int y, int altitude, int speed, Direction direction){
         super(x,y,altitude,speed,direction);
     }
