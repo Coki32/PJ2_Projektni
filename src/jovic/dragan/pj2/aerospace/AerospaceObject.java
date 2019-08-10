@@ -14,11 +14,10 @@ import java.io.Serializable;
 public abstract class AerospaceObject implements Serializable {
 
     private static int ID = 1;
-    private String name;
     private Integer speed;
     private Vector2D directionVector;
     private Direction direction;
-
+    private int id;
 
 
     //altitude je bolje, preimenuj kasnije
@@ -35,8 +34,7 @@ public abstract class AerospaceObject implements Serializable {
         this.altitude = altitude;
         this.direction = dir;
         this.directionVector = dir.getDirectionVector();
-        name = "Avion"+ID;
-        ID++;
+        id = ID++;
     }
 
     public Direction getDirection(){
@@ -49,7 +47,11 @@ public abstract class AerospaceObject implements Serializable {
     }
 
     public String export(){
-        return x+","+y+","+altitude+","+direction;
+        return  id+","+x+","+y+","+altitude+","+direction;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public Pair<Integer, Integer> getNextPosition() {
@@ -68,7 +70,7 @@ public abstract class AerospaceObject implements Serializable {
 
     @Override
     public String toString() {
-        return "(" + name+", "+x+","+y+"," + direction+")";
+        return "(" + id+", "+x+","+y+"," + direction+")";
     }
 
     public void setX(int x) {

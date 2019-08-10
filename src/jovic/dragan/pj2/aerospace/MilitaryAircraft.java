@@ -3,16 +3,40 @@ package jovic.dragan.pj2.aerospace;
 import jovic.dragan.pj2.Interfaces.Military;
 import jovic.dragan.pj2.util.Direction;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public abstract class MilitaryAircraft extends Aircraft implements Military {
 
     protected boolean foreign, followed;
 
+    protected List<MilitaryAircraft> followers;
+    protected MilitaryAircraft following;
+
     public MilitaryAircraft(int x, int y, int altitude, int speed, Direction direction){
         super(x,y,altitude,speed,direction);
         foreign = false;
         followed = false;
+        followers = new ArrayList<>();
     }
+
+    public void setFollowing(MilitaryAircraft target){
+        following = target;
+    }
+
+    public MilitaryAircraft getFollowing(){
+        return following;
+    }
+
+    public void addFollower(MilitaryAircraft follower){
+        followers.add(follower);
+    }
+
+    public List<MilitaryAircraft> getFollowers(){
+        return followers;
+    }
+
 
     @Override
     public String export() {

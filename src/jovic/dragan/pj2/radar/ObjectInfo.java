@@ -5,28 +5,37 @@ import jovic.dragan.pj2.util.Direction;
 import java.io.Serializable;
 
 public class ObjectInfo implements Serializable {
-    private int x,y,altitude;
+    private int x,y,altitude, id;
     private Direction direction;
     private boolean military,foreign, followed;
 
     public ObjectInfo(String... fields) {
-        x = Integer.parseInt(fields[0]);
-        y = Integer.parseInt(fields[1]);
-        altitude = Integer.parseInt(fields[2]);
-        direction = Direction.valueOf(fields[3].trim());
-        if(fields.length>4){
+        id = Integer.parseInt(fields[0]);
+        x = Integer.parseInt(fields[1]);
+        y = Integer.parseInt(fields[2]);
+        altitude = Integer.parseInt(fields[3]);
+        direction = Direction.valueOf(fields[4].trim());
+        if(fields.length>5){
             military = true;
-            foreign = Boolean.parseBoolean(fields[4]);
-            followed = Boolean.parseBoolean(fields[5]);
+            foreign = Boolean.parseBoolean(fields[5]);
+            followed = Boolean.parseBoolean(fields[6]);
         }
         else {
             military = foreign = false;
         }
     }
 
+    public String toCsv(){
+        return id+","+x+","+y+","+altitude+","+direction+","+foreign+","+followed;
+    }
+
     @Override
     public String toString() {
-        return x+","+y+","+altitude+","+direction+","+military+(foreign ? ",STRANI":",DOMACI");
+        return id+","+x+","+y+","+altitude+","+direction+","+military+(foreign ? ",STRANI":",DOMACI");
+    }
+
+    public int getId() {
+        return id;
     }
 
     public boolean isFollowed() {

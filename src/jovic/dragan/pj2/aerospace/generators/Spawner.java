@@ -8,18 +8,25 @@ import jovic.dragan.pj2.preferences.SimulatorPreferences;
 import jovic.dragan.pj2.util.Direction;
 import jovic.dragan.pj2.util.Util;
 
+import java.util.Queue;
 import java.util.Random;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
 
 public class Spawner {
 
     private Thread spawningThread;
     private SpawningRunnable spawningRunnable;
-
+    private Queue<AerospaceObject> spawnQueue;
     public Spawner(SimulatorPreferences properties, Aerospace aerospace){
-        spawningRunnable = new SpawningRunnable(properties, aerospace);
+        spawnQueue = new ConcurrentLinkedQueue<>();
+        spawningRunnable = new SpawningRunnable(properties, aerospace, spawnQueue);
         spawningThread = new Thread(spawningRunnable);
         spawningThread.start();
+    }
+
+    public void enqueuSpawn(AerospaceObject ao){
+        spawnQueue.add(ao);
     }
 
     public synchronized void setPaused(boolean value){
@@ -36,9 +43,10 @@ class SpawningRunnable implements Runnable {
     private RandomPlaneGenerator rpg;
     private SimulatorPreferences preferences;
     private PreferenceWatcher<SimulatorPreferences> watcher;
-
-    public SpawningRunnable(SimulatorPreferences preferences, Aerospace aerospace) {
+    private Queue<AerospaceObject> spawnQueue;
+    public SpawningRunnable(SimulatorPreferences preferences, Aerospace aerospace, Queue<AerospaceObject> spawnQueue) {
         this.paused = false;
+        this.spawnQueue = spawnQueue;
         this.preferences = preferences;
         this.aerospace = aerospace;
         this.rng = new Random();
@@ -58,6 +66,10 @@ class SpawningRunnable implements Runnable {
 
     private AerospaceObject randomObject() {
         boolean invader = false;
+        AerospaceObject nextToSpawn = spawnQueue.poll();
+        if(nextToSpawn!=null){
+            return nextToSpawn;
+        }
         if (watcher.isChanged()) {
             System.out.println("Ucitano u spawneru");
             int oldForeign = preferences.getForeignMilitary();
@@ -79,7 +91,7 @@ class SpawningRunnable implements Runnable {
         }
         if (invader) {
             spawned = new FighterPlane(x, y, preferences.getHeightOptions()[Util.randomBetween(0, preferences.getHeightOptions().length - 1)],
-                    Util.randomBetween(preferences.getSpeedMin(), preferences.getSpeedMax())
+                    1  //Util.randomBetween(preferences.getSpeedMin(), preferences.getSpeedMax())
                     , spawningFrom.opposite());
             ((MilitaryAircraft) spawned).setForeign(true);
             System.out.println("Spawned invaders!");

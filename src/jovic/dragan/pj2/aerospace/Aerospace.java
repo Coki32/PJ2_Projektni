@@ -115,6 +115,14 @@ public class Aerospace {
             return  null;
     }
 
+    public Map<Integer, Map<Integer, ConcurrentLinkedDeque<AerospaceObject>>> getMap(){
+        return map;
+    }
+
+    public Spawner getSpawner(){
+        return spawner;
+    }
+
     public void addAerospaceObject(AerospaceObject object) {
         if(object!=null && (flightAllowed || object instanceof Military )) {
             int x = object.getX(), y = object.getY();
@@ -179,7 +187,15 @@ class UpdatingTask extends TimerTask {
                     if(!isInsideOfMap(nextPosition.getFirst(), nextPosition.getSecond(),mapWidth,mapHeight))
                     {
                         listIter.remove();
-                        System.out.println(ao+" izbacen iz simulacije...");
+                    }
+                    else if ((ao instanceof MilitaryAircraft) && !((MilitaryAircraft)ao).isForeign() && ((MilitaryAircraft) ao).getFollowing()!=null) {
+                        MilitaryAircraft aoMil = (MilitaryAircraft)ao;
+                        int x1 = aoMil.getFollowing().getX(), y1 = aoMil.getFollowing().getY();
+                        if( Math.sqrt((x1-oldX)*(x1-oldX)+(y1-oldY)*(y1-oldY))<2){
+                            System.out.println("Domaca letjelica unistava stranu!");
+                            map.values().forEach(yMap->yMap.values().forEach(q->q.removeIf(qo->qo.getId()==((MilitaryAircraft) ao).getFollowing().getId())));
+                            ((MilitaryAircraft) ao).setFollowing(null);
+                        }
                     }
                     else if (oldX != nextPosition.getFirst() || oldY != nextPosition.getSecond()) {
                         ao.setSkip(true);

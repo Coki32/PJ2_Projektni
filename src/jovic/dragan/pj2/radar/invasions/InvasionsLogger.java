@@ -10,16 +10,31 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class InvasionsLogger {
+    private static Executor delayingExecutor = Executors.newCachedThreadPool();
     public static void logInvasion(ObjectInfo info){
-        Util.createFolderIfNotExists(Constants.EVENTS_FOLDER_PATH);
-        try(PrintWriter pw =
-                    new PrintWriter(Constants.EVENTS_FOLDER_PATH +
-                            File.separator + LocalDateTime.now().toLocalTime().toString().replace(':','.')+".txt")){
-        pw.println(info.getX()+","+info.getY()+","+info.getAltitude()+","+info.getDirection());
-        }catch (FileNotFoundException ex){
-            GenericLogger.log(InvasionsChecker.class,ex);
-        }
+        delayingExecutor.execute( new Runnable(){
+            @Override
+            public void run() {
+                //try {
+
+                    Util.createFolderIfNotExists(Constants.EVENTS_FOLDER_PATH);
+                    //Thread.sleep(10000);//pauza da ovaj strani malo "pobjegne"
+                    try (PrintWriter pw =
+                                 new PrintWriter(Constants.EVENTS_FOLDER_PATH +
+                                         File.separator + LocalDateTime.now().toLocalTime().toString().replace(':', '.') + ".txt")) {
+                        pw.println(info.toCsv());
+                    } catch (FileNotFoundException ex) {
+                        GenericLogger.log(InvasionsChecker.class, ex);
+                    }
+                //}catch (InterruptedException ex){
+                //    GenericLogger.log(this.getClass(),ex);
+                //}
+            }
+        });
+
     }
 }

@@ -30,7 +30,6 @@ public class RadarExporter extends Thread {
     @Override
     public void run() {
         while(true) {
-            long start = System.currentTimeMillis();
             Map<Integer, Map<Integer, ConcurrentLinkedDeque<AerospaceObject>>> copy;
             synchronized (map) {
                 copy = new ConcurrentHashMap<>(map);
@@ -40,15 +39,11 @@ public class RadarExporter extends Thread {
                 {
                     q.forEach(ao -> {
                         pw.println(ao.export());
-                        if ((ao instanceof MilitaryAircraft) && ((MilitaryAircraft) ao).isForeign())
-                            System.out.println("Exportovao stranu vojsku kao "+ao.export());
                     });
                 }));
             } catch (FileNotFoundException ex) {
                 GenericLogger.log(this.getClass(), ex);
             }
-            long end = System.currentTimeMillis();
-            System.out.println("Exported in " + (end - start) + "ms");
             try {
                 if(preferenceWatcher.isChanged()){
                     radarPreferences = preferenceWatcher.getOriginal();

@@ -8,6 +8,7 @@ import jovic.dragan.pj2.logger.GenericLogger;
 import jovic.dragan.pj2.preferences.Constants;
 import jovic.dragan.pj2.radar.ObjectInfo;
 import jovic.dragan.pj2.util.Direction;
+import jovic.dragan.pj2.util.Util;
 
 import java.io.DataInput;
 import java.io.IOException;
@@ -35,32 +36,49 @@ public class InvasionHandler implements Consumer<WatchEvent> {
         Path path = ((WatchEvent<Path>)watchEvent).context();
         try {
             ObjectInfo invader = new ObjectInfo(Files.readString(Paths.get(Constants.EVENTS_FOLDER_PATH).resolve(path)).trim().split(","));
-            Direction invaderDirection = invader.getDirection();
-            System.out.println("---------PREPOZNAT INVADER! " + invader);
-            Direction defenseDirection = null;//Direction za (x1,y1), za (x2,y2) je .opposite
-            aerospace.banFlight();
-            int x1,x2,y1,y2;
-            if(invaderDirection == Direction.UP || invaderDirection == Direction.DOWN) {
-                x1 = invader.getX()-1;
-                x2 = invader.getX()+1;
-                y1 = y2 = invaderDirection==Direction.UP ? 0 : aerospace.getPreferences().getFieldHeight();
-                defenseDirection = invader.getY()<(aerospace.getPreferences().getFieldHeight()/2) ? Direction.UP : Direction.DOWN;
+            if (!invader.isFollowed()) {
+                Direction invaderDirection = invader.getDirection();
+                System.out.println("---------PREPOZNAT INVADER! " + invader);
+                Direction defenseDirection = null;//Direction za (x1,y1), za (x2,y2) je .opposite
+                aerospace.banFlight();
+                int x1, x2, y1, y2;
+                if (invaderDirection == Direction.UP || invaderDirection == Direction.DOWN) {
+                    x1 = invader.getX() - 1;
+                    x2 = invader.getX() + 1;
+                    y1 = y2 = invaderDirection == Direction.UP ? 0 : aerospace.getPreferences().getFieldHeight();
+                    defenseDirection = invader.getY() < (aerospace.getPreferences().getFieldHeight() / 2) ? Direction.UP : Direction.DOWN;
+                } else {
+                    y1 = invader.getY() - 1;
+                    y2 = invader.getY() + 1;
+                    x1 = x2 = invader.getDirection() == Direction.RIGHT ? 0 : aerospace.getPreferences().getFieldWidth();
+                    defenseDirection = invader.getX() < (aerospace.getPreferences().getFieldWidth() / 2) ? Direction.RIGHT : Direction.LEFT;
+                }
+                System.out.print("Invader:"+invader.getX()+","+invader.getY());
+                System.out.println("Odbrana:"+x1+","+y1+" == "+x2+","+y2);
+                MilitaryAircraft left = new FighterPlane(x1, y1, invader.getAltitude(),
+                        3//Util.randomBetween(aerospace.getPreferences().getSpeedMin(), aerospace.getPreferences().getSpeedMax())
+                        , defenseDirection);
+                MilitaryAircraft right = new FighterPlane(x2, y2, invader.getAltitude(),
+                        2//Util.randomBetween(aerospace.getPreferences().getSpeedMin(), aerospace.getPreferences().getSpeedMax())
+                        , defenseDirection);
+                aerospace.getMap().values().parallelStream().forEach(yMap-> yMap.values().forEach(q->{
+                    q.forEach(ao->{
+                        if(ao.getId()==invader.getId())
+                        {
+
+                            ((MilitaryAircraft)ao).setFollowed(true);
+                            ((MilitaryAircraft) ao).addFollower(left);
+                            ((MilitaryAircraft) ao).addFollower(right);
+                            left.setFollowing((MilitaryAircraft) ao);
+                            right.setFollowing((MilitaryAircraft) ao);
+                        }
+                    });
+                }));
+                aerospace.getSpawner().enqueuSpawn(left);
+                aerospace.getSpawner().enqueuSpawn(right);
             }
-            else {
-                y1 = invader.getY()-1;
-                y2 = invader.getY()+1;
-                x1 = x2 = invader.getDirection() == Direction.RIGHT ? 0 : aerospace.getPreferences().getFieldWidth();
-                defenseDirection = invader.getX()<(aerospace.getPreferences().getFieldWidth()/2) ? Direction.RIGHT:Direction.LEFT;
-            }
-//            Thread.sleep(3000);
-            System.out.println("Odbrana spawnuje dva aviona na ("+x1+","+y1+") i ("+x2+","+y2+")");
-            aerospace.addAerospaceObject(new FighterPlane(x1,y1,invader.getAltitude(),1,defenseDirection));
-            aerospace.addAerospaceObject(new FighterPlane(x2,y2,invader.getAltitude(),1,defenseDirection));
-            aerospace.getField(invader.getX(),invader.getY()).stream()
-                    .filter(ao->ao.getAltitude()==invader.getAltitude() && (ao instanceof MilitaryAircraft) &&
-                            ((MilitaryAircraft)ao).isForeign()).forEach(ao->((MilitaryAircraft)ao).setFollowed(true));
         }
-        catch (IOException  ex){
+        catch (IOException ex){
             GenericLogger.log(this.getClass(),ex);
         }
     }
