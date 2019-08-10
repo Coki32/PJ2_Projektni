@@ -208,6 +208,26 @@ title __PROJEKT's Class Diagram__\n
   }
   
 
+  namespace jovic.dragan.pj2.gui {
+    class jovic.dragan.pj2.gui.MainWindow {
+    }
+  }
+  
+
+  namespace jovic.dragan.pj2.gui {
+    class jovic.dragan.pj2.gui.MapViewer {
+    }
+  }
+  
+
+  namespace jovic.dragan.pj2.gui {
+    namespace handlers {
+      class jovic.dragan.pj2.gui.handlers.MapUpdateHandler {
+      }
+    }
+  }
+  
+
   namespace jovic.dragan.pj2.logger {
     class jovic.dragan.pj2.logger.GenericLogger {
     }
@@ -466,6 +486,14 @@ title __PROJEKT's Class Diagram__\n
   jovic.dragan.pj2.aerospace.handlers.CollisionHandler o-- jovic.dragan.pj2.aerospace.Aerospace : aerospace
   jovic.dragan.pj2.aerospace.handlers.InvasionHandler .up.|> java.util.function.Consumer
   jovic.dragan.pj2.aerospace.handlers.InvasionHandler o-- jovic.dragan.pj2.aerospace.Aerospace : aerospace
+  jovic.dragan.pj2.gui.MainWindow -up-|> javax.swing.JFrame
+  jovic.dragan.pj2.gui.MainWindow o-- jovic.dragan.pj2.gui.MapViewer : viewer
+  jovic.dragan.pj2.gui.MapViewer .up.|> java.lang.Runnable
+  jovic.dragan.pj2.gui.MapViewer -up-|> java.awt.Canvas
+  jovic.dragan.pj2.gui.MapViewer o-- jovic.dragan.pj2.util.Watcher : mapWatcher
+  jovic.dragan.pj2.gui.MapViewer o-- jovic.dragan.pj2.preferences.SimulatorPreferences : preferences
+  jovic.dragan.pj2.gui.handlers.MapUpdateHandler .up.|> java.util.function.Consumer
+  jovic.dragan.pj2.gui.handlers.MapUpdateHandler o-- jovic.dragan.pj2.gui.MapViewer : viewer
   jovic.dragan.pj2.personel.Passenger .up.|> java.io.Serializable
   jovic.dragan.pj2.personel.Passenger -up-|> jovic.dragan.pj2.personel.Person
   jovic.dragan.pj2.personel.Passenger o-- jovic.dragan.pj2.personel.belongings.Passport : passport

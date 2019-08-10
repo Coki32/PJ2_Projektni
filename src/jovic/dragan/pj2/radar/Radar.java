@@ -40,7 +40,7 @@ public class Radar {
                         Queue<ObjectInfo> invasions = new ConcurrentLinkedQueue<>();
                         Queue<ObjectInfo> collisions = new ConcurrentLinkedQueue<>();
                         for (String line: lines) {
-                            ObjectInfo info = new ObjectInfo(line.split(","));
+                            ObjectInfo info = new ObjectInfo(line.trim().split(","));
                             invasions.add(info);
                             collisions.add(info);
                         }

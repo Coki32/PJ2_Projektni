@@ -116,7 +116,9 @@ title __PREFERENCES's Class Diagram__\n
         - speedMin : int
         + getFieldHeight()
         + getFieldWidth()
+        + getForeignMilitary()
         + getHeightOptions()
+        + getHomeMilitary()
         + getSharedFileName()
         + getSpawnTimeMax()
         + getSpawnTimeMin()

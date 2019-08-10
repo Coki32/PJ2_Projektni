@@ -16,7 +16,7 @@ public class InvasionsChecker implements Runnable{
     @Override
     public void run() {
         if(infoList!=null)
-        for (ObjectInfo info: infoList.stream().filter(obj-> obj!=null && obj.isMilitary() && obj.isForeign()).collect(Collectors.toList())) {
+        for (ObjectInfo info: infoList.stream().filter(obj-> obj!=null && obj.isMilitary() && obj.isForeign() && !obj.isFollowed()).collect(Collectors.toList())) {
             InvasionsLogger.logInvasion(info);
         }
     }

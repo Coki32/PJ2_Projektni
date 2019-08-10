@@ -1,5 +1,6 @@
 package jovic.dragan.pj2.aerospace;
 
+import jovic.dragan.pj2.Interfaces.Military;
 import jovic.dragan.pj2.aerospace.generators.Spawner;
 import jovic.dragan.pj2.aerospace.handlers.CollisionHandler;
 import jovic.dragan.pj2.aerospace.handlers.InvasionHandler;
@@ -29,7 +30,7 @@ public class Aerospace {
     private boolean flightAllowed = true;
     private SimulatorPreferences preferences;
     private PreferenceWatcher<SimulatorPreferences> watcher;
-
+    private boolean running = false;
 //    Spawner spawner = new Spawner(properties, aerospace);
     private Spawner spawner;
 
@@ -54,19 +55,18 @@ public class Aerospace {
         catch (IOException ex){
             GenericLogger.log(this.getClass(), Level.SEVERE,"Could not register folder watchers for collisions and invasions, those will not be detected",ex);
         }
-        timerTask = new UpdatingTask(map,watcher);
+        timerTask = new UpdatingTask(map,watcher, this);
         watcher.start();
         spawner = new Spawner(preferences,this);
     }
 
     public synchronized void banFlight() {
         if (flightAllowed) {
-            spawner.setPaused(true);
             int mapWidth = preferences.getFieldWidth();
             int mapHeight = preferences.getFieldHeight();
             System.out.println("Postavljan zabranu svi izlaze najkraicm putem");
             Integer[] exit = new Integer[4];
-            map.values().parallelStream().forEach(yMap -> yMap.values().forEach(q -> q.forEach(ao -> {
+            map.values().parallelStream().forEach(yMap -> yMap.values().forEach(q -> q.stream().filter(o->!(o instanceof Military)).forEach(ao -> {
                 int x = ao.getX();
                 int y = ao.getY();
                 exit[0] = mapHeight-y; //Distance to upper edge
@@ -74,7 +74,6 @@ public class Aerospace {
                 exit[2] = x;//distance to left edge
                 exit[3] = mapWidth-x;//distance to right edge
                 Direction newDirection = Direction.fromInt(Util.minIdx(exit));
-                System.out.println(ao+" ide ka " + newDirection);
                 ao.setDirection(newDirection);
             })));
             flightAllowed = false;
@@ -86,13 +85,18 @@ public class Aerospace {
         if (!flightAllowed) {
             System.out.println("Postavljan zabranu leta na false");
             flightAllowed = true;
-            spawner.setPaused(false);
         }
     }
 
+    public boolean isFlightAllowed() {
+        return flightAllowed;
+    }
+
     public void start() {
-        //TODO: dodaj u preference update frequency
-        updatingTimer.schedule(timerTask, 0, 1000);
+        if(!running) {
+            updatingTimer.schedule(timerTask, 0, preferences.getSimulatorUpdatePeriod());
+            running = true;
+        }
     }
 
     public SimulatorPreferences getPreferences(){
@@ -112,13 +116,16 @@ public class Aerospace {
     }
 
     public void addAerospaceObject(AerospaceObject object) {
-        if(object!=null) {
+        if(object!=null && (flightAllowed || object instanceof Military )) {
             int x = object.getX(), y = object.getY();
             if (!map.containsKey(x)) {
                 map.put(x, new ConcurrentHashMap<>());
                 map.get(x).put(y, new ConcurrentLinkedDeque<>());
             } else if (!map.get(x).containsKey(y)) {
                 map.get(x).put(y, new ConcurrentLinkedDeque<>());
+            }
+            if(object instanceof MilitaryAircraft){
+                System.out.println("Dodata vojska u prostor, i to "+ (((MilitaryAircraft) object).isForeign() ? "strana":"domaca"));
             }
             map.get(x).get(y).add(object);
         }
@@ -130,12 +137,13 @@ class UpdatingTask extends TimerTask {
     private Map<Integer, Map<Integer, ConcurrentLinkedDeque<AerospaceObject>>> map;
     private PreferenceWatcher<SimulatorPreferences> watcher;
     private SimulatorPreferences preferences;
-
+    private Aerospace aerospace;
     private RadarExporter exporter;
 
-    UpdatingTask(Map<Integer, Map<Integer, ConcurrentLinkedDeque<AerospaceObject>>> map, PreferenceWatcher<SimulatorPreferences> watcher) {
+    UpdatingTask(Map<Integer, Map<Integer, ConcurrentLinkedDeque<AerospaceObject>>> map, PreferenceWatcher<SimulatorPreferences> watcher, Aerospace aerospace) {
         this.map = map;
         this.watcher = watcher;
+        this.aerospace = aerospace;
         preferences = watcher.getOriginal();
         RadarPreferences radarPreferences = RadarPreferences.load();
 
@@ -187,6 +195,9 @@ class UpdatingTask extends TimerTask {
             }
         }
         map.values().parallelStream().forEach((yMap) -> yMap.values().forEach(q -> q.forEach(ao -> ao.setSkip(false))));
+        if(!aerospace.isFlightAllowed() && map.values().parallelStream().allMatch(yMap->yMap.values().stream().allMatch(q->q.stream().allMatch(
+                ao-> !(ao instanceof Military) || !((MilitaryAircraft)ao).isForeign()))))
+            aerospace.resumeFlight();
         long end = System.currentTimeMillis();
     }
 }

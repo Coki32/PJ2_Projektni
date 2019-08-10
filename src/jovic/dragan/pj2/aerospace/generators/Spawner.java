@@ -42,51 +42,51 @@ class SpawningRunnable implements Runnable {
         this.preferences = preferences;
         this.aerospace = aerospace;
         this.rng = new Random();
-        rpg = new RandomPlaneGenerator(BomberPlane.class);
+        rpg = new RandomPlaneGenerator(PassengerPlane.class, TransportHelicopter.class, FirefighterPlane.class, FirefighterHelicopter.class,
+                AntiHailRocket.class, PassengerHelicopter.class);
         watcher = new PreferenceWatcher<>(preferences, Constants.SIMULATOR_PROPERTIES_FILENAME, SimulatorPreferences::load);
         watcher.start();
     }
 
-    public synchronized void setPaused(boolean value){
+    public synchronized void setPaused(boolean value) {
         this.paused = value;
     }
 
-    private int randomBetween(int min, int max){
-        return rng.nextInt(max-min+1)+min;
+    private int randomBetween(int min, int max) {
+        return rng.nextInt(max - min + 1) + min;
     }
 
-    private AerospaceObject randomObject(){
+    private AerospaceObject randomObject() {
         boolean invader = false;
-        if(watcher.isChanged()){
+        if (watcher.isChanged()) {
             System.out.println("Ucitano u spawneru");
             int oldForeign = preferences.getForeignMilitary();
             preferences = watcher.getOriginal();
             int newForeign = preferences.getForeignMilitary();
             watcher.setChanged(false);
-            invader = newForeign>oldForeign;
+            invader = newForeign > oldForeign;
         }
         AerospaceObject spawned = null;
-        int x=0,y=0;
+        int x = 0, y = 0;
         //bice glupo tipa spawningFrom bude LEFT pa to znaci sa lijeve ivice ide do desne
         Direction spawningFrom = Direction.fromInt(rng.nextInt(4));
-        if(spawningFrom == Direction.LEFT || spawningFrom == Direction.RIGHT) {
+        if (spawningFrom == Direction.LEFT || spawningFrom == Direction.RIGHT) {
             x = spawningFrom == Direction.LEFT ? 0 : preferences.getFieldWidth();
-            y = rng.nextInt(preferences.getFieldHeight()) > 100 ? 5 : 15;
-        }
-        else {
-            x = rng.nextInt(preferences.getFieldWidth()) > 100 ? 5 : 15;
+            y = rng.nextInt(preferences.getFieldHeight());
+        } else {
+            x = rng.nextInt(preferences.getFieldWidth());
             y = spawningFrom == Direction.UP ? preferences.getFieldHeight() : 0;
         }
-        if(invader)
-        {
-            spawned = new FighterPlane(x,y,5,1,spawningFrom);
-            ((MilitaryAircraft)spawned).setForeign(true);
+        if (invader) {
+            spawned = new FighterPlane(x, y, preferences.getHeightOptions()[Util.randomBetween(0, preferences.getHeightOptions().length - 1)],
+                    Util.randomBetween(preferences.getSpeedMin(), preferences.getSpeedMax())
+                    , spawningFrom.opposite());
+            ((MilitaryAircraft) spawned).setForeign(true);
             System.out.println("Spawned invaders!");
-        }
-        else
-            spawned =  rpg.getRandom(x,y,
-                   5, //rng.nextInt(500),
-                    Util.randomBetween(preferences.getSpeedMin(),preferences.getSpeedMax()),
+        } else
+            spawned = rpg.getRandom(x, y,
+                    preferences.getHeightOptions()[Util.randomBetween(0, preferences.getHeightOptions().length - 1)],
+                    Util.randomBetween(preferences.getSpeedMin(), preferences.getSpeedMax()),
                     spawningFrom.opposite());
         return spawned;
     }
@@ -97,13 +97,11 @@ class SpawningRunnable implements Runnable {
         while (true) {
             int minSpawn = preferences.getSpawnTimeMin(),
                     maxSpawn = preferences.getSpawnTimeMax();
-            if(!paused) {
-                AerospaceObject ao = randomObject();
-                aerospace.addAerospaceObject(ao);
-            }
+            AerospaceObject ao = randomObject();
+            aerospace.addAerospaceObject(ao);
             try {
-                int pauza = Util.randomBetween(minSpawn,maxSpawn);
-                Thread.sleep(pauza*1000);
+                int pauza = Util.randomBetween(minSpawn, maxSpawn);
+                Thread.sleep(pauza * 1000);
             } catch (InterruptedException ex) {
                 GenericLogger.log(this.getClass(), Level.SEVERE, "Spawner thread prekinut na spavanju!", ex);
             }

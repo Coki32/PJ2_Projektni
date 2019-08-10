@@ -1,6 +1,7 @@
 package jovic.dragan.pj2.radar;
 
 import jovic.dragan.pj2.aerospace.AerospaceObject;
+import jovic.dragan.pj2.aerospace.MilitaryAircraft;
 import jovic.dragan.pj2.logger.GenericLogger;
 import jovic.dragan.pj2.preferences.Constants;
 import jovic.dragan.pj2.preferences.PreferenceWatcher;
@@ -10,6 +11,7 @@ import jovic.dragan.pj2.preferences.RadarPreferences;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.Map;
+import java.util.SimpleTimeZone;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
@@ -36,7 +38,11 @@ public class RadarExporter extends Thread {
             try (PrintWriter pw = new PrintWriter(Constants.SIMULATOR_SHARED_FILE_FULL_NAME)) {
                 copy.values().parallelStream().forEach(yMap -> yMap.values().forEach(q ->
                 {
-                    q.forEach(ao -> pw.println(ao.export()));
+                    q.forEach(ao -> {
+                        pw.println(ao.export());
+                        if ((ao instanceof MilitaryAircraft) && ((MilitaryAircraft) ao).isForeign())
+                            System.out.println("Exportovao stranu vojsku kao "+ao.export());
+                    });
                 }));
             } catch (FileNotFoundException ex) {
                 GenericLogger.log(this.getClass(), ex);

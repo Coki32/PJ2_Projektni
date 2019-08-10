@@ -13,11 +13,13 @@ public class SimulatorPreferences implements Serializable {
     private int fieldWidth, fieldHeight, spawnTimeMin, spawnTimeMax, speedMin, speedMax;
     private int[] heightOptions;
     private String sharedFolder, sharedFileName, sharedFullName;
+    private int simulatorUpdatePeriod;
     private int foreignMilitary, homeMilitary;
 
 
     private static SimulatorPreferences initHardcoded() {
         SimulatorPreferences sp = new SimulatorPreferences();
+        sp.simulatorUpdatePeriod = Constants.SIMULATOR_DEFAULT_PERIOD;
         sp.fieldWidth = Constants.SIMULATOR_DEFAULT_SIZE;
         sp.fieldHeight = Constants.SIMULATOR_DEFAULT_SIZE;
         sp.spawnTimeMax = Constants.SIMULATOR_DEFAULT_SPAWN_MAX;
@@ -49,6 +51,10 @@ public class SimulatorPreferences implements Serializable {
             sp = SimulatorPreferences.initHardcoded();
         }
         return sp;
+    }
+
+    public int getSimulatorUpdatePeriod() {
+        return simulatorUpdatePeriod;
     }
 
     public int getFieldWidth() {

@@ -7,20 +7,34 @@ import java.io.Serializable;
 public class ObjectInfo implements Serializable {
     private int x,y,altitude;
     private Direction direction;
-    private boolean military,foreign;
+    private boolean military,foreign, followed;
 
     public ObjectInfo(String... fields) {
         x = Integer.parseInt(fields[0]);
         y = Integer.parseInt(fields[1]);
         altitude = Integer.parseInt(fields[2]);
-        direction = Direction.valueOf(fields[3]);
+        direction = Direction.valueOf(fields[3].trim());
         if(fields.length>4){
             military = true;
             foreign = Boolean.parseBoolean(fields[4]);
+            followed = Boolean.parseBoolean(fields[5]);
         }
         else {
             military = foreign = false;
         }
+    }
+
+    @Override
+    public String toString() {
+        return x+","+y+","+altitude+","+direction+","+military+(foreign ? ",STRANI":",DOMACI");
+    }
+
+    public boolean isFollowed() {
+        return followed;
+    }
+
+    public void setFollowed(boolean followed) {
+        this.followed = followed;
     }
 
     public Direction getDirection() {
