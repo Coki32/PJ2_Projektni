@@ -11,7 +11,7 @@ title __GUI's Class Diagram__\n
   
 
   namespace jovic.dragan.pj2.gui {
-    class jovic.dragan.pj2.gui.MapViewer {
+    class jovic.dragan.pj2.gui.components.MapViewer {
         - watcher : PreferenceWatcher<SimulatorPreferences>
         + MapViewer()
         + getPreferences()
@@ -21,11 +21,11 @@ title __GUI's Class Diagram__\n
   
 
   jovic.dragan.pj2.gui.MainWindow -up-|> javax.swing.JFrame
-  jovic.dragan.pj2.gui.MainWindow o-- jovic.dragan.pj2.gui.MapViewer : viewer
-  jovic.dragan.pj2.gui.MapViewer .up.|> java.lang.Runnable
-  jovic.dragan.pj2.gui.MapViewer -up-|> java.awt.Canvas
-  jovic.dragan.pj2.gui.MapViewer o-- jovic.dragan.pj2.util.Watcher : mapWatcher
-  jovic.dragan.pj2.gui.MapViewer o-- jovic.dragan.pj2.preferences.SimulatorPreferences : preferences
+  jovic.dragan.pj2.gui.MainWindow o-- jovic.dragan.pj2.gui.components.MapViewer : viewer
+  jovic.dragan.pj2.gui.components.MapViewer .up.|> java.lang.Runnable
+  jovic.dragan.pj2.gui.components.MapViewer -up-|> java.awt.Canvas
+  jovic.dragan.pj2.gui.components.MapViewer o-- jovic.dragan.pj2.util.Watcher : mapWatcher
+  jovic.dragan.pj2.gui.components.MapViewer o-- jovic.dragan.pj2.preferences.SimulatorPreferences : preferences
 
 
 right footer

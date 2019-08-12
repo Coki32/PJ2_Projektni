@@ -75,8 +75,8 @@ public class InvasionHandler implements Consumer<WatchEvent> {
                         }
                     });
                 }));
-                aerospace.getSpawner().enqueuSpawn(left);
-                aerospace.getSpawner().enqueuSpawn(right);
+                aerospace.getSpawner().enqueueSpawn(left);
+                aerospace.getSpawner().enqueueSpawn(right);
             } else
                 System.out.println(handled + ", ne dodajem " + invader.getId());
         }

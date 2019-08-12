@@ -1,6 +1,6 @@
 package jovic.dragan.pj2.gui.handlers;
 
-import jovic.dragan.pj2.gui.MapViewer;
+import jovic.dragan.pj2.gui.components.MapViewer;
 import jovic.dragan.pj2.logger.GenericLogger;
 import jovic.dragan.pj2.preferences.Constants;
 import jovic.dragan.pj2.radar.ObjectInfo;
@@ -36,10 +36,10 @@ public class MapUpdateHandler implements Consumer<WatchEvent> {
             if (lines.size() != 0) {
                 Graphics g = viewer.getGraphics();
                 viewer.paint(g);
-                int h = viewer.getHeight(), w = viewer.getWidth();
-                int mapHeight = viewer.getPreferences().getFieldHeight(),
+                double h = viewer.getHeight(), w = viewer.getWidth();
+                double mapHeight = viewer.getPreferences().getFieldHeight(),
                         mapWidth = viewer.getPreferences().getFieldWidth();
-                int planeWidth = (int)Math.ceil(w/mapWidth) - 1, planeHeight = (int)Math.ceil(h/mapHeight) - 1;
+                int planeWidth = (int) Math.ceil(w / mapWidth), planeHeight = (int) Math.ceil(h / mapHeight);
                 for (String line : lines) {
                     ObjectInfo info = new ObjectInfo(line.trim().split(","));
                     Color color = Color.BLACK;
@@ -47,9 +47,10 @@ public class MapUpdateHandler implements Consumer<WatchEvent> {
                         color = info.isForeign() ? Color.RED : Color.BLUE;
                     }
                     g.setColor(color);
-                    g.fillRect(w/mapWidth*info.getX(), h/mapHeight*info.getY(),planeWidth,planeHeight);
+                    g.fillRect((int) (w / mapWidth * info.getX()), (int) (h / mapHeight * info.getY()), planeWidth, planeHeight);
                 }
-
+                System.out.println(String.format("View:%f x %f, Mapa: %f x %f a velicina %d x %d",
+                        h, w, mapHeight, mapWidth, planeHeight, planeWidth));
             }
         }
         catch (IOException ex){

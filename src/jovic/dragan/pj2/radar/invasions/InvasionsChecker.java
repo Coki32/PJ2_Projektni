@@ -18,6 +18,7 @@ public class InvasionsChecker implements Runnable{
         if(infoList!=null)
         for (ObjectInfo info: infoList.stream().filter(obj-> obj!=null && obj.isMilitary() && obj.isForeign() && !obj.isFollowed()).collect(Collectors.toList())) {
             InvasionsLogger.logInvasion(info);
+            System.out.println("Invazija na " + info);
         }
     }
 }

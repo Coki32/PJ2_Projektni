@@ -1,26 +1,19 @@
-package jovic.dragan.pj2.gui;
+package jovic.dragan.pj2.gui.components;
 
 import jovic.dragan.pj2.gui.handlers.MapUpdateHandler;
 import jovic.dragan.pj2.logger.GenericLogger;
 import jovic.dragan.pj2.preferences.Constants;
-import jovic.dragan.pj2.preferences.PreferenceWatcher;
 import jovic.dragan.pj2.preferences.SimulatorPreferences;
-import jovic.dragan.pj2.simulator.Simulator;
 import jovic.dragan.pj2.util.Watcher;
 
-import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
-import java.util.function.Consumer;
-import java.util.prefs.Preferences;
 
 public class MapViewer extends Canvas implements Runnable {
     private SimulatorPreferences preferences;
-//    private PreferenceWatcher<SimulatorPreferences> watcher;
-//    private Watcher mapWatcher;
 
     public MapViewer(int width, int height){
         preferences = SimulatorPreferences.load();
@@ -42,7 +35,8 @@ public class MapViewer extends Canvas implements Runnable {
             GenericLogger.log(this.getClass(),ex);
         }
 //        watcher.start();
-        this.setPreferredSize(new Dimension(width,height));
+//        this.setPreferredSize(new Dimension(width,height));
+
         this.setSize(width,height);
         this.setBackground(Color.orange);
     }

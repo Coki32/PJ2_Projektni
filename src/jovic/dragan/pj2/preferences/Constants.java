@@ -35,7 +35,7 @@ public class Constants {
     public static final int SIMULATOR_DEFAULT_SPAWN_MAX = 5;
     public static final int SIMULATOR_DEFAULT_PERIOD = 1000;
 
-    public static final int DEFAULT_SHARED_UPDATE_INTERVAL = 3;
+    public static final int DEFAULT_SHARED_UPDATE_INTERVAL = 3000;
 
     public static final int[] SIMULATOR_HEIGHT_OPTIONS = new int[]{500, 1000, 1500, 2000};
     public static final int SIMULATOR_DEFAULT_FOREIGN_MIL = -1;

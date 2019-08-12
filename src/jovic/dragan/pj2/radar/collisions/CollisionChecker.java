@@ -22,7 +22,7 @@ public class CollisionChecker implements Runnable {
 
     @Override
     public void run() {
-        lock.lock();
+        //lock.lock();
         long start = System.currentTimeMillis();
         Set<Integer> xS = new HashSet<>(), yS = new HashSet<>(), altS = new HashSet<>();
         for (ObjectInfo info : infoList) {
@@ -46,8 +46,8 @@ public class CollisionChecker implements Runnable {
             }
         }
         long end = System.currentTimeMillis();
-        //System.out.println("Provjerio sudare za " + (end-start)+"ms");
-        lock.unlock();
+        System.out.println("Provjerio sudare za " + (end - start) + "ms - " + infoList.size() + " aviona");
+        //lock.unlock();
         /*Set<Integer> provjerenePozicije = new HashSet<>();
         if (infoList.size() > 1) {
             var i = infoList.iterator();

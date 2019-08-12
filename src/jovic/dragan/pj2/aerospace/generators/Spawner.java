@@ -25,7 +25,7 @@ public class Spawner {
         spawningThread.start();
     }
 
-    public void enqueuSpawn(AerospaceObject ao){
+    public void enqueueSpawn(AerospaceObject ao) {
         spawnQueue.add(ao);
     }
 
@@ -70,10 +70,6 @@ class SpawningRunnable implements Runnable {
         if(nextToSpawn!=null){
             return nextToSpawn;
         }
-//        AerospaceObject a = new PassengerPlane(10,0,100,1,Direction.UP);
-//        AerospaceObject b = new PassengerPlane(10, 30, 100,1,Direction.DOWN);
-//        return (new Random()).nextBoolean() ? a : b;
-
         if (watcher.isChanged()) {
             System.out.println("Ucitano u spawneru");
             int oldForeign = preferences.getForeignMilitary();

@@ -211,7 +211,7 @@ title __AEROSPACE's Class Diagram__\n
   
 
   namespace jovic.dragan.pj2.aerospace {
-    class jovic.dragan.pj2.aerospace.UpdatingTask {
+    class jovic.dragan.pj2.aerospace.UpdatingRunnable {
         - map : Map<Integer, Map<Integer, ConcurrentLinkedDeque<AerospaceObject>>>
         - watcher : PreferenceWatcher<SimulatorPreferences>
         + run()
@@ -227,7 +227,7 @@ title __AEROSPACE's Class Diagram__\n
   jovic.dragan.pj2.aerospace.Aerospace o-- jovic.dragan.pj2.util.Watcher : invasionWatcher
   jovic.dragan.pj2.aerospace.Aerospace o-- jovic.dragan.pj2.preferences.SimulatorPreferences : preferences
   jovic.dragan.pj2.aerospace.Aerospace o-- jovic.dragan.pj2.aerospace.generators.Spawner : spawner
-  jovic.dragan.pj2.aerospace.Aerospace o-- jovic.dragan.pj2.aerospace.UpdatingTask : timerTask
+  jovic.dragan.pj2.aerospace.Aerospace o-- jovic.dragan.pj2.aerospace.UpdatingRunnable : timerTask
   jovic.dragan.pj2.aerospace.AerospaceObject .up.|> java.io.Serializable
   jovic.dragan.pj2.aerospace.AerospaceObject o-- jovic.dragan.pj2.util.Direction : direction
   jovic.dragan.pj2.aerospace.AerospaceObject o-- jovic.dragan.pj2.util.Vector2D : directionVector
@@ -270,9 +270,9 @@ title __AEROSPACE's Class Diagram__\n
   jovic.dragan.pj2.aerospace.TransportPlane o-- jovic.dragan.pj2.aerospace.equipment.Cargo : cargo
   jovic.dragan.pj2.aerospace.UnmannedAircraft .up.|> java.io.Serializable
   jovic.dragan.pj2.aerospace.UnmannedAircraft -up-|> jovic.dragan.pj2.aerospace.Aircraft
-  jovic.dragan.pj2.aerospace.UpdatingTask -up-|> java.util.TimerTask
-  jovic.dragan.pj2.aerospace.UpdatingTask o-- jovic.dragan.pj2.radar.RadarExporter : exporter
-  jovic.dragan.pj2.aerospace.UpdatingTask o-- jovic.dragan.pj2.preferences.SimulatorPreferences : preferences
+  jovic.dragan.pj2.aerospace.UpdatingRunnable -up-|> java.util.TimerTask
+  jovic.dragan.pj2.aerospace.UpdatingRunnable o-- jovic.dragan.pj2.radar.RadarExporter : exporter
+  jovic.dragan.pj2.aerospace.UpdatingRunnable o-- jovic.dragan.pj2.preferences.SimulatorPreferences : preferences
 
 
 right footer

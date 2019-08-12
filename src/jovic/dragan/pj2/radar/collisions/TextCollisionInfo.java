@@ -9,10 +9,15 @@ public class TextCollisionInfo implements Serializable {
     private List<Integer> IDs;
 
     public TextCollisionInfo(CollisionInfo info){
-        opis = "Sudar " + info.getNumberOfPlanes()+ " aviona";
-        pozicija = "(x,y,z)=("+info.getX()+","+info.getY()+","+info.getAltitude()+")";
-        vrijeme = LocalDateTime.now().toString();
-        IDs = info.getIDs();
+        if (info.getX() != -1) {
+            opis = "Sudar " + info.getNumberOfPlanes() + " aviona";
+            pozicija = "(x,y,z)=(" + info.getX() + "," + info.getY() + "," + info.getAltitude() + ")";
+            vrijeme = LocalDateTime.now().toString();
+            IDs = info.getIDs();
+        } else {
+            opis = pozicija = vrijeme = "";
+            IDs = null;
+        }
     }
 
     public List<Integer> getIDs() {

@@ -1,7 +1,6 @@
 package jovic.dragan.pj2.radar;
 
 import jovic.dragan.pj2.aerospace.AerospaceObject;
-import jovic.dragan.pj2.aerospace.MilitaryAircraft;
 import jovic.dragan.pj2.logger.GenericLogger;
 import jovic.dragan.pj2.preferences.Constants;
 import jovic.dragan.pj2.preferences.PreferenceWatcher;
@@ -11,7 +10,6 @@ import jovic.dragan.pj2.preferences.RadarPreferences;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.Map;
-import java.util.SimpleTimeZone;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
@@ -49,7 +47,7 @@ public class RadarExporter extends Thread {
                     radarPreferences = preferenceWatcher.getOriginal();
                     preferenceWatcher.setChanged(false);
                 }
-                Thread.sleep(radarPreferences.getFileUpdateTime()* 1000);
+                Thread.sleep(radarPreferences.getFileUpdateTime());
             } catch (InterruptedException ex) {
                 GenericLogger.log(this.getClass(), ex);
             }

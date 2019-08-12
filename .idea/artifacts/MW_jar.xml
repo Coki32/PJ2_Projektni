@@ -1,5 +1,5 @@
 <component name="ArtifactManager">
-  <artifact type="jar" name="MW.jar">
+  <artifact type="jar" build-on-make="true" name="MW.jar">
     <output-path>$PROJECT_DIR$/out/artifacts/projekt/</output-path>
     <root id="archive" name="gui.jar">
       <element id="directory" name="META-INF">

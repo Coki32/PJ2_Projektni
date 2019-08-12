@@ -14,7 +14,7 @@ title __HANDLERS's Class Diagram__\n
   
 
   jovic.dragan.pj2.gui.handlers.MapUpdateHandler .up.|> java.util.function.Consumer
-  jovic.dragan.pj2.gui.handlers.MapUpdateHandler o-- jovic.dragan.pj2.gui.MapViewer : viewer
+  jovic.dragan.pj2.gui.handlers.MapUpdateHandler o-- jovic.dragan.pj2.gui.components.MapViewer : viewer
 
 
 right footer
