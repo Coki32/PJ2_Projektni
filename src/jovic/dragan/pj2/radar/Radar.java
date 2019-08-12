@@ -8,13 +8,13 @@ import jovic.dragan.pj2.radar.invasions.InvasionsChecker;
 import jovic.dragan.pj2.util.Watcher;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.nio.file.*;
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Queue;
+import java.util.Scanner;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
@@ -30,33 +30,47 @@ public class Radar {
             GenericLogger.log(Radar.class,ex);
         }
         if(watcher!=null){
-            Executor executor = Executors.newCachedThreadPool();
-            Consumer<WatchEvent> eventConsumer = ev->{
-                System.out.println(System.currentTimeMillis()+": "+ev.kind());
-                Path path = ((WatchEvent<Path>)ev).context();
-                try {
-                    List<String> lines = Files.readAllLines(Paths.get(Constants.SIMULATOR_SHARED_FOLDERNAME).resolve(path));
-                    if (lines.size() != 0) {
-                        Queue<ObjectInfo> invasions = new ConcurrentLinkedQueue<>();
-                        Queue<ObjectInfo> collisions = new ConcurrentLinkedQueue<>();
-                        for (String line: lines) {
-                            ObjectInfo info = new ObjectInfo(line.trim().split(","));
-                            invasions.add(info);
-                            collisions.add(info);
-                        }
-                        //Jednom threadu kopija, jednom original jer collision checker izbacuje elemente iz kolekcije
-                        executor.execute(new CollisionChecker(collisions));
-                        executor.execute(new InvasionsChecker(invasions));
-                    }
+            ExecutorService executor = Executors.newCachedThreadPool();
+            Consumer<WatchEvent> eventConsumer = new Consumer<WatchEvent>() {
+                long newStart = 0, prevStart = 0;
 
-                }
-                catch (IOException ex){
-                    GenericLogger.log(Radar.class,ex);
+                @Override
+                public void accept(WatchEvent ev) {
+                    Path path = ((WatchEvent<Path>) ev).context();
+                    newStart = System.currentTimeMillis();
+//                    System.out.println("Od proslog "+(newStart-prevStart)+"ms");
+                    try {
+                        List<String> lines = Files.readAllLines(Paths.get(Constants.SIMULATOR_SHARED_FOLDERNAME).resolve(path));
+//                        System.out.print(lines.size()>=1 && ((newStart-prevStart)>20));
+                        if (lines.size() >= 1) {//&& ((newStart - prevStart) > 20)) {
+                            System.out.println(LocalDateTime.now() + " - radar tick");
+                            Queue<ObjectInfo> invasions = new ConcurrentLinkedQueue<>();
+                            Queue<ObjectInfo> collisions = new ConcurrentLinkedQueue<>();
+                            for (String line : lines) {
+                                ObjectInfo info = new ObjectInfo(line.trim().split(","));
+                                invasions.add(info);
+                                collisions.add(info);
+                            }
+                            //Jednom threadu kopija, jednom original jer collision checker izbacuje elemente iz kolekcije
+                            executor.execute(new CollisionChecker(collisions));
+                            executor.execute(new InvasionsChecker(invasions));
+                        } else {
+//                            System.out.println("Ne radim nista: "+lines);
+                        }
+                    } catch (IOException ex) {
+                        GenericLogger.log(Radar.class, ex);
+                    }
+                    prevStart = newStart;
                 }
             };
             watcher.addEventHandler(StandardWatchEventKinds.ENTRY_MODIFY, eventConsumer);
             watcher.start();
         }
+
+        (new Thread(() -> {
+            int a = new Scanner(System.in).nextInt();
+            System.exit(0);
+        })).start();
     }
 
 }

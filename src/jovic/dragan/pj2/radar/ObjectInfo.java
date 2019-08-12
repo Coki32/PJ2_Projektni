@@ -1,6 +1,7 @@
 package jovic.dragan.pj2.radar;
 
 import jovic.dragan.pj2.util.Direction;
+import jovic.dragan.pj2.util.Pair;
 
 import java.io.Serializable;
 
@@ -23,6 +24,14 @@ public class ObjectInfo implements Serializable {
         else {
             military = foreign = false;
         }
+    }
+
+    public Pair<Integer, Integer> getPosition() {
+        return new Pair<Integer, Integer>(x, y);
+    }
+
+    public Pair<Integer, Integer> getNextPosition() {
+        return new Pair<Integer, Integer>(x + direction.getDirectionVector().getX(), y + direction.getDirectionVector().getY());
     }
 
     public String toCsv(){

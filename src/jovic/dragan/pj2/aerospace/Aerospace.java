@@ -17,9 +17,11 @@ import jovic.dragan.pj2.util.Watcher;
 
 import java.io.IOException;
 import java.nio.file.StandardWatchEventKinds;
-import java.util.*;
+import java.util.Map;
 import java.util.Timer;
-import java.util.concurrent.*;
+import java.util.TimerTask;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.logging.Level;
 
 public class Aerospace {
@@ -184,11 +186,7 @@ class UpdatingTask extends TimerTask {
                     AerospaceObject ao = listIter.next();
                     int oldX = ao.getX(), oldY = ao.getY();
                     Pair<Integer, Integer> nextPosition = ao.getNextPosition();
-                    if(!isInsideOfMap(nextPosition.getFirst(), nextPosition.getSecond(),mapWidth,mapHeight))
-                    {
-                        listIter.remove();
-                    }
-                    else if ((ao instanceof MilitaryAircraft) && !((MilitaryAircraft)ao).isForeign() && ((MilitaryAircraft) ao).getFollowing()!=null) {
+                    if ((ao instanceof MilitaryAircraft) && !((MilitaryAircraft) ao).isForeign() && ((MilitaryAircraft) ao).getFollowing() != null) {
                         MilitaryAircraft aoMil = (MilitaryAircraft)ao;
                         int x1 = aoMil.getFollowing().getX(), y1 = aoMil.getFollowing().getY();
                         if( Math.sqrt((x1-oldX)*(x1-oldX)+(y1-oldY)*(y1-oldY))<2){
@@ -197,8 +195,12 @@ class UpdatingTask extends TimerTask {
                             ((MilitaryAircraft) ao).setFollowing(null);
                         }
                     }
-                    else if (oldX != nextPosition.getFirst() || oldY != nextPosition.getSecond()) {
+                    if (!isInsideOfMap(nextPosition.getFirst(), nextPosition.getSecond(), mapWidth, mapHeight)) {
+                        listIter.remove();
+                    } else if (oldX != nextPosition.getFirst() || oldY != nextPosition.getSecond()) {
                         ao.setSkip(true);
+                        ao.setX(nextPosition.getFirst());
+                        ao.setY(nextPosition.getSecond());
                         listIter.remove();
                         count++;
                         if (!map.containsKey(ao.getX()))

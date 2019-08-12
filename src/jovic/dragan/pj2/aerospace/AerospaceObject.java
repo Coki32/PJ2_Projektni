@@ -4,7 +4,6 @@ package jovic.dragan.pj2.aerospace;
 import jovic.dragan.pj2.util.Direction;
 import jovic.dragan.pj2.util.Pair;
 import jovic.dragan.pj2.util.Vector2D;
-import jovic.dragan.pj2.util.Vector3D;
 
 import java.io.Serializable;
 
@@ -59,13 +58,14 @@ public abstract class AerospaceObject implements Serializable {
             skip = false;
             return new Pair<>(x, y);
         }
+        int newX = x, newY = y;
         ticks++;
         if (ticks % speed == 0) {
-            x += directionVector.getX();
-            y += directionVector.getY();
+            newX += directionVector.getX();
+            newY += directionVector.getY();
             ticks = 0;
         }
-        return new Pair<>(x, y);
+        return new Pair<>(newX, newY);
     }
 
     @Override

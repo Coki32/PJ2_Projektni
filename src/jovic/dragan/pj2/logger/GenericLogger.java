@@ -3,16 +3,13 @@ package jovic.dragan.pj2.logger;
 import jovic.dragan.pj2.preferences.PreferencesHelper;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.time.LocalDateTime;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class GenericLogger {
-
-    private static Map<String, Handler> handlers = new HashMap<>();
 
     /**
      * Logs the exception with the default level of WARNING
@@ -28,12 +25,10 @@ public class GenericLogger {
         Logger logger = Logger.getLogger(C.getName());
         if(logger.getHandlers().length==0)
             try {
-                if(!handlers.containsKey(C.getName())) {
-                    PreferencesHelper.createFolderIfNotExists("./logs/");
-                    Handler handler = new FileHandler("./logs/"+C.getName()+".log");
-                    handlers.put(C.getName(),handler);
-                    logger.addHandler(handler);
-                }
+                PreferencesHelper.createFolderIfNotExists("./logs/");
+                Handler handler = new FileHandler("./logs/" + C.getName() + LocalDateTime.now().toLocalTime().toString().replace(':', '_') + ".log");
+                logger.addHandler(handler);
+                handler.close();
             }
             catch (IOException exc){
                 exc.printStackTrace();
@@ -41,9 +36,4 @@ public class GenericLogger {
         logger.log(level,msg,thrown);
     }
 
-    public static void closeHandlers(){
-        for (Handler handler : handlers.values()) {
-            handler.close();
-        }
-    }
 }

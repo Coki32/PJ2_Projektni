@@ -4,8 +4,10 @@ import jovic.dragan.pj2.logger.GenericLogger;
 import jovic.dragan.pj2.preferences.Constants;
 import jovic.dragan.pj2.util.Util;
 
-import java.io.*;
-import java.nio.file.Path;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 
 public class CollisionLogger {
     public static void logCollision(CollisionInfo info){
@@ -14,7 +16,6 @@ public class CollisionLogger {
                 new FileOutputStream(
                 new File(Constants.ALERTS_FOLDER_PATH+File.separator+System.currentTimeMillis()+".sudar")))){
             pw.writeObject(info.getSerializible());
-            System.out.println(info.getSerializible());
         }
         catch (IOException ex){
             GenericLogger.log(CollisionLogger.class,ex);

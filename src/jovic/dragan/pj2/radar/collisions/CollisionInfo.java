@@ -1,22 +1,32 @@
 package jovic.dragan.pj2.radar.collisions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CollisionInfo  {
 
     private int x, y, altitude, numberOfPlanes;
-
+    private List<Integer> IDs;
     public CollisionInfo(int x, int y, int altitude) {
         this.x = x;
         this.y = y;
         this.altitude = altitude;
         this.numberOfPlanes = 0;
+        IDs = new ArrayList<>();
     }
+
 
     public TextCollisionInfo getSerializible(){
         return new TextCollisionInfo(this);
     }
 
-    public void increaseCount(){
+    public void addPlane(int id) {
         numberOfPlanes++;
+        IDs.add(id);
+    }
+
+    public List<Integer> getIDs() {
+        return IDs;
     }
 
     public int getNumberOfPlanes(){

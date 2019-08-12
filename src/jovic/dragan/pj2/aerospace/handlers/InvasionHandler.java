@@ -1,6 +1,5 @@
 package jovic.dragan.pj2.aerospace.handlers;
 
-import jovic.dragan.pj2.Interfaces.Military;
 import jovic.dragan.pj2.aerospace.Aerospace;
 import jovic.dragan.pj2.aerospace.FighterPlane;
 import jovic.dragan.pj2.aerospace.MilitaryAircraft;
@@ -10,20 +9,22 @@ import jovic.dragan.pj2.radar.ObjectInfo;
 import jovic.dragan.pj2.util.Direction;
 import jovic.dragan.pj2.util.Util;
 
-import java.io.DataInput;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.WatchEvent;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Consumer;
 
 public class InvasionHandler implements Consumer<WatchEvent> {
 
     private Aerospace aerospace;
-
+    private Set<Integer> handled;
     public InvasionHandler(Aerospace aerospace){
         this.aerospace = aerospace;
+        handled = new HashSet<>();
     }
 
     @Override
@@ -36,7 +37,7 @@ public class InvasionHandler implements Consumer<WatchEvent> {
         Path path = ((WatchEvent<Path>)watchEvent).context();
         try {
             ObjectInfo invader = new ObjectInfo(Files.readString(Paths.get(Constants.EVENTS_FOLDER_PATH).resolve(path)).trim().split(","));
-            if (!invader.isFollowed()) {
+            if (!invader.isFollowed() && handled.add(invader.getId())) {
                 Direction invaderDirection = invader.getDirection();
                 System.out.println("---------PREPOZNAT INVADER! " + invader);
                 Direction defenseDirection = null;//Direction za (x1,y1), za (x2,y2) je .opposite
@@ -56,10 +57,10 @@ public class InvasionHandler implements Consumer<WatchEvent> {
                 System.out.print("Invader:"+invader.getX()+","+invader.getY());
                 System.out.println("Odbrana:"+x1+","+y1+" == "+x2+","+y2);
                 MilitaryAircraft left = new FighterPlane(x1, y1, invader.getAltitude(),
-                        3//Util.randomBetween(aerospace.getPreferences().getSpeedMin(), aerospace.getPreferences().getSpeedMax())
+                        Util.randomBetween(aerospace.getPreferences().getSpeedMin(), aerospace.getPreferences().getSpeedMax())
                         , defenseDirection);
                 MilitaryAircraft right = new FighterPlane(x2, y2, invader.getAltitude(),
-                        2//Util.randomBetween(aerospace.getPreferences().getSpeedMin(), aerospace.getPreferences().getSpeedMax())
+                        Util.randomBetween(aerospace.getPreferences().getSpeedMin(), aerospace.getPreferences().getSpeedMax())
                         , defenseDirection);
                 aerospace.getMap().values().parallelStream().forEach(yMap-> yMap.values().forEach(q->{
                     q.forEach(ao->{
@@ -76,7 +77,8 @@ public class InvasionHandler implements Consumer<WatchEvent> {
                 }));
                 aerospace.getSpawner().enqueuSpawn(left);
                 aerospace.getSpawner().enqueuSpawn(right);
-            }
+            } else
+                System.out.println(handled + ", ne dodajem " + invader.getId());
         }
         catch (IOException ex){
             GenericLogger.log(this.getClass(),ex);

@@ -2,13 +2,21 @@ package jovic.dragan.pj2.radar.collisions;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class TextCollisionInfo implements Serializable {
     private String opis, vrijeme, pozicija;
+    private List<Integer> IDs;
+
     public TextCollisionInfo(CollisionInfo info){
         opis = "Sudar " + info.getNumberOfPlanes()+ " aviona";
         pozicija = "(x,y,z)=("+info.getX()+","+info.getY()+","+info.getAltitude()+")";
         vrijeme = LocalDateTime.now().toString();
+        IDs = info.getIDs();
+    }
+
+    public List<Integer> getIDs() {
+        return IDs;
     }
 
     @Override

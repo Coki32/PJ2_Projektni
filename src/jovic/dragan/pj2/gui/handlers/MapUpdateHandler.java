@@ -12,8 +12,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.WatchEvent;
 import java.util.List;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Consumer;
 
 public class MapUpdateHandler implements Consumer<WatchEvent> {
@@ -43,7 +41,7 @@ public class MapUpdateHandler implements Consumer<WatchEvent> {
                         mapWidth = viewer.getPreferences().getFieldWidth();
                 int planeWidth = (int)Math.ceil(w/mapWidth) - 1, planeHeight = (int)Math.ceil(h/mapHeight) - 1;
                 for (String line : lines) {
-                    ObjectInfo info = new ObjectInfo(line.split(","));
+                    ObjectInfo info = new ObjectInfo(line.trim().split(","));
                     Color color = Color.BLACK;
                     if(info.isMilitary()) {
                         color = info.isForeign() ? Color.RED : Color.BLUE;
