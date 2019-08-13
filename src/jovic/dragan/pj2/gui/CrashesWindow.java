@@ -41,12 +41,12 @@ public class CrashesWindow extends JFrame {
         });
         crashList.setPreferredSize(new Dimension(200, 200));
         detailsView.setPreferredSize(new Dimension(300, 200));
-//        detailsView.(new Dimension(300,250));
+        this.setTitle("Prikaz sudara");
         this.setLayout(new BorderLayout(5, 5));
         this.add(crashList, BorderLayout.WEST);
         this.add(detailsView, BorderLayout.CENTER);
         this.pack();
-        this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
 
 }

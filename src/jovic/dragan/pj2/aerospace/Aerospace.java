@@ -7,7 +7,6 @@ import jovic.dragan.pj2.aerospace.handlers.InvasionHandler;
 import jovic.dragan.pj2.logger.GenericLogger;
 import jovic.dragan.pj2.preferences.Constants;
 import jovic.dragan.pj2.preferences.PreferenceWatcher;
-import jovic.dragan.pj2.preferences.RadarPreferences;
 import jovic.dragan.pj2.preferences.SimulatorPreferences;
 import jovic.dragan.pj2.radar.RadarExporter;
 import jovic.dragan.pj2.util.Direction;
@@ -27,7 +26,7 @@ public class Aerospace {
     private Map<Integer, Map<Integer, ConcurrentLinkedDeque<AerospaceObject>>> map;
     private UpdatingRunnable updatingRunnable;
     private Thread updatingThread;
-    private boolean flightAllowed = true;
+    private boolean flightAllowed = true, guiFlightAllowed = true;
     private SimulatorPreferences preferences;
     private PreferenceWatcher<SimulatorPreferences> watcher;
     private boolean running = false;
@@ -81,10 +80,23 @@ public class Aerospace {
         }
     }
 
-    public synchronized void resumeFlight() {
+    public synchronized void allowFlight() {
         if (!flightAllowed) {
             System.out.println("Postavljan zabranu leta na false");
             flightAllowed = true;
+        }
+    }
+
+    public synchronized void guiBanFlight() {
+        if (guiFlightAllowed) {
+            guiFlightAllowed = false;
+            banFlight();
+        }
+    }
+
+    public synchronized void guiAllowFlight() {
+        if (!guiFlightAllowed) {
+            guiFlightAllowed = true;
         }
     }
 
@@ -124,7 +136,7 @@ public class Aerospace {
     }
 
     public void addAerospaceObject(AerospaceObject object) {
-        if(object!=null && (flightAllowed || object instanceof Military )) {
+        if (object != null && ((flightAllowed && guiFlightAllowed) || object instanceof Military)) {
             int x = object.getX(), y = object.getY();
             if (!map.containsKey(x)) {
                 map.put(x, new ConcurrentHashMap<>());
@@ -153,7 +165,7 @@ class UpdatingRunnable implements Runnable {
         this.watcher = watcher;
         this.aerospace = aerospace;
         preferences = watcher.getOriginal();
-        RadarPreferences radarPreferences = RadarPreferences.load();
+        //RadarPreferences radarPreferences = RadarPreferences.load();
 
         exporter = new RadarExporter(map);
         exporter.start();
@@ -212,7 +224,7 @@ class UpdatingRunnable implements Runnable {
             map.values().parallelStream().forEach((yMap) -> yMap.values().forEach(q -> q.forEach(ao -> ao.setSkip(false))));
             if (!aerospace.isFlightAllowed() && map.values().parallelStream().allMatch(yMap -> yMap.values().stream().allMatch(q -> q.stream().allMatch(
                     ao -> !(ao instanceof Military) || !((MilitaryAircraft) ao).isForeign()))))
-                aerospace.resumeFlight();
+                aerospace.allowFlight();
             long end = System.currentTimeMillis();
             try {
                 Thread.sleep(preferences.getSimulatorUpdatePeriod());

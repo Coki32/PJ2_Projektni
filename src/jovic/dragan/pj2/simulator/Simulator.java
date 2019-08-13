@@ -1,6 +1,7 @@
 package jovic.dragan.pj2.simulator;
 
 import jovic.dragan.pj2.aerospace.Aerospace;
+import jovic.dragan.pj2.controller.AerospaceController;
 import jovic.dragan.pj2.preferences.SimulatorPreferences;
 
 import java.util.Scanner;
@@ -10,6 +11,7 @@ public class Simulator {
     public static void main(String[] args) {
         Aerospace aerospace = new Aerospace(properties);
         aerospace.start();
+        AerospaceController controller = new AerospaceController(aerospace);
         new Thread(()->{
             while(true) {
                 int a = new Scanner(System.in).nextInt();
@@ -17,7 +19,7 @@ public class Simulator {
                     aerospace.banFlight();
                 }
                 else if (a==1)
-                    aerospace.resumeFlight();
+                    aerospace.allowFlight();
                 else
                     System.exit(0);
             }

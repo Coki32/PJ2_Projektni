@@ -57,5 +57,8 @@ public class Constants {
     public static final int BOMBER_CARRY_LIMIT = 3;
     public static final int PLANE_CARRY_LIMIT = 3;
 
+    public static final String COMMANDS_FOLDER = System.getProperty("java.io.tmpdir") + separator + "aerospaceCommands";
+    public static final String COMMAND_BAN_FLIGHT = "flight.ban";
+    public static final String COMMAND_ALLOW_FLIGHT = "flight.allow";
 
 }
