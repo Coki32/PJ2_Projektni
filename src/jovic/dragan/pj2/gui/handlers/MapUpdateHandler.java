@@ -17,15 +17,21 @@ import java.util.function.Consumer;
 public class MapUpdateHandler implements Consumer<WatchEvent> {
 
     private MapViewer viewer;
+    private boolean gridEnabled;
 
-    public MapUpdateHandler(MapViewer viewer){
+    public MapUpdateHandler(MapViewer viewer, boolean gridEnabled) {
         this.viewer = viewer;
+        this.gridEnabled = gridEnabled;
     }
 
 
     @Override
     public Consumer<WatchEvent> andThen(Consumer<? super WatchEvent> after) {
         return null;
+    }
+
+    private void drawGrid(int h, int w, int hStep, int wStep) {
+
     }
 
     @Override
@@ -40,13 +46,16 @@ public class MapUpdateHandler implements Consumer<WatchEvent> {
                 double mapHeight = viewer.getPreferences().getFieldHeight(),
                         mapWidth = viewer.getPreferences().getFieldWidth();
                 int planeWidth = (int) Math.ceil(w / mapWidth), planeHeight = (int) Math.ceil(h / mapHeight);
+                if (gridEnabled)
+                    drawGrid((int) h, (int) w, planeHeight, planeWidth);
                 for (String line : lines) {
                     ObjectInfo info = new ObjectInfo(line.trim().split(","));
-                    Color color = Color.BLACK;
-                    if(info.isMilitary()) {
-                        color = info.isForeign() ? Color.RED : Color.BLUE;
-                    }
-                    g.setColor(color);
+//                    Color color = Color.BLACK;
+//
+//                    if(info.isMilitary()) {
+//                        color = info.isForeign() ? Color.RED : Color.BLUE;
+//                    }
+                    g.setColor(info.getDrawingColor());
                     g.fillRect((int) (w / mapWidth * info.getX()), (int) (h / mapHeight * info.getY()), planeWidth, planeHeight);
                 }
                 System.out.println(String.format("View:%f x %f, Mapa: %f x %f a velicina %d x %d",

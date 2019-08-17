@@ -50,8 +50,8 @@ class SpawningRunnable implements Runnable {
         this.preferences = preferences;
         this.aerospace = aerospace;
         this.rng = new Random();
-        rpg = new RandomPlaneGenerator(PassengerPlane.class, TransportHelicopter.class, FirefighterPlane.class, FirefighterHelicopter.class,
-                AntiHailRocket.class, PassengerHelicopter.class);
+        rpg = new RandomPlaneGenerator(PassengerPlane.class, TransportHelicopter.class, FirefighterPlane.class,
+                FirefighterHelicopter.class, AntiHailRocket.class, PassengerHelicopter.class);
         watcher = new PreferenceWatcher<>(preferences, Constants.SIMULATOR_PROPERTIES_FILENAME, SimulatorPreferences::load);
         watcher.start();
     }

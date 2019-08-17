@@ -6,6 +6,7 @@ import jovic.dragan.pj2.preferences.Constants;
 import jovic.dragan.pj2.util.Direction;
 import jovic.dragan.pj2.util.Util;
 
+import java.awt.*;
 import java.io.Serializable;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -25,5 +26,10 @@ public class PassengerHelicopter extends Helicopter implements Serializable {
         }).limit(Util.randomBetween(1, Constants.HELICOPTER_CREW_LIMIT)).collect(Collectors.toList()));
         String[] models = modelPreferences.getHelicopters();
         setModel(models[Util.randomBetween(0,models.length-1)]);
+    }
+
+    @Override
+    public String export() {
+        return super.export() + "," + Color.ORANGE.getRGB();
     }
 }

@@ -14,18 +14,19 @@ import java.nio.file.WatchEvent;
 
 public class MapViewer extends Canvas implements Runnable {
     private SimulatorPreferences preferences;
+    private MapUpdateHandler handler;
 
-    public MapViewer(int width, int height){
+    public MapViewer(int width, int height, boolean gridEnabled) {
         preferences = SimulatorPreferences.load();
+        handler = new MapUpdateHandler(this, gridEnabled);
         try {
             Watcher mapWatcher = new Watcher(Constants.SIMULATOR_SHARED_FOLDERNAME, StandardWatchEventKinds.ENTRY_MODIFY);
-            mapWatcher.addEventHandler(StandardWatchEventKinds.ENTRY_MODIFY,new MapUpdateHandler(this));
+            mapWatcher.addEventHandler(StandardWatchEventKinds.ENTRY_MODIFY, handler);
             mapWatcher.start();
             Watcher prefWatcher = new Watcher(Constants.PREFERENCES_FOLDERNAME, StandardWatchEventKinds.ENTRY_MODIFY);
             prefWatcher.addEventHandler(StandardWatchEventKinds.ENTRY_MODIFY,watchEvent -> {
                Path path = ((WatchEvent<Path>)watchEvent).context();
                if(path.toString().endsWith(Constants.SIMULATOR_PROPERTIES_FILENAME)){
-//                   System.out.println("Ucitan novi prefs");
                     preferences = SimulatorPreferences.load();
                }
             });
@@ -34,9 +35,6 @@ public class MapViewer extends Canvas implements Runnable {
         catch (IOException ex){
             GenericLogger.log(this.getClass(),ex);
         }
-//        watcher.start();
-//        this.setPreferredSize(new Dimension(width,height));
-
         this.setSize(width,height);
         this.setBackground(Color.orange);
     }

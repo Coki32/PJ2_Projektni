@@ -35,12 +35,13 @@ public class Backuper extends Thread {
     public void run() {
         while (true) {
             LocalDateTime time = LocalDateTime.now();
-            try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream("./bkp/" + time.toString().replace(':', '-') + ".zip"))) {
+            String name = "backup_" + time.getYear() + "_" + time.getMonth() + "_" + time.getDayOfMonth() + "_" + time.getHour() + "_" + time.getMinute();
+            try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream("./bkp/" + name + ".zip"))) {
                 for (String folder : folders) {
                     zos.putNextEntry(new ZipEntry(folder + "/"));
                     Files.newDirectoryStream(Paths.get(folder)).forEach(path -> {
-                        try (BufferedInputStream fis = new BufferedInputStream(new FileInputStream(path.toFile()));) {
-                            System.out.println("Cuvam fajl " + path.toFile().toString());
+                        try (BufferedInputStream fis = new BufferedInputStream(new FileInputStream(path.toFile()))) {
+                            //System.out.println("Cuvam fajl " + path.toFile().toString());
                             zos.putNextEntry(new ZipEntry(folder + "/" + path.getFileName().toString()));
                             zos.write(fis.readAllBytes());
                             zos.closeEntry();

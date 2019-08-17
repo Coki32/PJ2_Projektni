@@ -4,6 +4,7 @@ import jovic.dragan.pj2.Interfaces.Firefighter;
 import jovic.dragan.pj2.util.Direction;
 import jovic.dragan.pj2.util.Util;
 
+import java.awt.*;
 import java.io.Serializable;
 
 /**
@@ -19,6 +20,11 @@ public class FirefighterPlane extends Aeroplane implements Firefighter, Serializ
         waterCapacity = Util.randomBetween(1000, 5000);
         setModel("PPA-"+ID);
         ID+=100;
+    }
+
+    @Override
+    public String export() {
+        return super.export() + "," + Color.PINK.getRGB();
     }
 
     public void extinguishFire() {

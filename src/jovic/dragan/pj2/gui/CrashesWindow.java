@@ -6,8 +6,6 @@ import jovic.dragan.pj2.preferences.Constants;
 import jovic.dragan.pj2.util.Util;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -21,6 +19,8 @@ public class CrashesWindow extends JFrame {
     private JList<String> crashList;
     private CrashDetailsView detailsView;
 
+    private JScrollPane scrollable;
+
     public CrashesWindow() {
         detailsView = new CrashDetailsView();
         Util.createFolderIfNotExists(Constants.ALERTS_FOLDER_PATH);
@@ -32,19 +32,17 @@ public class CrashesWindow extends JFrame {
             paths.add("Nije moguce otvoriti folder, pokusajte ponovo");
         }
         crashList = new JList<String>(paths.toArray(new String[]{}));
-        crashList.addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                detailsView.setCrash(((JList<String>) e.getSource()).getSelectedValue());
-
-            }
-        });
-        crashList.setPreferredSize(new Dimension(200, 200));
+        crashList.addListSelectionListener(e -> detailsView.setCrash(((JList<String>) e.getSource()).getSelectedValue()));
+        crashList.setVisibleRowCount(Math.min(paths.size(), 10));
         detailsView.setPreferredSize(new Dimension(300, 200));
+        scrollable = new JScrollPane(crashList);
+        crashList.setAutoscrolls(true);
+        scrollable.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+
         this.setTitle("Prikaz sudara");
         this.setLayout(new BorderLayout(5, 5));
         this.add(crashList, BorderLayout.WEST);
-        this.add(detailsView, BorderLayout.CENTER);
+        this.add(scrollable, BorderLayout.WEST);
         this.pack();
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }

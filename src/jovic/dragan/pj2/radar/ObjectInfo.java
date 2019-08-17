@@ -3,27 +3,33 @@ package jovic.dragan.pj2.radar;
 import jovic.dragan.pj2.util.Direction;
 import jovic.dragan.pj2.util.Pair;
 
+import java.awt.*;
 import java.io.Serializable;
 
 public class ObjectInfo implements Serializable {
     private int x,y,altitude, id;
     private Direction direction;
     private boolean military,foreign, followed;
-
+    private Color drawingColor;
     public ObjectInfo(String... fields) {
         id = Integer.parseInt(fields[0]);
         x = Integer.parseInt(fields[1]);
         y = Integer.parseInt(fields[2]);
         altitude = Integer.parseInt(fields[3]);
         direction = Direction.valueOf(fields[4].trim());
-        if(fields.length>5){
+        drawingColor = new Color(Integer.parseInt(fields[5].trim()));
+        if (fields.length > 6) {
             military = true;
-            foreign = Boolean.parseBoolean(fields[5]);
-            followed = Boolean.parseBoolean(fields[6]);
+            foreign = Boolean.parseBoolean(fields[6]);
+            followed = Boolean.parseBoolean(fields[7]);
         }
         else {
             military = foreign = false;
         }
+    }
+
+    public Color getDrawingColor() {
+        return drawingColor;
     }
 
     public Pair<Integer, Integer> getPosition() {

@@ -5,8 +5,9 @@ import jovic.dragan.pj2.personel.Person;
 import jovic.dragan.pj2.util.Direction;
 import jovic.dragan.pj2.util.Util;
 
+import java.awt.*;
 import java.io.Serializable;
-import java.util.*;
+import java.util.List;
 
 /**
  * 
@@ -21,6 +22,10 @@ public class PassengerPlane extends Aeroplane implements PassengerCarrier, Seria
         setModel(models[Util.randomBetween(0,models.length-1)]);
     }
 
+    @Override
+    public String export() {
+        return super.export() + "," + Color.green.getRGB();
+    }
 
     @Override
     public List<Person> getPassengers() {

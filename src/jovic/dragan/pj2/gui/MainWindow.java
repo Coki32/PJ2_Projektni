@@ -14,6 +14,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
+import java.util.Arrays;
 
 public class MainWindow extends JFrame {
 
@@ -22,7 +23,7 @@ public class MainWindow extends JFrame {
 
     private Watcher crashWatcher;
 
-    public MainWindow() {
+    public MainWindow(String[] args) {
         try {
             Util.createFolderIfNotExists(Constants.ALERTS_FOLDER_PATH);//Sad stvarno ne moze biti exception...
             crashWatcher = new Watcher(Constants.ALERTS_FOLDER_PATH, StandardWatchEventKinds.ENTRY_MODIFY);
@@ -36,7 +37,8 @@ public class MainWindow extends JFrame {
         }
         this.setLayout(new BorderLayout(3, 3));
         this.setSize(850, 650);
-        viewer = new MapViewer(800, 600);
+        viewer = new MapViewer(800, 600, Arrays.asList(args).contains("-grid"));
+        viewer.setBackground(Color.white);
         barControls = new BarControls();
         this.setTitle("Java vazdusni prostor");
         this.add(viewer, BorderLayout.CENTER);
@@ -47,6 +49,6 @@ public class MainWindow extends JFrame {
     }
 
     public static void main(String[] args) {
-        new MainWindow();
+        new MainWindow(args);
     }
 }
