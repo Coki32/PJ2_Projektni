@@ -3,6 +3,7 @@ package jovic.dragan.pj2.aerospace;
 import jovic.dragan.pj2.Interfaces.Military;
 import jovic.dragan.pj2.util.Direction;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +41,7 @@ public abstract class MilitaryAircraft extends Aircraft implements Military {
 
     @Override
     public String export() {
-        return super.export()+","+foreign+","+followed;
+        return super.export() + "," + (foreign ? Color.RED.getRGB() : Color.BLUE.getRGB()) + "," + foreign + "," + followed;
     }
 
     public void setFollowed(boolean followed) {

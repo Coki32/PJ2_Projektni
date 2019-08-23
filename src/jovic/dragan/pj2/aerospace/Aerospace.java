@@ -171,8 +171,8 @@ class UpdatingRunnable implements Runnable {
         exporter.start();
     }
 
-    private boolean isInsideOfMap(int x, int y, int width, int height){
-        return x<=width && y<=height && x>=0 && y>=0;
+    private boolean isInsideOfMap(int x, int y, int width, int height) {
+        return x <= width && y <= height && x >= 0 && y >= 0;
     }
 
     @Override
@@ -180,8 +180,11 @@ class UpdatingRunnable implements Runnable {
         while (true) {
             long start = System.currentTimeMillis();
             if (watcher.isChanged()) {
+                SimulatorPreferences oldPrefs = preferences;
                 preferences = watcher.getOriginal();
                 watcher.setChanged(false);
+                if (preferences == null)
+                    preferences = oldPrefs;
                 System.out.println("Ucitan novi pref u aerospace!");
             }
             int mapWidth = preferences.getFieldWidth(), mapHeight = preferences.getFieldHeight();
@@ -199,7 +202,7 @@ class UpdatingRunnable implements Runnable {
                         if ((ao instanceof MilitaryAircraft) && !((MilitaryAircraft) ao).isForeign() && ((MilitaryAircraft) ao).getFollowing() != null) {
                             MilitaryAircraft aoMil = (MilitaryAircraft) ao;
                             int x1 = aoMil.getFollowing().getX(), y1 = aoMil.getFollowing().getY();
-                            if (Math.sqrt((x1 - oldX) * (x1 - oldX) + (y1 - oldY) * (y1 - oldY)) < 2) {
+                            if (Math.sqrt((x1 - oldX) * (x1 - oldX) + (y1 - oldY) * (y1 - oldY)) < 1.1) {
                                 System.out.println("Domaca letjelica unistava stranu!");
                                 map.values().forEach(yMap -> yMap.values().forEach(q -> q.removeIf(qo -> qo.getId() == ((MilitaryAircraft) ao).getFollowing().getId())));
                                 ((MilitaryAircraft) ao).setFollowing(null);

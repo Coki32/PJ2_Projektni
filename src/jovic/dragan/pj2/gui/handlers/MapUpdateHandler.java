@@ -49,6 +49,7 @@ public class MapUpdateHandler implements Consumer<WatchEvent> {
                 if (gridEnabled)
                     drawGrid((int) h, (int) w, planeHeight, planeWidth);
                 for (String line : lines) {
+                    String[] split = line.trim().split(",");
                     ObjectInfo info = new ObjectInfo(line.trim().split(","));
 //                    Color color = Color.BLACK;
 //

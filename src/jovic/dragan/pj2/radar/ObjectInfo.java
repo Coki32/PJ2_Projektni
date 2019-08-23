@@ -41,12 +41,12 @@ public class ObjectInfo implements Serializable {
     }
 
     public String toCsv(){
-        return id+","+x+","+y+","+altitude+","+direction+","+foreign+","+followed;
+        return id + "," + x + "," + y + "," + altitude + "," + direction + "," + drawingColor.getRGB() + "," + foreign + "," + followed;
     }
 
     @Override
     public String toString() {
-        return id+","+x+","+y+","+altitude+","+direction+","+military+(foreign ? ",STRANI":",DOMACI");
+        return id + "," + x + "," + y + "," + altitude + "," + direction + "," + drawingColor.getRGB() + "," + military + (foreign ? ",STRANI" : ",DOMACI");
     }
 
     public int getId() {
