@@ -50,7 +50,12 @@ public class MapUpdateHandler implements Consumer<WatchEvent> {
                     drawGrid((int) h, (int) w, planeHeight, planeWidth);
                 for (String line : lines) {
                     String[] split = line.trim().split(",");
-                    ObjectInfo info = new ObjectInfo(line.trim().split(","));
+                    ObjectInfo info = null;
+                    try {
+                        info = new ObjectInfo(split);
+                    } catch (Exception ex) {
+                        System.out.println("Opet puca exception na " + split);
+                    }
 //                    Color color = Color.BLACK;
 //
 //                    if(info.isMilitary()) {
