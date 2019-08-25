@@ -21,11 +21,16 @@ public class BarControls extends JPanel {
     private JButton bShowCrashes;
     private JLabel lLatestEvent;
 
+    private JPanel buttonPanel;
+
     private Watcher eventWatcher;
 
     public BarControls() {
-        this.setLayout(new GridLayout(2, 1, 3, 3));
         bFlightControl = new JButton("Ban Flight");
+        buttonPanel = new JPanel(new GridLayout(1, 2, 3, 3));
+        bShowCrashes = new JButton("Show crashes");
+        lLatestEvent = new JLabel("Latest events will show up here");
+
         bFlightControl.addActionListener(new ActionListener() {
             private AerospaceMessageSender sender = new AerospaceMessageSender();
             boolean shouldBan = true;
@@ -41,12 +46,11 @@ public class BarControls extends JPanel {
                 shouldBan = !shouldBan;
             }
         });
-        bShowCrashes = new JButton("Show crashes");
         bShowCrashes.addActionListener(ev -> {
             CrashesWindow cw = new CrashesWindow();
             cw.setVisible(true);
         });
-        lLatestEvent = new JLabel("Latest events will show up here");
+
         try {
             eventWatcher = new Watcher(Constants.EVENTS_FOLDER_PATH, StandardWatchEventKinds.ENTRY_MODIFY);
             eventWatcher.addEventHandler(StandardWatchEventKinds.ENTRY_MODIFY, ev -> {
@@ -56,8 +60,13 @@ public class BarControls extends JPanel {
         } catch (IOException ex) {
             GenericLogger.log(this.getClass(), ex);
         }
-        add(bFlightControl);
-        add(bShowCrashes);
+
+        this.setLayout(new GridLayout(2, 1, 3, 3));
+
+        buttonPanel.add(bFlightControl);
+        buttonPanel.add(bShowCrashes);
+
+        add(buttonPanel);
         add(lLatestEvent);
     }
 
