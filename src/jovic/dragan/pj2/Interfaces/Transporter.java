@@ -2,8 +2,6 @@ package jovic.dragan.pj2.Interfaces;
 
 import jovic.dragan.pj2.aerospace.equipment.Cargo;
 
-import java.util.*;
-
 /**
  * 
  */

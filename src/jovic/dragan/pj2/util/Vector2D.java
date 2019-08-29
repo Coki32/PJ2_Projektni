@@ -1,7 +1,6 @@
 package jovic.dragan.pj2.util;
 
 import java.io.Serializable;
-import java.util.*;
 
 public class Vector2D implements Serializable {
     public Vector2D(int x, int y) {

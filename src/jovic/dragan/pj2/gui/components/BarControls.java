@@ -54,6 +54,7 @@ public class BarControls extends JPanel {
         try {
             eventWatcher = new Watcher(Constants.EVENTS_FOLDER_PATH, StandardWatchEventKinds.ENTRY_MODIFY);
             eventWatcher.addEventHandler(StandardWatchEventKinds.ENTRY_MODIFY, ev -> {
+                //noinspection unchecked
                 lLatestEvent.setText("New event available, check the file named " + ((WatchEvent<Path>) ev).context().toFile().getName() + " in the events folder");
             });
             eventWatcher.start();

@@ -34,6 +34,7 @@ public class PreferenceWatcher <T> extends Thread {
         }
     }
 
+    @SuppressWarnings("InfiniteLoopStatement")
     @Override
     public void run() {
         while(true) {

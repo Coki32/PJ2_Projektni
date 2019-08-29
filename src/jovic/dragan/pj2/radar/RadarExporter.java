@@ -25,6 +25,7 @@ public class RadarExporter extends Thread {
         PreferencesHelper.createFolderIfNotExists(Constants.SIMULATOR_SHARED_FOLDERNAME);
     }
 
+    @SuppressWarnings("InfiniteLoopStatement")
     @Override
     public void run() {
         while(true) {

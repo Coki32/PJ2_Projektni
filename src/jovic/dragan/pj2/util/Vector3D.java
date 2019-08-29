@@ -1,7 +1,5 @@
 package jovic.dragan.pj2.util;
 
-import java.util.*;
-
 /**
  * 
  */

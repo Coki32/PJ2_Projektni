@@ -175,6 +175,7 @@ class UpdatingRunnable implements Runnable {
         return x <= width && y <= height && x >= 0 && y >= 0;
     }
 
+    @SuppressWarnings("InfiniteLoopStatement")
     @Override
     public void run() {
         while (true) {

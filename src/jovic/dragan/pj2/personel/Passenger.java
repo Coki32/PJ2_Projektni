@@ -3,7 +3,6 @@ package jovic.dragan.pj2.personel;
 import jovic.dragan.pj2.personel.belongings.Passport;
 
 import java.io.Serializable;
-import java.util.*;
 
 /**
  * 

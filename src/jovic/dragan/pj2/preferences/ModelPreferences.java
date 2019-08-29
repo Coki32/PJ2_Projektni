@@ -3,7 +3,6 @@ package jovic.dragan.pj2.preferences;
 import jovic.dragan.pj2.logger.GenericLogger;
 import jovic.dragan.pj2.util.Util;
 
-import javax.swing.*;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.PrintWriter;

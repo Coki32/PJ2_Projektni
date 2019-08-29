@@ -1,9 +1,6 @@
 package jovic.dragan.pj2.personel;
 
-import com.sun.source.doctree.SerialDataTree;
-
 import java.io.Serializable;
-import java.util.*;
 
 /**
  * 

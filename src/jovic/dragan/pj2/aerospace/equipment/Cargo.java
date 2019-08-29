@@ -1,7 +1,6 @@
 package jovic.dragan.pj2.aerospace.equipment;
 
 import java.io.Serializable;
-import java.util.*;
 
 /**
  * 

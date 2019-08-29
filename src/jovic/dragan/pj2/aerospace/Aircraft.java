@@ -3,7 +3,6 @@ package jovic.dragan.pj2.aerospace;
 import jovic.dragan.pj2.personel.Person;
 import jovic.dragan.pj2.preferences.ModelPreferences;
 import jovic.dragan.pj2.util.Direction;
-import jovic.dragan.pj2.util.Vector3D;
 
 import java.io.Serializable;
 import java.util.*;

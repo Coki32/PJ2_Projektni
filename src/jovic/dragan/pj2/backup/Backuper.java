@@ -27,12 +27,13 @@ public class Backuper extends Thread {
     private Backuper(String... folders) {
         Util.createFolderIfNotExists("./bkp/");
         this.folders = new ArrayList<>();
-        this.folders.addAll(Arrays.asList(folders).stream().map(s -> s.substring(2)).collect(Collectors.toList()));
+        this.folders.addAll(Arrays.stream(folders).map(s -> s.substring(2)).collect(Collectors.toList()));
     }
 
 
     @Override
     public void run() {
+        //noinspection InfiniteLoopStatement
         while (true) {
             LocalDateTime time = LocalDateTime.now();
             String name = "backup_" + time.getYear() + "_" + time.getMonth() + "_" + time.getDayOfMonth() + "_" + time.getHour() + "_" + time.getMinute();

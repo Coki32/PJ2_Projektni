@@ -12,16 +12,12 @@ import java.util.function.Consumer;
 
 public class AerospaceController {
 
-    private Aerospace aerospace;
-
-    private Watcher commandWatcher;
-
     public AerospaceController(Aerospace aerospace) {
-        this.aerospace = aerospace;
         Util.createFolderIfNotExists(Constants.COMMANDS_FOLDER);
         try {
-            commandWatcher = new Watcher(Constants.COMMANDS_FOLDER, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_MODIFY);
+            Watcher commandWatcher = new Watcher(Constants.COMMANDS_FOLDER, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_MODIFY);
             Consumer<WatchEvent> consumer = watchEvent -> {
+                //noinspection unchecked
                 Path path = ((WatchEvent<Path>) watchEvent).context();
                 System.out.println("Primljena komanda: " + path.toString());
                 if (path.toString().endsWith(Constants.COMMAND_BAN_FLIGHT)) {

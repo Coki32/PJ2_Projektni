@@ -1,10 +1,8 @@
 package jovic.dragan.pj2.personel.belongings;
 
-import jovic.dragan.pj2.personel.Person;
 import jovic.dragan.pj2.personel.Pilot;
 
 import java.io.Serializable;
-import java.util.*;
 
 /**
  * 

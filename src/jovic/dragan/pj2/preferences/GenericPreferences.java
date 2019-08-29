@@ -1,7 +1,6 @@
 package jovic.dragan.pj2.preferences;
 
 import jovic.dragan.pj2.Interfaces.IPreferences;
-import jovic.dragan.pj2.logger.GenericLogger;
 
 
 //TODO: Mozda napravi generic preference, ako ostane vremena

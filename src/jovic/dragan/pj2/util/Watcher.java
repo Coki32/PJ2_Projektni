@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -40,14 +39,14 @@ public class Watcher extends Thread{
         return true;
     }
 
+    @SuppressWarnings("InfiniteLoopStatement")
     @Override
     public void run() {
         while(true){
             WatchKey key = null;
             try{
                 key = service.take();
-            }
-            catch (InterruptedException ex){
+            } catch (InterruptedException ex){
                 GenericLogger.log(this.getClass(),ex);
             }
             if(key!=null){

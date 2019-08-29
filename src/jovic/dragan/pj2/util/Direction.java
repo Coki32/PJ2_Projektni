@@ -1,7 +1,5 @@
 package jovic.dragan.pj2.util;
 
-import jovic.dragan.pj2.aerospace.AerospaceObject;
-
 import java.util.Map;
 
 public enum Direction {
