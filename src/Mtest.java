@@ -1,27 +1,14 @@
+import jovic.dragan.pj2.aerospace.handlers.InvasionHandler;
+import jovic.dragan.pj2.util.Direction;
+
 import java.awt.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Parameter;
 
 public class Mtest {
 
-    void f(int a) {
-
-    }
-
-    public Mtest(int b) {
-
-    }
-
-    public Mtest() {
-        Constructor<?>[] ctors = this.getClass().getConstructors();
-        for (Constructor<?> ctor : ctors) {
-            if (ctor.getParameterCount() == 1) {
-                System.out.println(ctor.getParameterTypes()[0].equals(int.class));
-            }
-        }
-    }
+    static final int MAX = 10;
 
     public static void main(String[] args) {
-        new Mtest();
     }
 }

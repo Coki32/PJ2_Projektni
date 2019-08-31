@@ -8,6 +8,7 @@ import jovic.dragan.pj2.preferences.Constants;
 import jovic.dragan.pj2.preferences.SimulatorPreferences;
 import jovic.dragan.pj2.radar.ObjectInfo;
 import jovic.dragan.pj2.util.Direction;
+import jovic.dragan.pj2.util.Pair;
 import jovic.dragan.pj2.util.Util;
 
 import java.io.IOException;
@@ -41,31 +42,41 @@ public class InvasionHandler implements Consumer<WatchEvent> {
             if (!invader.isFollowed() && handled.add(invader.getId())) {
                 Direction invaderDirection = invader.getDirection();
                 System.out.println("---------PREPOZNAT INVADER! " + invader);
-                Direction defenseDirection = null;//Direction za (xLeft,yLeft), za (xRight,yRight) je .opposite
                 aerospace.banFlight();
-                int xLeft, xRight, yLeft, yRight;
+                int xLeft = -1, xRight = -1, yLeft = -1, yRight = -1;
                 SimulatorPreferences preferences = aerospace.getPreferences();
-
-                if (invaderDirection == Direction.UP || invaderDirection == Direction.DOWN) {
-                    xLeft = Math.max(invader.getX() - 1, 0);//xLeft = invader.getX()-1 < 0 ? 0 : invader.getX()-1;
-                    xRight = Math.min(invader.getX() + 1, preferences.getFieldWidth());//ili to, ili desna ivica
-                    yLeft = yRight = invaderDirection == Direction.UP ? 0 : preferences.getFieldHeight();
-                    defenseDirection = invader.getY() < (preferences.getFieldHeight() / 2) ? Direction.UP : Direction.DOWN;
-                } else {
-                    //Left je bellow, right je above
-                    yLeft = Math.max(invader.getY() - 1, 0);
-                    yRight = Math.min(invader.getY() + 1, preferences.getFieldWidth());
-                    xLeft = xRight = invader.getDirection() == Direction.RIGHT ? 0 : preferences.getFieldWidth();
-                    defenseDirection = invader.getX() < (preferences.getFieldWidth() / 2) ? Direction.RIGHT : Direction.LEFT;
+                int width = preferences.getFieldWidth(), height = preferences.getFieldHeight();
+                int invaderX = invader.getX(), invaderY = invader.getY();
+                switch (invaderDirection) {
+                    case UP: {
+                        xLeft = Math.max(invaderX - 1, 0);
+                        xRight = Math.min(invaderX + 1, width);
+                        yLeft = yRight = 0;
+                    }
+                    break;
+                    case DOWN: {//Ovdje se pod lijevi misli na "pilotov" lijevi. Kad bi gledali iz perspektive invadera
+                        yLeft = yRight = height;
+                        xLeft = Math.min(invaderX + 1, width);
+                        xRight = Math.max(invaderX - 1, 0);
+                    }
+                    break;
+                    case LEFT: {
+                        xLeft = xRight = width;
+                        yLeft = Math.max(invaderY - 1, 0);
+                        yRight = Math.min(invaderY + 1, height);
+                    }
+                    break;
+                    case RIGHT: {
+                        xLeft = xRight = 0;
+                        yLeft = Math.min(invaderY + 1, height);
+                        yRight = Math.max(invaderY - 1, 0);
+                    }
+                    break;
                 }
-                System.out.print("Invader:"+invader.getX()+","+invader.getY());
-                System.out.println("Odbrana:" + xLeft + "," + yLeft + " == " + xRight + "," + yRight);
                 int speedLeft = Util.randomBetween(preferences.getSpeedMin(), preferences.getSpeedMax());
-                int speedRIght = Util.randomBetween(preferences.getSpeedMin(), preferences.getSpeedMax());
-                MilitaryAircraft left = new FighterPlane(xLeft, yLeft, invader.getAltitude(),
-                        speedLeft, defenseDirection);
-                MilitaryAircraft right = new FighterPlane(xRight, yRight, invader.getAltitude(),
-                        speedRIght, defenseDirection);
+                int speedRight = Util.randomBetween(preferences.getSpeedMin(), preferences.getSpeedMax());
+                MilitaryAircraft left = new FighterPlane(xLeft, yLeft, invader.getAltitude(), speedLeft, invaderDirection);
+                MilitaryAircraft right = new FighterPlane(xRight, yRight, invader.getAltitude(), speedRight, invaderDirection);
                 aerospace.getMap().values().parallelStream().forEach(yMap-> yMap.values().forEach(q->{
                     q.forEach(ao->{
                         if(ao.getId()==invader.getId())
