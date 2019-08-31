@@ -4,15 +4,11 @@ import jovic.dragan.pj2.gui.components.BarControls;
 import jovic.dragan.pj2.gui.components.MapViewer;
 import jovic.dragan.pj2.logger.GenericLogger;
 import jovic.dragan.pj2.preferences.Constants;
-import jovic.dragan.pj2.preferences.SimulatorPreferences;
 import jovic.dragan.pj2.util.Util;
 import jovic.dragan.pj2.util.Watcher;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -55,6 +51,7 @@ public class MainWindow extends JFrame {
     }
 
     public static void main(String[] args) {
+        System.out.println("Pokrenut GUI");
         new MainWindow(args);
     }
 }

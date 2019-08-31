@@ -1,6 +1,6 @@
 package jovic.dragan.pj2.aerospace;
 
-import jovic.dragan.pj2.Interfaces.Military;
+import jovic.dragan.pj2.interfaces.Military;
 import jovic.dragan.pj2.logger.GenericLogger;
 import jovic.dragan.pj2.radar.RadarExporter;
 import jovic.dragan.pj2.util.Pair;
@@ -35,43 +35,42 @@ public class AerospaceUpdatingRunnable implements Runnable {
         while (true) {
             long start = System.currentTimeMillis();
             int mapWidth = aerospace.getPreferences().getFieldWidth(), mapHeight = aerospace.getPreferences().getFieldHeight();
-            var mapsIter = map.values().iterator();
-            while (mapsIter.hasNext()) {
-                var subMap = mapsIter.next();
-                var subMapIter = subMap.values().iterator();
-                while (subMapIter.hasNext()) {
-                    var list = subMapIter.next();
-                    var listIter = list.iterator();
+            for (Map<Integer, Queue<AerospaceObject>> subMap : map.values()) {
+                for (Queue<AerospaceObject> list : subMap.values()) {
+                    var listIter = list.iterator();//iterator zbog .remove-a
                     while (listIter.hasNext()) {
                         AerospaceObject ao = listIter.next();
-                        int oldX = ao.getX(), oldY = ao.getY();
-                        Pair<Integer, Integer> nextPosition = ao.getNextPosition();
-                        if ((ao instanceof MilitaryAircraft) && !((MilitaryAircraft) ao).isForeign() && ((MilitaryAircraft) ao).getFollowing() != null) {
-                            MilitaryAircraft aoMil = (MilitaryAircraft) ao;
-                            int x1 = aoMil.getFollowing().getX(), y1 = aoMil.getFollowing().getY();
-                            if (Math.sqrt((x1 - oldX) * (x1 - oldX) + (y1 - oldY) * (y1 - oldY)) < 1.1) {
-                                System.out.println("Domaca letjelica unistava stranu!");
-                                map.values().forEach(yMap -> yMap.values().forEach(q -> q.removeIf(qo -> qo.getId() == ((MilitaryAircraft) ao).getFollowing().getId())));
-                                ((MilitaryAircraft) ao).setFollowing(null);
+                        //Ako ga ne treba prekosciti obradi ga i oznaci za posjeceno
+                        if (!ao.isSkip()) {
+                            int oldX = ao.getX(), oldY = ao.getY();
+                            Pair<Integer, Integer> nextPosition = ao.getNextPosition();
+                            ao.setSkip(true);//Osigurava da se taj samo jednom provjeri
+                            if ((ao instanceof MilitaryAircraft) && !((MilitaryAircraft) ao).isForeign() && ((MilitaryAircraft) ao).getFollowing() != null) {
+                                MilitaryAircraft aoMil = (MilitaryAircraft) ao;
+                                int x1 = aoMil.getFollowing().getX(), y1 = aoMil.getFollowing().getY();
+                                if (Math.sqrt((x1 - oldX) * (x1 - oldX) + (y1 - oldY) * (y1 - oldY)) <= 1.0) {
+                                    System.out.println("Domaca letjelica unistava stranu!");
+                                    map.values().forEach(yMap -> yMap.values().forEach(q -> q.removeIf(qo -> qo.getId() == ((MilitaryAircraft) ao).getFollowing().getId())));
+                                    ((MilitaryAircraft) ao).setFollowing(null);
+                                }
                             }
-                        }
-                        if (!isInsideOfMap(nextPosition.getFirst(), nextPosition.getSecond(), mapWidth, mapHeight)) {
-                            listIter.remove();
-                        } else if (oldX != nextPosition.getFirst() || oldY != nextPosition.getSecond()) {
-                            //ao.setSkip(true);
-                            ao.setX(nextPosition.getFirst());
-                            ao.setY(nextPosition.getSecond());
-                            listIter.remove();
-                            if (!map.containsKey(ao.getX()))
-                                map.put(ao.getX(), new ConcurrentHashMap<>());
-                            if (!map.get(ao.getX()).containsKey(ao.getY()))
-                                map.get(ao.getX()).put(ao.getY(), new ConcurrentLinkedDeque<>());
-                            map.get(ao.getX()).get(ao.getY()).add(ao);
+                            if (!isInsideOfMap(nextPosition.getFirst(), nextPosition.getSecond(), mapWidth, mapHeight)) {
+                                listIter.remove();
+                            } else if (oldX != nextPosition.getFirst() || oldY != nextPosition.getSecond()) {
+                                ao.setX(nextPosition.getFirst());
+                                ao.setY(nextPosition.getSecond());
+                                listIter.remove();
+                                if (!map.containsKey(ao.getX()))
+                                    map.put(ao.getX(), new ConcurrentHashMap<>());
+                                if (!map.get(ao.getX()).containsKey(ao.getY()))
+                                    map.get(ao.getX()).put(ao.getY(), new ConcurrentLinkedDeque<>());
+                                map.get(ao.getX()).get(ao.getY()).add(ao);
+                            }
                         }
                     }
                 }
             }
-            //map.values().parallelStream().forEach((yMap) -> yMap.values().forEach(q -> q.forEach(ao -> ao.setSkip(false))));
+            map.values().parallelStream().forEach((yMap) -> yMap.values().forEach(q -> q.forEach(ao -> ao.setSkip(false))));
             if (!aerospace.isFlightAllowed() && map.values().parallelStream().allMatch(yMap -> yMap.values().stream().allMatch(q -> q.stream().allMatch(
                     ao -> !(ao instanceof Military) || !((MilitaryAircraft) ao).isForeign()))))
                 aerospace.allowFlight();

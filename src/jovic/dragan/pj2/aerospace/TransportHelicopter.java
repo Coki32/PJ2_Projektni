@@ -1,12 +1,11 @@
 package jovic.dragan.pj2.aerospace;
 
-import jovic.dragan.pj2.Interfaces.Transporter;
+import jovic.dragan.pj2.interfaces.Transporter;
 import jovic.dragan.pj2.aerospace.equipment.Cargo;
 import jovic.dragan.pj2.preferences.Constants;
 import jovic.dragan.pj2.util.Direction;
 import jovic.dragan.pj2.util.Util;
 
-import java.awt.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;

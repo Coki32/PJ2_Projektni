@@ -1,11 +1,10 @@
 package jovic.dragan.pj2.aerospace;
 
-import jovic.dragan.pj2.Interfaces.Firefighter;
+import jovic.dragan.pj2.interfaces.Firefighter;
 import jovic.dragan.pj2.preferences.Constants;
 import jovic.dragan.pj2.util.Direction;
 import jovic.dragan.pj2.util.Util;
 
-import java.awt.*;
 import java.io.Serializable;
 
 /**

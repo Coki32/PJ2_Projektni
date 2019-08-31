@@ -1,6 +1,6 @@
 package jovic.dragan.pj2.aerospace;
 
-import jovic.dragan.pj2.Interfaces.Military;
+import jovic.dragan.pj2.interfaces.Military;
 import jovic.dragan.pj2.aerospace.generators.Spawner;
 import jovic.dragan.pj2.aerospace.handlers.CollisionHandler;
 import jovic.dragan.pj2.aerospace.handlers.InvasionHandler;
@@ -32,7 +32,7 @@ public class Aerospace {
     private Spawner spawner;
 
     public Aerospace(SimulatorPreferences preferences) {
-        map = new ConcurrentHashMap<>();
+        map = new ConcurrentHashMap<>(preferences.getFieldWidth() / 2);
 
         this.preferences = preferences;
 

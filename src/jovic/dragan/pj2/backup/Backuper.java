@@ -64,6 +64,7 @@ public class Backuper extends Thread {
     }
 
     public static void main(String[] args) {
+        System.out.println("Pokrenut backup utility");
         Util.createFolderIfNotExists(Constants.ALERTS_FOLDER_PATH);
         Util.createFolderIfNotExists(Constants.PREFERENCES_FOLDERNAME);
         Util.createFolderIfNotExists(Constants.EVENTS_FOLDER_PATH);

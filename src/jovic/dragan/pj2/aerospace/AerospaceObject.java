@@ -1,6 +1,7 @@
 package jovic.dragan.pj2.aerospace;
 
 
+import jovic.dragan.pj2.preferences.Constants;
 import jovic.dragan.pj2.util.Direction;
 import jovic.dragan.pj2.util.Pair;
 import jovic.dragan.pj2.util.Vector2D;
@@ -36,7 +37,8 @@ public abstract class AerospaceObject implements Serializable {
         this.altitude = altitude;
         this.direction = dir;
         this.directionVector = dir.getDirectionVector();
-        drawingColor = new Color(77, 142, 179);//default boja
+        this.skip = false;
+        this.drawingColor = Constants.Colors.NOT_ASSIGNED;//default boja
         id = ID++;
     }
 
@@ -59,7 +61,6 @@ public abstract class AerospaceObject implements Serializable {
 
     public Pair<Integer, Integer> getNextPosition() {
         if (skip) {
-            skip = false;
             return new Pair<>(x, y);
         }
         int newX = x, newY = y;
@@ -95,6 +96,10 @@ public abstract class AerospaceObject implements Serializable {
 
     public int getY() {
         return y;
+    }
+
+    public boolean isSkip() {
+        return skip;
     }
 
     public void setSkip(boolean value) {

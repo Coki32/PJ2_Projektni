@@ -1,4 +1,4 @@
-package jovic.dragan.pj2.Interfaces;
+package jovic.dragan.pj2.interfaces;
 
 import jovic.dragan.pj2.aerospace.equipment.Cargo;
 

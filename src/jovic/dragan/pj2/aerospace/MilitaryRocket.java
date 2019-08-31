@@ -1,9 +1,8 @@
 package jovic.dragan.pj2.aerospace;
 
-import jovic.dragan.pj2.Interfaces.Military;
+import jovic.dragan.pj2.interfaces.Military;
 import jovic.dragan.pj2.util.Direction;
 
-import java.awt.*;
 import java.io.Serializable;
 
 public class MilitaryRocket extends Rocket implements Serializable, Military {

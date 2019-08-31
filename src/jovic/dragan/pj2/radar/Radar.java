@@ -22,6 +22,7 @@ public class Radar {
 
 
     public static void main(String[] args){
+        System.out.println("Pokrenut radar");
         Watcher watcher = null;
         try {
             watcher = new Watcher(Constants.SIMULATOR_SHARED_FOLDERNAME, StandardWatchEventKinds.ENTRY_MODIFY);

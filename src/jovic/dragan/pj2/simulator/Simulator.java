@@ -9,6 +9,7 @@ import java.util.Scanner;
 public class Simulator {
     private static final SimulatorPreferences properties = SimulatorPreferences.load();
     public static void main(String[] args) {
+        System.out.println("Pokrenut simulator");
         Aerospace aerospace = new Aerospace(properties);
         aerospace.start();
         AerospaceController controller = new AerospaceController(aerospace);
