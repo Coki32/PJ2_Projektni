@@ -2,8 +2,6 @@ package jovic.dragan.pj2.aerospace.generators;
 
 import jovic.dragan.pj2.aerospace.*;
 import jovic.dragan.pj2.logger.GenericLogger;
-import jovic.dragan.pj2.preferences.Constants;
-import jovic.dragan.pj2.preferences.PreferenceWatcher;
 import jovic.dragan.pj2.preferences.SimulatorPreferences;
 import jovic.dragan.pj2.util.Direction;
 import jovic.dragan.pj2.util.Util;
@@ -18,9 +16,10 @@ public class Spawner {
     private Thread spawningThread;
     private SpawningRunnable spawningRunnable;
     private Queue<AerospaceObject> spawnQueue;
-    public Spawner(SimulatorPreferences properties, Aerospace aerospace){
+
+    public Spawner(Aerospace aerospace) {
         spawnQueue = new ConcurrentLinkedQueue<>();
-        spawningRunnable = new SpawningRunnable(properties, aerospace, spawnQueue);
+        spawningRunnable = new SpawningRunnable(aerospace, spawnQueue);
         spawningThread = new Thread(spawningRunnable);
         spawningThread.start();
     }
@@ -41,19 +40,17 @@ class SpawningRunnable implements Runnable {
     private Aerospace aerospace;
     private Random rng;
     private RandomPlaneGenerator rpg;
-    private SimulatorPreferences preferences;
-    private PreferenceWatcher<SimulatorPreferences> watcher;
     private Queue<AerospaceObject> spawnQueue;
-    public SpawningRunnable(SimulatorPreferences preferences, Aerospace aerospace, Queue<AerospaceObject> spawnQueue) {
+    private int oldForeign;
+
+    public SpawningRunnable(Aerospace aerospace, Queue<AerospaceObject> spawnQueue) {
         this.paused = false;
         this.spawnQueue = spawnQueue;
-        this.preferences = preferences;
         this.aerospace = aerospace;
+        oldForeign = aerospace.getPreferences().getForeignMilitary();
         this.rng = new Random();
         rpg = new RandomPlaneGenerator(PassengerPlane.class, TransportHelicopter.class, FirefighterPlane.class,
-                FirefighterHelicopter.class, AntiHailRocket.class, PassengerHelicopter.class);
-        watcher = new PreferenceWatcher<>(preferences, Constants.SIMULATOR_PROPERTIES_FILENAME, SimulatorPreferences::load);
-        watcher.start();
+                FirefighterHelicopter.class, AntiHailRocket.class, PassengerHelicopter.class, TransportPlane.class);
     }
 
     public synchronized void setPaused(boolean value) {
@@ -70,13 +67,11 @@ class SpawningRunnable implements Runnable {
         if(nextToSpawn!=null){
             return nextToSpawn;
         }
-        if (watcher.isChanged()) {
-            System.out.println("Ucitano u spawneru");
-            int oldForeign = preferences.getForeignMilitary();
-            preferences = watcher.getOriginal();
-            int newForeign = preferences.getForeignMilitary();
-            watcher.setChanged(false);
-            invader = newForeign > oldForeign;
+        SimulatorPreferences preferences = aerospace.getPreferences();
+        if (preferences.getForeignMilitary() > oldForeign) {
+            oldForeign = preferences.getForeignMilitary();
+            System.out.println("Spawner vidi da se povecao broj!");
+            invader = true;
         }
         AerospaceObject spawned = null;
         int x = 0, y = 0;
@@ -108,8 +103,8 @@ class SpawningRunnable implements Runnable {
     public void run() {
         //noinspection InfiniteLoopStatement
         while (true) {
-            int minSpawn = preferences.getSpawnTimeMin(),
-                    maxSpawn = preferences.getSpawnTimeMax();
+            int minSpawn = aerospace.getPreferences().getSpawnTimeMin(),
+                    maxSpawn = aerospace.getPreferences().getSpawnTimeMax();
             AerospaceObject ao = randomObject();
             aerospace.addAerospaceObject(ao);
             try {

@@ -5,6 +5,7 @@ import jovic.dragan.pj2.util.Direction;
 import jovic.dragan.pj2.util.Pair;
 import jovic.dragan.pj2.util.Vector2D;
 
+import java.awt.*;
 import java.io.Serializable;
 
 /**
@@ -18,6 +19,8 @@ public abstract class AerospaceObject implements Serializable {
     private Direction direction;
     private int id;
 
+    //za export boje
+    protected Color drawingColor;
 
     //altitude je bolje, preimenuj kasnije
     private int altitude, x, y;
@@ -33,6 +36,7 @@ public abstract class AerospaceObject implements Serializable {
         this.altitude = altitude;
         this.direction = dir;
         this.directionVector = dir.getDirectionVector();
+        drawingColor = new Color(77, 142, 179);//default boja
         id = ID++;
     }
 
@@ -46,7 +50,7 @@ public abstract class AerospaceObject implements Serializable {
     }
 
     public String export(){
-        return  id+","+x+","+y+","+altitude+","+direction;
+        return id + "," + x + "," + y + "," + altitude + "," + direction + "," + drawingColor.getRGB();
     }
 
     public int getId() {

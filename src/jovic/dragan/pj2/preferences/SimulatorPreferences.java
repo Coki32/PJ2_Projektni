@@ -2,6 +2,7 @@ package jovic.dragan.pj2.preferences;
 
 
 import jovic.dragan.pj2.logger.GenericLogger;
+import jovic.dragan.pj2.simulator.Simulator;
 import jovic.dragan.pj2.util.Util;
 
 import java.io.*;
@@ -32,12 +33,17 @@ public class SimulatorPreferences implements Serializable {
         sp.sharedFileName = Constants.SIMULATOR_SHARED_FILENAME;
         sp.sharedFolder = Constants.SIMULATOR_SHARED_FOLDERNAME;
         sp.sharedFullName = Constants.SIMULATOR_SHARED_FILE_FULL_NAME;
+        SimulatorPreferences.save(sp);
+        return sp;
+    }
+
+    public static void save(SimulatorPreferences sp) {
         try (PrintWriter pw = new PrintWriter(Constants.SIMULATOR_PROPERTIES_FULL_NAME)){
             pw.println(new com.google.gson.GsonBuilder().setPrettyPrinting().create().toJson(sp));
         } catch (FileNotFoundException ex) {
             GenericLogger.log(SimulatorPreferences.class, ex);
         }
-        return sp;
+
     }
 
     public static SimulatorPreferences load(){
@@ -87,6 +93,11 @@ public class SimulatorPreferences implements Serializable {
 
     public String getSharedFileName() {
         return sharedFileName;
+    }
+
+    //Samo za gui olaksicu, inace ne bi bilo ovdje
+    public void setForeignMilitary(int foreignMilitary) {
+        this.foreignMilitary = foreignMilitary;
     }
 
     public int getForeignMilitary() {

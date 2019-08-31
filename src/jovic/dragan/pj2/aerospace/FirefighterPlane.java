@@ -1,6 +1,7 @@
 package jovic.dragan.pj2.aerospace;
 
 import jovic.dragan.pj2.Interfaces.Firefighter;
+import jovic.dragan.pj2.preferences.Constants;
 import jovic.dragan.pj2.util.Direction;
 import jovic.dragan.pj2.util.Util;
 
@@ -20,12 +21,14 @@ public class FirefighterPlane extends Aeroplane implements Firefighter, Serializ
         waterCapacity = Util.randomBetween(1000, 5000);
         setModel("PPA-"+ID);
         ID+=100;
+
+        drawingColor = Constants.Colors.FIREFIGHTER_PLANE;
     }
 
-    @Override
-    public String export() {
-        return super.export() + "," + Color.PINK.getRGB();
-    }
+//    @Override
+//    public String export() {
+//        return super.export() + "," + Color.PINK.getRGB();
+//    }
 
     public void extinguishFire() {
         System.out.println("PPA gasi pozar!");

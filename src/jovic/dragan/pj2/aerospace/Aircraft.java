@@ -3,6 +3,7 @@ package jovic.dragan.pj2.aerospace;
 import jovic.dragan.pj2.personel.Person;
 import jovic.dragan.pj2.preferences.ModelPreferences;
 import jovic.dragan.pj2.util.Direction;
+import jovic.dragan.pj2.util.Util;
 
 import java.io.Serializable;
 import java.util.*;
@@ -23,6 +24,10 @@ public abstract class Aircraft extends AerospaceObject implements Serializable {
         super(x, y, altitude, speed, direction);
         characteristics = new HashMap<>();
         crew = new ArrayList<>();
+    }
+
+    protected void assignRandomModel(String[] models) {
+        setModel(models[Util.randomBetween(0, models.length - 1)]);
     }
 
     public String getModel() {

@@ -24,12 +24,9 @@ public class PassengerHelicopter extends Helicopter implements Serializable {
             @Override
             public Person get() { return new Passenger("Putnik",String.valueOf(++i)); }
         }).limit(Util.randomBetween(1, Constants.HELICOPTER_CREW_LIMIT)).collect(Collectors.toList()));
-        String[] models = modelPreferences.getHelicopters();
-        setModel(models[Util.randomBetween(0,models.length-1)]);
-    }
 
-    @Override
-    public String export() {
-        return super.export() + "," + Color.ORANGE.getRGB();
+        drawingColor = Constants.Colors.PASSENGER_HELICOPTER;
+
+        assignRandomModel(modelPreferences.getHelicopters());
     }
 }

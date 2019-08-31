@@ -22,13 +22,17 @@ public class ModelPreferences implements Serializable {
         mp.helicopters = Constants.MODELS_HELICOPTERS;
         mp.militaryBombers = Constants.MODELS_MILITARY_BOMBERS;
         mp.militaryPlanes = Constants.MODELS_MILITARY_PLANES;
-        try(PrintWriter pw = new PrintWriter(Constants.MODELS_FULL_NAME)){
-            pw.println(new com.google.gson.GsonBuilder().setPrettyPrinting().create().toJson(mp));
-        }
-        catch (FileNotFoundException ex){
-            GenericLogger.log(ModelPreferences.class,ex);
-        }
+        save(mp);
         return mp;
+    }
+
+    public static void save(ModelPreferences mp) {
+        try (PrintWriter pw = new PrintWriter(Constants.MODELS_FULL_NAME)) {
+            pw.println(new com.google.gson.GsonBuilder().setPrettyPrinting().create().toJson(mp));
+        } catch (FileNotFoundException ex) {
+            GenericLogger.log(ModelPreferences.class, ex);
+        }
+
     }
 
     public static ModelPreferences load(){

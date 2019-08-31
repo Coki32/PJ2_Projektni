@@ -4,11 +4,15 @@ import jovic.dragan.pj2.gui.components.BarControls;
 import jovic.dragan.pj2.gui.components.MapViewer;
 import jovic.dragan.pj2.logger.GenericLogger;
 import jovic.dragan.pj2.preferences.Constants;
+import jovic.dragan.pj2.preferences.SimulatorPreferences;
 import jovic.dragan.pj2.util.Util;
 import jovic.dragan.pj2.util.Watcher;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -26,12 +30,14 @@ public class MainWindow extends JFrame {
     public MainWindow(String[] args) {
         try {
             Util.createFolderIfNotExists(Constants.ALERTS_FOLDER_PATH);//Sad stvarno ne moze biti exception...
-            crashWatcher = new Watcher(Constants.ALERTS_FOLDER_PATH, StandardWatchEventKinds.ENTRY_MODIFY);
-            crashWatcher.addEventHandler(StandardWatchEventKinds.ENTRY_MODIFY, ev -> {
-                Path path = ((WatchEvent<Path>) ev).context();
-                new CrashPopup(Paths.get(Constants.ALERTS_FOLDER_PATH).resolve(path).toString());
-            });
-            crashWatcher.start();
+            if (!Arrays.asList(args).contains("-nopopup")) {
+                crashWatcher = new Watcher(Constants.ALERTS_FOLDER_PATH, StandardWatchEventKinds.ENTRY_MODIFY);
+                crashWatcher.addEventHandler(StandardWatchEventKinds.ENTRY_MODIFY, ev -> {
+                    Path path = ((WatchEvent<Path>) ev).context();
+                    new CrashPopup(Paths.get(Constants.ALERTS_FOLDER_PATH).resolve(path).toString());
+                });
+                crashWatcher.start();
+            }
         } catch (IOException ex) {
             GenericLogger.log(this.getClass(), ex);
         }

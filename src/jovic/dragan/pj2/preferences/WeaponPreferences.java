@@ -1,6 +1,7 @@
 package jovic.dragan.pj2.preferences;
 
 import jovic.dragan.pj2.logger.GenericLogger;
+import jovic.dragan.pj2.util.Util;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -19,18 +20,22 @@ public class WeaponPreferences {
         wp.planeWeapons = Constants.PLANE_WEAPONS;
         wp.bomberCarryLimit = Constants.BOMBER_CARRY_LIMIT;
         wp.planeCarryLimit = Constants.PLANE_CARRY_LIMIT;
-        try (PrintWriter writer = new PrintWriter(Constants.WEAPONS_PROPERTIES_FULL_NAME)){
+        save(wp);
+        return wp;
+    }
+
+    public static void save(WeaponPreferences wp) {
+        try (PrintWriter writer = new PrintWriter(Constants.WEAPONS_PROPERTIES_FULL_NAME)) {
             writer.println(new com.google.gson.GsonBuilder().setPrettyPrinting().create().toJson(wp));
         } catch (FileNotFoundException ex) {
             GenericLogger.log(WeaponPreferences.class, ex);
         }
-        return wp;
     }
 
     public static WeaponPreferences load() {
         WeaponPreferences wp = null;
         try {
-            PreferencesHelper.createFolderIfNotExists(Constants.PREFERENCES_FOLDERNAME);
+            Util.createFolderIfNotExists(Constants.PREFERENCES_FOLDERNAME);
             wp = new com.google.gson.Gson().fromJson(new FileReader(Constants.WEAPONS_PROPERTIES_FULL_NAME), WeaponPreferences.class);
         } catch (FileNotFoundException ex) {
             GenericLogger.log(WeaponPreferences.class, ex);

@@ -4,6 +4,7 @@ import jovic.dragan.pj2.controller.AerospaceMessageSender;
 import jovic.dragan.pj2.gui.CrashesWindow;
 import jovic.dragan.pj2.logger.GenericLogger;
 import jovic.dragan.pj2.preferences.Constants;
+import jovic.dragan.pj2.preferences.SimulatorPreferences;
 import jovic.dragan.pj2.util.Watcher;
 
 import javax.swing.*;
@@ -19,17 +20,19 @@ public class BarControls extends JPanel {
 
     private JButton bFlightControl;
     private JButton bShowCrashes;
+    private JButton bInvade;
     private JLabel lLatestEvent;
 
-    private JPanel buttonPanel;
+    private JPanel pButtonPanel;
 
     private Watcher eventWatcher;
 
     public BarControls() {
         bFlightControl = new JButton("Ban Flight");
-        buttonPanel = new JPanel(new GridLayout(1, 2, 3, 3));
         bShowCrashes = new JButton("Show crashes");
+        bInvade = new JButton("Spawn invaders");
         lLatestEvent = new JLabel("Latest events will show up here");
+        pButtonPanel = new JPanel(new GridLayout(1, 3, 3, 3));
 
         bFlightControl.addActionListener(new ActionListener() {
             private AerospaceMessageSender sender = new AerospaceMessageSender();
@@ -50,7 +53,11 @@ public class BarControls extends JPanel {
             CrashesWindow cw = new CrashesWindow();
             cw.setVisible(true);
         });
-
+        bInvade.addActionListener(ev -> {
+            SimulatorPreferences sp = SimulatorPreferences.load();
+            sp.setForeignMilitary(sp.getForeignMilitary() + 1);
+            SimulatorPreferences.save(sp);
+        });
         try {
             eventWatcher = new Watcher(Constants.EVENTS_FOLDER_PATH, StandardWatchEventKinds.ENTRY_MODIFY);
             eventWatcher.addEventHandler(StandardWatchEventKinds.ENTRY_MODIFY, ev -> {
@@ -64,10 +71,11 @@ public class BarControls extends JPanel {
 
         this.setLayout(new GridLayout(2, 1, 3, 3));
 
-        buttonPanel.add(bFlightControl);
-        buttonPanel.add(bShowCrashes);
+        pButtonPanel.add(bFlightControl);
+        pButtonPanel.add(bShowCrashes);
+        pButtonPanel.add(bInvade);
 
-        add(buttonPanel);
+        add(pButtonPanel);
         add(lLatestEvent);
     }
 

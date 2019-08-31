@@ -17,6 +17,11 @@ public class Watcher extends Thread{
     protected Map<WatchEvent.Kind,Consumer<WatchEvent>> handlers;
     protected WatchEvent.Kind[] availableKinds;
 
+    /**
+     * @param path  Folder for which events will be tracked
+     * @param kinds List of kinds of events to be tracked
+     * @throws IOException registering the watcher may throw an IOException
+     */
     public Watcher(String path, WatchEvent.Kind... kinds) throws IOException {
         try {
             watchingPath = Paths.get(path);

@@ -1,13 +1,11 @@
 package jovic.dragan.pj2.preferences;
 
+import java.awt.*;
 import java.io.File;
 
 public class Constants {
     private static final String separator = File.separator;
 
-    //ovih nema u SimulatorPreference klasi jeeer mi nema smisla, mora znati koji se prvi otvara unaprijed.
-    //Ako neko hoce custom preferences fajl moralo bi se i to pratiti u nekom trecem default preferences fajlu
-    //i eto gluposti s lancem fajlova
     public static final String PREFERENCES_FOLDERNAME = "." + separator + "preferences";
     public static final String SIMULATOR_PROPERTIES_FILENAME = "simulator.preferences";
     public static final String SIMULATOR_PROPERTIES_FULL_NAME = PREFERENCES_FOLDERNAME + separator + SIMULATOR_PROPERTIES_FILENAME;
@@ -60,5 +58,21 @@ public class Constants {
     public static final String COMMANDS_FOLDER = System.getProperty("java.io.tmpdir") + separator + "aerospaceCommands";
     public static final String COMMAND_BAN_FLIGHT = "flight.ban";
     public static final String COMMAND_ALLOW_FLIGHT = "flight.allow";
+
+    public static class Colors {
+        public static final Color NOT_ASSIGNED = new Color(170, 179, 7);
+        public static final Color FIREFIGHTER_HELICOPTER = Color.DARK_GRAY;
+        public static final Color FIREFIGHTER_PLANE = Color.PINK;
+        public static final Color MILITARY_HOME = Color.BLUE;
+        public static final Color MILITARY_FOREIGN = Color.RED;
+        public static final Color PASSENGER_HELICOPTER = Color.ORANGE;
+        public static final Color PASSENGER_PLANE = Color.GREEN;
+        public static final Color ROCKET = Color.BLACK;
+        public static final Color TRANSPORT_HELICOPTER = Color.MAGENTA;
+        public static final Color TRANSPORT_PLANE = Color.CYAN;
+
+
+    }
+
 
 }

@@ -9,8 +9,8 @@ public interface Transporter {
 
     void addCargo(Cargo c);
 
-    void getCurrentCargoWeight();
+    int getCurrentCargoWeight();
 
-    void getMaximumCargoWeight();
+    int getMaximumCargoWeight();
 
 }

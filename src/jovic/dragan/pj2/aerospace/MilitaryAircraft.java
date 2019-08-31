@@ -1,6 +1,7 @@
 package jovic.dragan.pj2.aerospace;
 
 import jovic.dragan.pj2.Interfaces.Military;
+import jovic.dragan.pj2.preferences.Constants;
 import jovic.dragan.pj2.util.Direction;
 
 import java.awt.*;
@@ -20,6 +21,8 @@ public abstract class MilitaryAircraft extends Aircraft implements Military {
         foreign = false;
         followed = false;
         followers = new ArrayList<>();
+
+        drawingColor = Constants.Colors.MILITARY_HOME;//jer je svaki domaci na pocetku
     }
 
     public void setFollowing(MilitaryAircraft target){
@@ -41,7 +44,7 @@ public abstract class MilitaryAircraft extends Aircraft implements Military {
 
     @Override
     public String export() {
-        return super.export() + "," + (foreign ? Color.RED.getRGB() : Color.BLUE.getRGB()) + "," + foreign + "," + followed;
+        return super.export() + "," + foreign + "," + followed;
     }
 
     public void setFollowed(boolean followed) {
@@ -58,5 +61,6 @@ public abstract class MilitaryAircraft extends Aircraft implements Military {
 
     public void setForeign(boolean foreign) {
         this.foreign = foreign;
+        drawingColor = foreign ? Constants.Colors.MILITARY_FOREIGN : Constants.Colors.MILITARY_HOME;
     }
 }

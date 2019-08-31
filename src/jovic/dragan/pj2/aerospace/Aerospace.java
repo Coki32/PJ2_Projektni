@@ -6,7 +6,6 @@ import jovic.dragan.pj2.aerospace.handlers.CollisionHandler;
 import jovic.dragan.pj2.aerospace.handlers.InvasionHandler;
 import jovic.dragan.pj2.logger.GenericLogger;
 import jovic.dragan.pj2.preferences.Constants;
-import jovic.dragan.pj2.preferences.PreferenceWatcher;
 import jovic.dragan.pj2.preferences.SimulatorPreferences;
 import jovic.dragan.pj2.radar.RadarExporter;
 import jovic.dragan.pj2.util.Direction;
@@ -15,48 +14,60 @@ import jovic.dragan.pj2.util.Util;
 import jovic.dragan.pj2.util.Watcher;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.StandardWatchEventKinds;
+import java.nio.file.WatchEvent;
 import java.util.Map;
+import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.logging.Level;
 
 public class Aerospace {
 
-    private Map<Integer, Map<Integer, ConcurrentLinkedDeque<AerospaceObject>>> map;
+    private Map<Integer, Map<Integer, Queue<AerospaceObject>>> map;
     private UpdatingRunnable updatingRunnable;
     private Thread updatingThread;
     private boolean flightAllowed = true, guiFlightAllowed = true;
     private SimulatorPreferences preferences;
-    private PreferenceWatcher<SimulatorPreferences> watcher;
     private boolean running = false;
-//    Spawner spawner = new Spawner(properties, aerospace);
     private Spawner spawner;
-
-    private Watcher collisionWatcher, invasionWatcher;
 
     public Aerospace(SimulatorPreferences preferences) {
         map = new ConcurrentHashMap<>();
 
         this.preferences = preferences;
-        watcher = new PreferenceWatcher<>(preferences, Constants.SIMULATOR_PROPERTIES_FILENAME,SimulatorPreferences::load);
+
         Util.createFolderIfNotExists(Constants.ALERTS_FOLDER_PATH);
         Util.createFolderIfNotExists(Constants.EVENTS_FOLDER_PATH);
         try {
-            collisionWatcher = new Watcher(Constants.ALERTS_FOLDER_PATH, StandardWatchEventKinds.ENTRY_MODIFY);
-            invasionWatcher = new Watcher(Constants.EVENTS_FOLDER_PATH, StandardWatchEventKinds.ENTRY_MODIFY);
+            Watcher preferenceWatcher = new Watcher(Constants.PREFERENCES_FOLDERNAME, StandardWatchEventKinds.ENTRY_MODIFY);
+            Watcher collisionWatcher = new Watcher(Constants.ALERTS_FOLDER_PATH, StandardWatchEventKinds.ENTRY_MODIFY);
+            Watcher invasionWatcher = new Watcher(Constants.EVENTS_FOLDER_PATH, StandardWatchEventKinds.ENTRY_MODIFY);
+
             collisionWatcher.addEventHandler(StandardWatchEventKinds.ENTRY_MODIFY,new CollisionHandler(this));
             invasionWatcher.addEventHandler(StandardWatchEventKinds.ENTRY_MODIFY,new InvasionHandler(this));
+            preferenceWatcher.addEventHandler(StandardWatchEventKinds.ENTRY_MODIFY, ev -> {
+                if (((WatchEvent<Path>) ev).context().toFile().toString().endsWith(Constants.SIMULATOR_PROPERTIES_FILENAME)) {
+                    this.reloadPreferences();
+                    System.out.println("Novi preferences ucitan u Aerospace, samim tim i spawner!");
+                }
+            });
+
             collisionWatcher.start();
             invasionWatcher.start();
+            preferenceWatcher.start();
         }
         catch (IOException ex){
             GenericLogger.log(this.getClass(), Level.SEVERE,"Could not register folder watchers for collisions and invasions, those will not be detected",ex);
         }
-        updatingRunnable = new UpdatingRunnable(map, watcher, this);
+        updatingRunnable = new UpdatingRunnable(map, this);
         updatingThread = new Thread(updatingRunnable, "updating task thread");
-        watcher.start();
-        spawner = new Spawner(preferences,this);
+        spawner = new Spawner(this);
+    }
+
+    private void reloadPreferences() {
+        preferences = SimulatorPreferences.load();
     }
 
     public synchronized void banFlight() {
@@ -115,19 +126,7 @@ public class Aerospace {
         return preferences;
     }
 
-    public void clearPosition(int x, int y, int altitude){
-        if(map.containsKey(x) && map.get(x).containsKey(y))
-            map.get(x).get(y).removeIf(ao->ao.getAltitude()==altitude);
-    }
-
-    public ConcurrentLinkedDeque<AerospaceObject> getField(int x, int y){
-        if (map.containsKey(x) && map.get(x).containsKey(y))
-            return map.get(x).get(y);
-        else
-            return  null;
-    }
-
-    public Map<Integer, Map<Integer, ConcurrentLinkedDeque<AerospaceObject>>> getMap(){
+    public Map<Integer, Map<Integer, Queue<AerospaceObject>>> getMap() {
         return map;
     }
 
@@ -145,7 +144,12 @@ public class Aerospace {
                 map.get(x).put(y, new ConcurrentLinkedDeque<>());
             }
             if(object instanceof MilitaryAircraft){
-                System.out.println("Dodata vojska u prostor, i to "+ (((MilitaryAircraft) object).isForeign() ? "strana":"domaca"));
+                MilitaryAircraft ma = (MilitaryAircraft) object;
+                if (ma instanceof FighterPlane) {
+                    FighterPlane fp = (FighterPlane) ma;
+                    if (!fp.isForeign() && fp.getFollowing() != null)
+                        fp.follow(fp.getFollowing());
+                }
             }
             map.get(x).get(y).add(object);
         }
@@ -154,17 +158,13 @@ public class Aerospace {
 
 class UpdatingRunnable implements Runnable {
 
-    private Map<Integer, Map<Integer, ConcurrentLinkedDeque<AerospaceObject>>> map;
-    private PreferenceWatcher<SimulatorPreferences> watcher;
-    private SimulatorPreferences preferences;
+    private Map<Integer, Map<Integer, Queue<AerospaceObject>>> map;
     private Aerospace aerospace;
     private RadarExporter exporter;
 
-    UpdatingRunnable(Map<Integer, Map<Integer, ConcurrentLinkedDeque<AerospaceObject>>> map, PreferenceWatcher<SimulatorPreferences> watcher, Aerospace aerospace) {
+    UpdatingRunnable(Map<Integer, Map<Integer, Queue<AerospaceObject>>> map, Aerospace aerospace) {
         this.map = map;
-        this.watcher = watcher;
         this.aerospace = aerospace;
-        preferences = watcher.getOriginal();
         //RadarPreferences radarPreferences = RadarPreferences.load();
 
         exporter = new RadarExporter(map);
@@ -180,15 +180,7 @@ class UpdatingRunnable implements Runnable {
     public void run() {
         while (true) {
             long start = System.currentTimeMillis();
-            if (watcher.isChanged()) {
-                SimulatorPreferences oldPrefs = preferences;
-                preferences = watcher.getOriginal();
-                watcher.setChanged(false);
-                if (preferences == null)
-                    preferences = oldPrefs;
-                System.out.println("Ucitan novi pref u aerospace!");
-            }
-            int mapWidth = preferences.getFieldWidth(), mapHeight = preferences.getFieldHeight();
+            int mapWidth = aerospace.getPreferences().getFieldWidth(), mapHeight = aerospace.getPreferences().getFieldHeight();
             var mapsIter = map.values().iterator();
             while (mapsIter.hasNext()) {
                 var subMap = mapsIter.next();
@@ -212,7 +204,7 @@ class UpdatingRunnable implements Runnable {
                         if (!isInsideOfMap(nextPosition.getFirst(), nextPosition.getSecond(), mapWidth, mapHeight)) {
                             listIter.remove();
                         } else if (oldX != nextPosition.getFirst() || oldY != nextPosition.getSecond()) {
-                            ao.setSkip(true);
+                            //ao.setSkip(true);
                             ao.setX(nextPosition.getFirst());
                             ao.setY(nextPosition.getSecond());
                             listIter.remove();
@@ -225,13 +217,13 @@ class UpdatingRunnable implements Runnable {
                     }
                 }
             }
-            map.values().parallelStream().forEach((yMap) -> yMap.values().forEach(q -> q.forEach(ao -> ao.setSkip(false))));
+            //map.values().parallelStream().forEach((yMap) -> yMap.values().forEach(q -> q.forEach(ao -> ao.setSkip(false))));
             if (!aerospace.isFlightAllowed() && map.values().parallelStream().allMatch(yMap -> yMap.values().stream().allMatch(q -> q.stream().allMatch(
                     ao -> !(ao instanceof Military) || !((MilitaryAircraft) ao).isForeign()))))
                 aerospace.allowFlight();
             long end = System.currentTimeMillis();
             try {
-                Thread.sleep(preferences.getSimulatorUpdatePeriod());
+                Thread.sleep(aerospace.getPreferences().getSimulatorUpdatePeriod());
             } catch (InterruptedException ex) {
                 GenericLogger.log(this.getClass(), ex);
             }

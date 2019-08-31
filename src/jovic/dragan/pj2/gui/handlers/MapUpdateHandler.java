@@ -18,7 +18,7 @@ public class MapUpdateHandler implements Consumer<WatchEvent> {
 
     private MapViewer viewer;
     private boolean gridEnabled;
-
+    long lastDraw = 0;
     public MapUpdateHandler(MapViewer viewer, boolean gridEnabled) {
         this.viewer = viewer;
         this.gridEnabled = gridEnabled;
@@ -36,40 +36,40 @@ public class MapUpdateHandler implements Consumer<WatchEvent> {
 
     @Override
     public void accept(WatchEvent watchEvent) {
-        Path path = ((WatchEvent<Path>) watchEvent).context();
-        try {
-            List<String> lines = Files.readAllLines(Paths.get(Constants.SIMULATOR_SHARED_FOLDERNAME).resolve(path));
-            if (lines.size() != 0) {
-                Graphics g = viewer.getGraphics();
-                viewer.paint(g);
-                double h = viewer.getHeight(), w = viewer.getWidth();
-                double mapHeight = viewer.getPreferences().getFieldHeight(),
-                        mapWidth = viewer.getPreferences().getFieldWidth();
-                int planeWidth = (int) Math.ceil(w / mapWidth), planeHeight = (int) Math.ceil(h / mapHeight);
-                if (gridEnabled)
-                    drawGrid((int) h, (int) w, planeHeight, planeWidth);
-                for (String line : lines) {
-                    String[] split = line.trim().split(",");
-                    ObjectInfo info = null;
-                    try {
-                        info = new ObjectInfo(split);
-                    } catch (Exception ex) {
-                        System.out.println("Opet puca exception na " + split);
+        if (!((System.currentTimeMillis() - lastDraw) < 500)) {
+            Path path = ((WatchEvent<Path>) watchEvent).context();
+            try {
+                int count = 0;
+                List<String> lines = Files.readAllLines(Paths.get(Constants.SIMULATOR_SHARED_FOLDERNAME).resolve(path));
+                if (lines.size() != 0) {
+                    Graphics g = viewer.getGraphics();
+                    viewer.paint(g);
+                    double h = viewer.getHeight(), w = viewer.getWidth();
+                    double mapHeight = viewer.getPreferences().getFieldHeight(),
+                            mapWidth = viewer.getPreferences().getFieldWidth();
+                    int planeWidth = (int) Math.ceil(w / mapWidth), planeHeight = (int) Math.ceil(h / mapHeight);
+                    if (gridEnabled)
+                        drawGrid((int) h, (int) w, planeHeight, planeWidth);
+                    for (String line : lines) {
+                        String[] split = line.trim().split(",");
+                        ObjectInfo info = null;
+                        try {
+                            info = new ObjectInfo(split);
+                        } catch (Exception ex) {//fajl moze biti "corrupted" pa se info ne procita ispravno
+                            GenericLogger.log(this.getClass(), ex);
+                        }
+                        if (info != null) {
+                            g.setColor(info.getDrawingColor());
+                            g.fillRect((int) (w / mapWidth * info.getX()), (int) (h / mapHeight * info.getY()), planeWidth, planeHeight);
+                            count++;
+                        }
                     }
-//                    Color color = Color.BLACK;
-//
-//                    if(info.isMilitary()) {
-//                        color = info.isForeign() ? Color.RED : Color.BLUE;
-//                    }
-                    g.setColor(info.getDrawingColor());
-                    g.fillRect((int) (w / mapWidth * info.getX()), (int) (h / mapHeight * info.getY()), planeWidth, planeHeight);
+                    lastDraw = System.currentTimeMillis();
+                    System.out.println("Nacrtao sam " + count + " aviona");
                 }
-                System.out.println(String.format("View:%f x %f, Mapa: %f x %f a velicina %d x %d",
-                        h, w, mapHeight, mapWidth, planeHeight, planeWidth));
+            } catch (IOException ex) {
+                GenericLogger.log(this.getClass(), ex);
             }
-        }
-        catch (IOException ex){
-            GenericLogger.log(this.getClass(),ex);
         }
     }
 }

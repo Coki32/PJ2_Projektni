@@ -24,10 +24,6 @@ public class Util {
         }
     }
 
-    public Path pathResolver(String folder, Path path){
-        return (Paths.get(folder).resolve(path));
-    }
-
     /**
      * @param min minimum number the generator may return
      * @param max maximum number the generator may return, inclusive

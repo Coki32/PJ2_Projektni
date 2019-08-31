@@ -11,8 +11,4 @@ public class AntiHailRocket extends Rocket implements Serializable {
         super(x,y,altitude,speed,direction);
     }
 
-    @Override
-    public String export() {
-        return super.export() + "," + (new Color(30, 220, 250).getRGB());
-    }
 }

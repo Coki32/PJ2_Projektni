@@ -1,6 +1,6 @@
 package jovic.dragan.pj2.logger;
 
-import jovic.dragan.pj2.preferences.PreferencesHelper;
+import jovic.dragan.pj2.util.Util;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -25,7 +25,7 @@ public class GenericLogger {
         Logger logger = Logger.getLogger(C.getName());
         if(logger.getHandlers().length==0)
             try {
-                PreferencesHelper.createFolderIfNotExists("./logs/");
+                Util.createFolderIfNotExists("./logs/");
                 Handler handler = new FileHandler("./logs/" + C.getName() + LocalDateTime.now().toLocalTime().toString().replace(':', '_') + ".log");
                 logger.addHandler(handler);
                 handler.close();

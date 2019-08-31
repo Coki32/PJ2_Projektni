@@ -2,6 +2,7 @@ package jovic.dragan.pj2.aerospace;
 
 import jovic.dragan.pj2.Interfaces.Firefighter;
 import jovic.dragan.pj2.personel.Pilot;
+import jovic.dragan.pj2.preferences.Constants;
 import jovic.dragan.pj2.util.Direction;
 
 import java.awt.*;
@@ -19,11 +20,7 @@ public class FirefighterHelicopter extends Helicopter implements Firefighter,Ser
         setModel("PPH-"+ID);
         addCrew(new Pilot("Pilot",String.valueOf(ID)));
         ID+=10;
-    }
-
-    @Override
-    public String export() {
-        return super.export() + "," + Color.DARK_GRAY.getRGB();
+        drawingColor = Constants.Colors.FIREFIGHTER_HELICOPTER;
     }
 
     @Override
