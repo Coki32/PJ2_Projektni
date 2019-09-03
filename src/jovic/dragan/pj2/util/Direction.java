@@ -13,6 +13,7 @@ public enum Direction {
         return OPPOSITES_MAP.get(this);
     }
 
+    //(-90) stepeni
     public Direction normal() {
         switch (this) {
             case UP:
@@ -24,7 +25,7 @@ public enum Direction {
             case RIGHT:
                 return DOWN;
             default:
-                return null;
+                throw new IllegalArgumentException("Nemoguca opcija");
         }
     }
 
@@ -43,7 +44,7 @@ public enum Direction {
             case RIGHT:
                 return new Vector2D(1, 0);
             default:
-                return null;
+                throw new IllegalArgumentException("Nemoguca opcija");
         }
     }
 }
