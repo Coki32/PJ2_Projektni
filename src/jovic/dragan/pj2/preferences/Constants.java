@@ -10,6 +10,8 @@ public class Constants {
     public static final String SIMULATOR_PROPERTIES_FILENAME = "simulator.preferences";
     public static final String SIMULATOR_PROPERTIES_FULL_NAME = PREFERENCES_FOLDERNAME + separator + SIMULATOR_PROPERTIES_FILENAME;
 
+    public static final String BACKUP_FOLDERNAME = "." + separator + "bkp";
+
     public static final String MODELS_FILENAME = "models.preferences";
     public static final String MODELS_FULL_NAME = PREFERENCES_FOLDERNAME+separator+MODELS_FILENAME;
 

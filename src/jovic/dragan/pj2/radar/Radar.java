@@ -5,6 +5,7 @@ import jovic.dragan.pj2.logger.GenericLogger;
 import jovic.dragan.pj2.preferences.Constants;
 import jovic.dragan.pj2.radar.collisions.CollisionChecker;
 import jovic.dragan.pj2.radar.invasions.InvasionsChecker;
+import jovic.dragan.pj2.util.Util;
 import jovic.dragan.pj2.util.Watcher;
 
 import java.io.IOException;
@@ -25,6 +26,7 @@ public class Radar {
         System.out.println("Pokrenut radar");
         Watcher watcher = null;
         try {
+            Util.createFolderIfNotExists(Constants.SIMULATOR_SHARED_FOLDERNAME);
             watcher = new Watcher(Constants.SIMULATOR_SHARED_FOLDERNAME, StandardWatchEventKinds.ENTRY_MODIFY);
         }
         catch (IOException ex){
@@ -32,17 +34,15 @@ public class Radar {
         }
         if(watcher!=null){
             ExecutorService executor = Executors.newCachedThreadPool();
-            Consumer<WatchEvent> eventConsumer = new Consumer<WatchEvent>() {
+            Consumer<WatchEvent> eventConsumer = new Consumer<>() {
                 long newStart = 0, prevStart = 0;
 
                 @Override
                 public void accept(WatchEvent ev) {
                     Path path = ((WatchEvent<Path>) ev).context();
                     newStart = System.currentTimeMillis();
-//                    System.out.println("Od proslog "+(newStart-prevStart)+"ms");
                     try {
                         List<String> lines = Files.readAllLines(Paths.get(Constants.SIMULATOR_SHARED_FOLDERNAME).resolve(path));
-//                        System.out.print(lines.size()>=1 && ((newStart-prevStart)>20));
                         if (lines.size() >= 1) {//&& ((newStart - prevStart) > 20)) {
                             System.out.println(LocalDateTime.now() + " - radar tick");
                             Queue<ObjectInfo> invasions = new ConcurrentLinkedQueue<>();
@@ -55,8 +55,6 @@ public class Radar {
                             //Jednom threadu kopija, jednom original jer collision checker izbacuje elemente iz kolekcije
                             executor.execute(new CollisionChecker(collisions));
                             executor.execute(new InvasionsChecker(invasions));
-                        } else {
-//                            System.out.println("Ne radim nista: "+lines);
                         }
                     } catch (IOException ex) {
                         GenericLogger.log(Radar.class, ex);

@@ -13,14 +13,13 @@ import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Queue;
 import java.util.logging.Level;
 
 public class RadarExporter extends Thread {
 
-    private Map<Integer, Map<Integer, Queue<AerospaceObject>>> map;
+    private final Map<Integer, Map<Integer, Queue<AerospaceObject>>> map;
     private RadarPreferences radarPreferences;
 
     public RadarExporter(Map<Integer, Map<Integer, Queue<AerospaceObject>>> map) {
@@ -48,17 +47,13 @@ public class RadarExporter extends Thread {
     @Override
     public void run() {
         while(true) {
-            Map<Integer, Map<Integer, Queue<AerospaceObject>>> copy;
-            synchronized (map) {
-                copy = new HashMap<>(map);
-            }
             try (PrintWriter pw = new PrintWriter(Constants.SIMULATOR_SHARED_FILE_FULL_NAME)) {
-                copy.values().forEach(yMap -> yMap.values().forEach(q ->
-                {
-                    q.forEach(ao -> {
-                        pw.println(ao.export());
-                    });
-                }));
+                synchronized (map) {//Citava mapa se zakljuca da se ne bi neki pomjerili, neki ostali na mjestu
+                    long start = System.nanoTime();
+                    map.values().forEach(yMap -> yMap.values().forEach(q -> q.forEach(ao -> pw.println(ao.export()))));
+                    long end = System.nanoTime();
+                    System.out.println("Mapa zakljucana na " + (end - start) / 1000000.0 + " ms");
+                }
 
             } catch (FileNotFoundException ex) {
                 GenericLogger.log(this.getClass(), ex);

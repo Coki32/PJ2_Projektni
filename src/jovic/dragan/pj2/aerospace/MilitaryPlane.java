@@ -7,7 +7,8 @@ import jovic.dragan.pj2.util.Direction;
 import jovic.dragan.pj2.util.Util;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 
@@ -16,7 +17,6 @@ public abstract class MilitaryPlane extends MilitaryAircraft implements Serializ
 
     private List<Weapon> weapons;
     protected static WeaponPreferences weaponPreferences = WeaponPreferences.load();
-    protected enum WeaponType{BOMBER, PLANE}
 
     public MilitaryPlane(int x, int y, int altitude, int speed, Direction direction) {
         super(x, y, altitude, speed, direction);

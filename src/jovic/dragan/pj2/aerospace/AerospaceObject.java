@@ -23,7 +23,6 @@ public abstract class AerospaceObject implements Serializable {
     //za export boje
     protected Color drawingColor;
 
-    //altitude je bolje, preimenuj kasnije
     private int altitude, x, y;
     private boolean skip;
     private int ticks;

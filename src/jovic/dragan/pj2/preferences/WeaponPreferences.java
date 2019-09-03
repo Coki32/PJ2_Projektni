@@ -33,7 +33,7 @@ public class WeaponPreferences {
     }
 
     public static WeaponPreferences load() {
-        WeaponPreferences wp = null;
+        WeaponPreferences wp;
         try {
             Util.createFolderIfNotExists(Constants.PREFERENCES_FOLDERNAME);
             wp = new com.google.gson.Gson().fromJson(new FileReader(Constants.WEAPONS_PROPERTIES_FULL_NAME), WeaponPreferences.class);

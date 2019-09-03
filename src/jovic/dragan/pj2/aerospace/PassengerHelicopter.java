@@ -6,7 +6,6 @@ import jovic.dragan.pj2.preferences.Constants;
 import jovic.dragan.pj2.util.Direction;
 import jovic.dragan.pj2.util.Util;
 
-import java.awt.*;
 import java.io.Serializable;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;

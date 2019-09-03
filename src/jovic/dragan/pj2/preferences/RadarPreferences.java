@@ -29,7 +29,7 @@ public class RadarPreferences  {
     }
 
     public static RadarPreferences load(){
-        RadarPreferences rp = null;
+        RadarPreferences rp;
         try{
             Util.createFolderIfNotExists(Constants.PREFERENCES_FOLDERNAME);
             rp = (new com.google.gson.Gson().fromJson(new FileReader(Constants.RADAR_PROPERTIES_FULL_NAME),RadarPreferences.class));

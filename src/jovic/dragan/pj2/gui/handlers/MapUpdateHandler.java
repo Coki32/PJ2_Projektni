@@ -17,11 +17,10 @@ import java.util.function.Consumer;
 public class MapUpdateHandler implements Consumer<WatchEvent> {
 
     private MapViewer viewer;
-    private boolean gridEnabled;
-    long lastDraw = 0;
-    public MapUpdateHandler(MapViewer viewer, boolean gridEnabled) {
+    private long lastDraw = 0;
+
+    public MapUpdateHandler(MapViewer viewer) {
         this.viewer = viewer;
-        this.gridEnabled = gridEnabled;
     }
 
 
@@ -30,13 +29,9 @@ public class MapUpdateHandler implements Consumer<WatchEvent> {
         return null;
     }
 
-    private void drawGrid(int h, int w, int hStep, int wStep) {
-
-    }
-
     @Override
     public void accept(WatchEvent watchEvent) {
-        if (!((System.currentTimeMillis() - lastDraw) < 500)) {
+        if (((System.currentTimeMillis() - lastDraw) > 500)) {
             Path path = ((WatchEvent<Path>) watchEvent).context();
             try {
                 int count = 0;
@@ -48,14 +43,13 @@ public class MapUpdateHandler implements Consumer<WatchEvent> {
                     double mapHeight = viewer.getPreferences().getFieldHeight(),
                             mapWidth = viewer.getPreferences().getFieldWidth();
                     int planeWidth = (int) Math.ceil(w / mapWidth), planeHeight = (int) Math.ceil(h / mapHeight);
-                    if (gridEnabled)
-                        drawGrid((int) h, (int) w, planeHeight, planeWidth);
                     for (String line : lines) {
                         String[] split = line.trim().split(",");
                         ObjectInfo info = null;
                         try {
                             info = new ObjectInfo(split);
                         } catch (Exception ex) {//fajl moze biti "corrupted" pa se info ne procita ispravno
+                            //A exceptioni su od IndexOutOfBounds, null pointer, sve, ovo je blanket za sve
                             GenericLogger.log(this.getClass(), ex);
                         }
                         if (info != null) {
@@ -65,7 +59,7 @@ public class MapUpdateHandler implements Consumer<WatchEvent> {
                         }
                     }
                     lastDraw = System.currentTimeMillis();
-                    System.out.println("Nacrtao sam " + count + " aviona");
+                    //System.out.println("Nacrtao sam " + count + " aviona");
                 }
             } catch (IOException ex) {
                 GenericLogger.log(this.getClass(), ex);

@@ -2,10 +2,12 @@ package jovic.dragan.pj2.preferences;
 
 
 import jovic.dragan.pj2.logger.GenericLogger;
-import jovic.dragan.pj2.simulator.Simulator;
 import jovic.dragan.pj2.util.Util;
 
-import java.io.*;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.PrintWriter;
+import java.io.Serializable;
 import java.util.logging.Level;
 
 
@@ -13,7 +15,6 @@ public class SimulatorPreferences implements Serializable {
 
     private int fieldWidth, fieldHeight, spawnTimeMin, spawnTimeMax, speedMin, speedMax;
     private int[] heightOptions;
-    private String sharedFolder, sharedFileName, sharedFullName;
     private int simulatorUpdatePeriod;
     private int foreignMilitary, homeMilitary;
 
@@ -30,9 +31,6 @@ public class SimulatorPreferences implements Serializable {
         sp.speedMin = Constants.SIMULATOR_DEFAULT_SPEED_MIN;
         sp.speedMax = Constants.SIMULATOR_DEFAULT_SPEED_MAX;
         sp.heightOptions = Constants.SIMULATOR_HEIGHT_OPTIONS;
-        sp.sharedFileName = Constants.SIMULATOR_SHARED_FILENAME;
-        sp.sharedFolder = Constants.SIMULATOR_SHARED_FOLDERNAME;
-        sp.sharedFullName = Constants.SIMULATOR_SHARED_FILE_FULL_NAME;
         SimulatorPreferences.save(sp);
         return sp;
     }
@@ -47,7 +45,7 @@ public class SimulatorPreferences implements Serializable {
     }
 
     public static SimulatorPreferences load(){
-        SimulatorPreferences sp = null;
+        SimulatorPreferences sp;
         try {
             Util.createFolderIfNotExists(Constants.PREFERENCES_FOLDERNAME);
             sp = (new com.google.gson.Gson().fromJson(new FileReader(Constants.SIMULATOR_PROPERTIES_FULL_NAME), SimulatorPreferences.class));
@@ -89,10 +87,6 @@ public class SimulatorPreferences implements Serializable {
 
     public int[] getHeightOptions(){
         return heightOptions;
-    }
-
-    public String getSharedFileName() {
-        return sharedFileName;
     }
 
     //Samo za gui olaksicu, inace ne bi bilo ovdje

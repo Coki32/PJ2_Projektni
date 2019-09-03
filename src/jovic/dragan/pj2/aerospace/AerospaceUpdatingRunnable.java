@@ -10,18 +10,16 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
-public class AerospaceUpdatingRunnable implements Runnable {
+class AerospaceUpdatingRunnable implements Runnable {
 
     private Map<Integer, Map<Integer, Queue<AerospaceObject>>> map;
     private Aerospace aerospace;
-    private RadarExporter exporter;
 
     AerospaceUpdatingRunnable(Map<Integer, Map<Integer, Queue<AerospaceObject>>> map, Aerospace aerospace) {
         this.map = map;
         this.aerospace = aerospace;
-        //RadarPreferences radarPreferences = RadarPreferences.load();
 
-        exporter = new RadarExporter(map);
+        RadarExporter exporter = new RadarExporter(map);
         exporter.start();
     }
 
@@ -33,7 +31,7 @@ public class AerospaceUpdatingRunnable implements Runnable {
     @Override
     public void run() {
         while (true) {
-            long start = System.currentTimeMillis();
+//            long start = System.currentTimeMillis();
             int mapWidth = aerospace.getPreferences().getFieldWidth(), mapHeight = aerospace.getPreferences().getFieldHeight();
             for (Map<Integer, Queue<AerospaceObject>> subMap : map.values()) {
                 for (Queue<AerospaceObject> list : subMap.values()) {
@@ -74,7 +72,8 @@ public class AerospaceUpdatingRunnable implements Runnable {
             if (!aerospace.isFlightAllowed() && map.values().parallelStream().allMatch(yMap -> yMap.values().stream().allMatch(q -> q.stream().allMatch(
                     ao -> !(ao instanceof Military) || !((MilitaryAircraft) ao).isForeign()))))
                 aerospace.allowFlight();
-            long end = System.currentTimeMillis();
+//            long end = System.currentTimeMillis();
+//            System.out.println("Update gotov za " + (end-start) + " ms");
             try {
                 Thread.sleep(aerospace.getPreferences().getSimulatorUpdatePeriod());
             } catch (InterruptedException ex) {

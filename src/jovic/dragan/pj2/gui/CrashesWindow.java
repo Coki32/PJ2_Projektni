@@ -31,7 +31,7 @@ public class CrashesWindow extends JFrame {
             GenericLogger.log(this.getClass(), ex);
             paths.add("Nije moguce otvoriti folder, pokusajte ponovo");
         }
-        crashList = new JList<String>(paths.toArray(new String[]{}));
+        crashList = new JList<>(paths.toArray(new String[]{}));
         crashList.addListSelectionListener(e -> detailsView.setCrash(((JList<String>) e.getSource()).getSelectedValue()));
         crashList.setVisibleRowCount(Math.min(paths.size(), 10));
         detailsView.setPreferredSize(new Dimension(300, 200));

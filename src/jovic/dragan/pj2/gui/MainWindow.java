@@ -37,11 +37,12 @@ public class MainWindow extends JFrame {
         } catch (IOException ex) {
             GenericLogger.log(this.getClass(), ex);
         }
+
         this.setLayout(new BorderLayout(3, 3));
         this.setSize(850, 650);
-        viewer = new MapViewer(800, 600, Arrays.asList(args).contains("-grid"));
+        viewer = new MapViewer(800, 600);
         viewer.setBackground(Color.white);
-        barControls = new BarControls();
+        barControls = new BarControls(Arrays.asList(args).contains("-invaderButton"));
         this.setTitle("Java vazdusni prostor");
         this.add(viewer, BorderLayout.CENTER);
         this.add(barControls, BorderLayout.SOUTH);

@@ -3,7 +3,6 @@ package jovic.dragan.pj2.aerospace;
 import jovic.dragan.pj2.preferences.Constants;
 import jovic.dragan.pj2.util.Direction;
 
-import java.awt.*;
 import java.io.Serializable;
 
 /**

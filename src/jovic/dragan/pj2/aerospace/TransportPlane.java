@@ -1,7 +1,7 @@
 package jovic.dragan.pj2.aerospace;
 
-import jovic.dragan.pj2.interfaces.Transporter;
 import jovic.dragan.pj2.aerospace.equipment.Cargo;
+import jovic.dragan.pj2.interfaces.Transporter;
 import jovic.dragan.pj2.preferences.Constants;
 import jovic.dragan.pj2.util.Direction;
 import jovic.dragan.pj2.util.Util;
@@ -16,7 +16,6 @@ import java.util.List;
 public class TransportPlane extends Aeroplane implements Transporter, Serializable {
 
     private List<Cargo> cargo;
-
     private int maxCargoWeight, currentCargoWeight = 0;
 
     public TransportPlane(int x, int y, int altitude, int speed, Direction direction) {

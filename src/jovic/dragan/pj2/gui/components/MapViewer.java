@@ -16,9 +16,9 @@ public class MapViewer extends Canvas implements Runnable {
     private SimulatorPreferences preferences;
     private MapUpdateHandler handler;
 
-    public MapViewer(int width, int height, boolean gridEnabled) {
+    public MapViewer(int width, int height) {
         preferences = SimulatorPreferences.load();
-        handler = new MapUpdateHandler(this, gridEnabled);
+        handler = new MapUpdateHandler(this);
         try {
             Watcher mapWatcher = new Watcher(Constants.SIMULATOR_SHARED_FOLDERNAME, StandardWatchEventKinds.ENTRY_MODIFY);
             mapWatcher.addEventHandler(StandardWatchEventKinds.ENTRY_MODIFY, handler);

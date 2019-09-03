@@ -36,12 +36,9 @@ public class Watcher extends Thread{
         watchingPath.register(service, kinds);
     }
 
-    public boolean addEventHandler(WatchEvent.Kind kind, Consumer<WatchEvent> consumer){
+    public void addEventHandler(WatchEvent.Kind kind, Consumer<WatchEvent> consumer) {
         if(!handlers.containsKey(kind) && Arrays.asList(availableKinds).contains(kind))
             handlers.put(kind, consumer);
-        else
-            return false;
-        return true;
     }
 
     @SuppressWarnings("InfiniteLoopStatement")

@@ -15,6 +15,7 @@ public class FirefighterHelicopter extends Helicopter implements Firefighter,Ser
 
     private static int ID=100;
     private int waterAmount;
+
     public FirefighterHelicopter(int x, int y, int altitude, int speed, Direction direction) {
         super(x, y, altitude, speed, direction);
         setModel("PPH-"+ID);

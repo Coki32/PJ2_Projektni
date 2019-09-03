@@ -8,7 +8,6 @@ import jovic.dragan.pj2.preferences.Constants;
 import jovic.dragan.pj2.preferences.SimulatorPreferences;
 import jovic.dragan.pj2.radar.ObjectInfo;
 import jovic.dragan.pj2.util.Direction;
-import jovic.dragan.pj2.util.Pair;
 import jovic.dragan.pj2.util.Util;
 
 import java.io.IOException;

@@ -18,21 +18,13 @@ import java.nio.file.WatchEvent;
 
 public class BarControls extends JPanel {
 
-    private JButton bFlightControl;
-    private JButton bShowCrashes;
-    private JButton bInvade;
     private JLabel lLatestEvent;
 
-    private JPanel pButtonPanel;
-
-    private Watcher eventWatcher;
-
-    public BarControls() {
-        bFlightControl = new JButton("Ban Flight");
-        bShowCrashes = new JButton("Show crashes");
-        bInvade = new JButton("Spawn invaders");
+    public BarControls(boolean invadeButton) {
+        JButton bFlightControl = new JButton("Ban Flight");
+        JButton bShowCrashes = new JButton("Show crashes");
         lLatestEvent = new JLabel("Latest events will show up here");
-        pButtonPanel = new JPanel(new GridLayout(1, 3, 3, 3));
+        JPanel pButtonPanel = new JPanel(new GridLayout(1, 3, 3, 3));
 
         bFlightControl.addActionListener(new ActionListener() {
             private AerospaceMessageSender sender = new AerospaceMessageSender();
@@ -53,13 +45,8 @@ public class BarControls extends JPanel {
             CrashesWindow cw = new CrashesWindow();
             cw.setVisible(true);
         });
-        bInvade.addActionListener(ev -> {
-            SimulatorPreferences sp = SimulatorPreferences.load();
-            sp.setForeignMilitary(sp.getForeignMilitary() + 1);
-            SimulatorPreferences.save(sp);
-        });
         try {
-            eventWatcher = new Watcher(Constants.EVENTS_FOLDER_PATH, StandardWatchEventKinds.ENTRY_MODIFY);
+            Watcher eventWatcher = new Watcher(Constants.EVENTS_FOLDER_PATH, StandardWatchEventKinds.ENTRY_MODIFY);
             eventWatcher.addEventHandler(StandardWatchEventKinds.ENTRY_MODIFY, ev -> {
                 //noinspection unchecked
                 lLatestEvent.setText("New event available, check the file named " + ((WatchEvent<Path>) ev).context().toFile().getName() + " in the events folder");
@@ -69,11 +56,20 @@ public class BarControls extends JPanel {
             GenericLogger.log(this.getClass(), ex);
         }
 
+
         this.setLayout(new GridLayout(2, 1, 3, 3));
 
         pButtonPanel.add(bFlightControl);
         pButtonPanel.add(bShowCrashes);
-        pButtonPanel.add(bInvade);
+        if (invadeButton) {
+            JButton bInvade = new JButton("Spawn invaders");
+            bInvade.addActionListener(ev -> {
+                SimulatorPreferences sp = SimulatorPreferences.load();
+                sp.setForeignMilitary(sp.getForeignMilitary() + 1);
+                SimulatorPreferences.save(sp);
+            });
+            pButtonPanel.add(bInvade);
+        }
 
         add(pButtonPanel);
         add(lLatestEvent);

@@ -1,6 +1,5 @@
 package jovic.dragan.pj2.util;
 
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Random;
 

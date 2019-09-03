@@ -36,7 +36,7 @@ public class ModelPreferences implements Serializable {
     }
 
     public static ModelPreferences load(){
-        ModelPreferences mp = null;
+        ModelPreferences mp;
         try {
             Util.createFolderIfNotExists(Constants.PREFERENCES_FOLDERNAME);
             mp = (new com.google.gson.Gson().fromJson(new FileReader(Constants.MODELS_FULL_NAME), ModelPreferences.class));

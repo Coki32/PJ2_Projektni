@@ -1,9 +1,9 @@
 package jovic.dragan.pj2.aerospace;
 
-import jovic.dragan.pj2.interfaces.Military;
 import jovic.dragan.pj2.aerospace.generators.Spawner;
 import jovic.dragan.pj2.aerospace.handlers.CollisionHandler;
 import jovic.dragan.pj2.aerospace.handlers.InvasionHandler;
+import jovic.dragan.pj2.interfaces.Military;
 import jovic.dragan.pj2.logger.GenericLogger;
 import jovic.dragan.pj2.preferences.Constants;
 import jovic.dragan.pj2.preferences.SimulatorPreferences;
@@ -23,13 +23,13 @@ import java.util.logging.Level;
 
 public class Aerospace {
 
-    private Map<Integer, Map<Integer, Queue<AerospaceObject>>> map;
-    private AerospaceUpdatingRunnable updatingRunnable;
+    private final Map<Integer, Map<Integer, Queue<AerospaceObject>>> map;
     private Thread updatingThread;
     private boolean flightAllowed = true, guiFlightAllowed = true;
     private SimulatorPreferences preferences;
     private boolean running = false;
     private Spawner spawner;
+    private final Object synchronizationObject = new Object();
 
     public Aerospace(SimulatorPreferences preferences) {
         map = new ConcurrentHashMap<>(preferences.getFieldWidth() / 2);
@@ -48,7 +48,7 @@ public class Aerospace {
             preferenceWatcher.addEventHandler(StandardWatchEventKinds.ENTRY_MODIFY, ev -> {
                 if (((WatchEvent<Path>) ev).context().toFile().toString().endsWith(Constants.SIMULATOR_PROPERTIES_FILENAME)) {
                     this.reloadPreferences();
-                    System.out.println("Novi preferences ucitan u Aerospace, samim tim i spawner!");
+                    //System.out.println("Novi preferences ucitan u Aerospace, samim tim i spawner!");
                 }
             });
 
@@ -59,7 +59,7 @@ public class Aerospace {
         catch (IOException ex){
             GenericLogger.log(this.getClass(), Level.SEVERE,"Could not register folder watchers for collisions and invasions, those will not be detected",ex);
         }
-        updatingRunnable = new AerospaceUpdatingRunnable(map, this);
+        AerospaceUpdatingRunnable updatingRunnable = new AerospaceUpdatingRunnable(map, this);
         updatingThread = new Thread(updatingRunnable, "updating task thread");
         spawner = new Spawner(this);
     }
@@ -72,7 +72,7 @@ public class Aerospace {
         if (flightAllowed) {
             int mapWidth = preferences.getFieldWidth();
             int mapHeight = preferences.getFieldHeight();
-            System.out.println("Postavljan zabranu svi izlaze najkraicm putem");
+            //System.out.println("Postavljan zabranu svi izlaze najkraicm putem");
             Integer[] exit = new Integer[4];
             map.values().parallelStream().forEach(yMap -> yMap.values().forEach(q -> q.stream().filter(o->!(o instanceof Military)).forEach(ao -> {
                 int x = ao.getX();
@@ -85,7 +85,7 @@ public class Aerospace {
                 ao.setDirection(newDirection);
             })));
             flightAllowed = false;
-            System.out.println("Postavljeno!");
+            //System.out.println("Postavljeno!");
         }
     }
 

@@ -6,7 +6,10 @@ import jovic.dragan.pj2.util.Direction;
 import jovic.dragan.pj2.util.Util;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 
@@ -54,16 +57,15 @@ public abstract class Aircraft extends AerospaceObject implements Serializable {
         this.crew = crew;
     }
 
-    public boolean addCrew(Person person) {
-        return crew.add(person);
+    public void addCrew(Person person) {
+        crew.add(person);
     }
 
-    public boolean addCharacteristic(String name, String value){
+    public void addCharacteristic(String name, String value) {
         if(characteristics.containsKey(name))
-            return false;
+            characteristics.replace(name, value);
         else
             characteristics.put(name, value);
-        return true;
     }
 
 }

@@ -14,24 +14,19 @@ import java.util.concurrent.Executors;
 
 public class InvasionsLogger {
     private static Executor delayingExecutor = Executors.newCachedThreadPool();
-    public static void logInvasion(ObjectInfo info){
-        delayingExecutor.execute( new Runnable(){
-            @Override
-            public void run() {
-                //try {
 
-                    Util.createFolderIfNotExists(Constants.EVENTS_FOLDER_PATH);
-                    //Thread.sleep(10000);//pauza da ovaj strani malo "pobjegne"
-                    try (PrintWriter pw =
-                                 new PrintWriter(Constants.EVENTS_FOLDER_PATH +
-                                         File.separator + LocalDateTime.now().toLocalTime().toString().replace(':', '.') + ".txt")) {
-                        pw.println(info.toCsv());
-                    } catch (FileNotFoundException ex) {
-                        GenericLogger.log(InvasionsChecker.class, ex);
-                    }
-                //}catch (InterruptedException ex){
-                //    GenericLogger.log(this.getClass(),ex);
-                //}
+    static {
+        Util.createFolderIfNotExists(Constants.EVENTS_FOLDER_PATH);
+    }
+
+    public static void logInvasion(ObjectInfo info){
+        delayingExecutor.execute(() -> {
+            try (PrintWriter pw =
+                         new PrintWriter(Constants.EVENTS_FOLDER_PATH +
+                                 File.separator + LocalDateTime.now().toLocalTime().toString().replace(':', '.') + ".txt")) {
+                pw.println(info.toCsv());
+            } catch (FileNotFoundException ex) {
+                GenericLogger.log(InvasionsChecker.class, ex);
             }
         });
 

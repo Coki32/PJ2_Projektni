@@ -28,12 +28,12 @@ public class GenericLogger {
                 Util.createFolderIfNotExists("./logs/");
                 Handler handler = new FileHandler("./logs/" + C.getName() + LocalDateTime.now().toLocalTime().toString().replace(':', '_') + ".log");
                 logger.addHandler(handler);
+                logger.log(level, msg, thrown);
                 handler.close();
             }
             catch (IOException exc){
                 exc.printStackTrace();
             }
-        logger.log(level,msg,thrown);
     }
 
 }

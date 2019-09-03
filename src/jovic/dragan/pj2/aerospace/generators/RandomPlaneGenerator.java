@@ -7,23 +7,22 @@ import jovic.dragan.pj2.util.Util;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Collectors;
 
-public class RandomPlaneGenerator {
+class RandomPlaneGenerator {
     private List<Constructor<?>> constructorList;
 
-    public RandomPlaneGenerator(Class<? extends AerospaceObject>... classes){
+    @SafeVarargs
+    RandomPlaneGenerator(Class<? extends AerospaceObject>... classes) {
         constructorList = new ArrayList<>();
         for(var clazz : classes)
             registerNewConstructor(clazz);
     }
 
-    public void registerNewConstructor(Class<? extends AerospaceObject> clazz){
+    private void registerNewConstructor(Class<? extends AerospaceObject> clazz) {
         constructorList.addAll(Arrays.stream(clazz.getConstructors())
                 .filter(ctor -> {
                     Class<?>[] parameters = ctor.getParameterTypes();
@@ -37,7 +36,7 @@ public class RandomPlaneGenerator {
                 .collect(Collectors.toList()));
     }
 
-    public AerospaceObject getRandom(int x, int y, int altitude, int speed, Direction dir){
+    AerospaceObject getRandom(int x, int y, int altitude, int speed, Direction dir) {
         AerospaceObject object = null;
         try {
             object = (AerospaceObject) constructorList.get(

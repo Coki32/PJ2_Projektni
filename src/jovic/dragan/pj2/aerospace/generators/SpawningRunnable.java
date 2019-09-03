@@ -10,7 +10,7 @@ import java.util.Queue;
 import java.util.Random;
 import java.util.logging.Level;
 
-public class SpawningRunnable implements Runnable {
+class SpawningRunnable implements Runnable {
 
     private Aerospace aerospace;
     private Random rng;
@@ -18,7 +18,7 @@ public class SpawningRunnable implements Runnable {
     private Queue<AerospaceObject> spawnQueue;
     private int oldForeign;
 
-    public SpawningRunnable(Aerospace aerospace, Queue<AerospaceObject> spawnQueue) {
+    SpawningRunnable(Aerospace aerospace, Queue<AerospaceObject> spawnQueue) {
         this.spawnQueue = spawnQueue;
         this.aerospace = aerospace;
         oldForeign = aerospace.getPreferences().getForeignMilitary();
@@ -27,27 +27,25 @@ public class SpawningRunnable implements Runnable {
                 FirefighterHelicopter.class, AntiHailRocket.class, PassengerHelicopter.class, TransportPlane.class);
     }
 
-
-    private int randomBetween(int min, int max) {
-        return rng.nextInt(max - min + 1) + min;
-    }
-
     private AerospaceObject randomObject() {
         boolean invader = false;
         AerospaceObject nextToSpawn = spawnQueue.poll();
         if (nextToSpawn != null) {
             return nextToSpawn;
         }
+
         SimulatorPreferences preferences = aerospace.getPreferences();
+
         if (preferences.getForeignMilitary() > oldForeign) {
             oldForeign = preferences.getForeignMilitary();
             invader = true;
         }
-        AerospaceObject spawned = null;
-        int x = 0, y = 0;
+        AerospaceObject spawned;
+
+        int x, y;
         int altitude = preferences.getHeightOptions()[Util.randomBetween(0, preferences.getHeightOptions().length - 1)];
         int speed = Util.randomBetween(preferences.getSpeedMin(), preferences.getSpeedMax());
-        //bice glupo tipa spawningFrom bude LEFT pa to znaci sa lijeve ivice ide do desne
+
         Direction spawningFrom = Direction.fromInt(rng.nextInt(4));
         if (spawningFrom == Direction.LEFT || spawningFrom == Direction.RIGHT) {
             x = spawningFrom == Direction.LEFT ? 0 : preferences.getFieldWidth();
@@ -70,11 +68,11 @@ public class SpawningRunnable implements Runnable {
     public void run() {
         //noinspection InfiniteLoopStatement
         while (true) {
-            int minSpawn = aerospace.getPreferences().getSpawnTimeMin(),
-                    maxSpawn = aerospace.getPreferences().getSpawnTimeMax();
             AerospaceObject ao = randomObject();
             aerospace.addAerospaceObject(ao);
             try {
+                int minSpawn = aerospace.getPreferences().getSpawnTimeMin(),
+                        maxSpawn = aerospace.getPreferences().getSpawnTimeMax();
                 int pause = Util.randomBetween(minSpawn, maxSpawn);
                 Thread.sleep(pause * 1000);
             } catch (InterruptedException ex) {
