@@ -8,6 +8,8 @@ import jovic.dragan.pj2.util.Vector2D;
 
 import java.awt.*;
 import java.io.Serializable;
+import java.util.LinkedList;
+import java.util.Queue;
 
 /**
  * 
@@ -19,6 +21,9 @@ public abstract class AerospaceObject implements Serializable {
     private Vector2D directionVector;
     private Direction direction;
     private int id;
+
+    //kad izlaze ne mogu se okrenuti u jednom polju, zato imaju korake
+    private Queue<Direction> turning = new LinkedList<>();
 
     //za export boje
     protected Color drawingColor;
@@ -46,8 +51,14 @@ public abstract class AerospaceObject implements Serializable {
     }
 
     public void setDirection(Direction dir){
-        direction = dir;
-        directionVector = dir.getDirectionVector();
+        if (dir == direction.opposite()) {
+            turning.add(dir.normal());
+            direction = dir;
+            directionVector = dir.getDirectionVector();
+        } else {
+            direction = dir;
+            directionVector = dir.getDirectionVector();
+        }
     }
 
     public String export(){
@@ -65,8 +76,14 @@ public abstract class AerospaceObject implements Serializable {
         int newX = x, newY = y;
         ticks++;
         if (ticks % speed == 0) {
-            newX += directionVector.getX();
-            newY += directionVector.getY();
+            Direction queuedDirection = turning.poll();
+            if (queuedDirection == null) {
+                newX += directionVector.getX();
+                newY += directionVector.getY();
+            } else {
+                newX += queuedDirection.getDirectionVector().getX();
+                newY += queuedDirection.getDirectionVector().getY();
+            }
             ticks = 0;
         }
         return new Pair<>(newX, newY);

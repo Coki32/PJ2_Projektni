@@ -13,6 +13,21 @@ public enum Direction {
         return OPPOSITES_MAP.get(this);
     }
 
+    public Direction normal() {
+        switch (this) {
+            case UP:
+                return RIGHT;
+            case DOWN:
+                return LEFT;
+            case LEFT:
+                return UP;
+            case RIGHT:
+                return DOWN;
+            default:
+                return null;
+        }
+    }
+
     public static Direction fromInt(int i) {
         return INTEGER_SIDE_MAP.get(i);
     }
@@ -28,7 +43,7 @@ public enum Direction {
             case RIGHT:
                 return new Vector2D(1, 0);
             default:
-                throw new IllegalArgumentException("bukvalno nije moguce!");
+                return null;
         }
     }
 }
