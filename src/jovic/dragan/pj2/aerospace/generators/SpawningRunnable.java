@@ -24,7 +24,8 @@ class SpawningRunnable implements Runnable {
         oldForeign = aerospace.getPreferences().getForeignMilitary();
         this.rng = new Random();
         rpg = new RandomPlaneGenerator(PassengerPlane.class, TransportHelicopter.class, FirefighterPlane.class,
-                FirefighterHelicopter.class, AntiHailRocket.class, PassengerHelicopter.class, TransportPlane.class);
+                FirefighterHelicopter.class, AntiHailRocket.class, PassengerHelicopter.class, TransportPlane.class,
+                UnmannedAircraft.class);
     }
 
     private AerospaceObject randomObject() {

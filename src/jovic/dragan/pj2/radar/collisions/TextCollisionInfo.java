@@ -5,17 +5,17 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class TextCollisionInfo implements Serializable {
-    private String opis, vrijeme, pozicija;
+    private String description, time, position;
     private List<Integer> IDs;
 
     public TextCollisionInfo(CollisionInfo info){
         if (info.getX() != -1) {
-            opis = "Sudar " + info.getNumberOfPlanes() + " aviona";
-            pozicija = "(x,y,z)=(" + info.getX() + "," + info.getY() + "," + info.getAltitude() + ")";
-            vrijeme = LocalDateTime.now().toString();
+            description = "Sudar " + info.getNumberOfPlanes() + " aviona";
+            position = "(x,y,z)=(" + info.getX() + "," + info.getY() + "," + info.getAltitude() + ")";
+            time = LocalDateTime.now().toString();
             IDs = info.getIDs();
         } else {
-            opis = pozicija = vrijeme = "";
+            description = position = time = "";
             IDs = null;
         }
     }
@@ -26,18 +26,18 @@ public class TextCollisionInfo implements Serializable {
 
     @Override
     public String toString() {
-        return opis+"\n"+vrijeme+"\n"+pozicija;
+        return description + "\n" + time + "\n" + position;
     }
 
-    public String getOpis() {
-        return opis;
+    public String getDescription() {
+        return description;
     }
 
-    public String getVrijeme() {
-        return vrijeme;
+    public String getTime() {
+        return time;
     }
 
-    public String getPozicija() {
-        return pozicija;
+    public String getPosition() {
+        return position;
     }
 }

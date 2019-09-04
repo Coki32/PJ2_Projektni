@@ -72,6 +72,7 @@ public class Constants {
         public static final Color ROCKET = Color.BLACK;
         public static final Color TRANSPORT_HELICOPTER = Color.MAGENTA;
         public static final Color TRANSPORT_PLANE = Color.CYAN;
+        public static final Color UNMANNED_AIRCRAFT = new Color(153, 220, 103);
 
 
     }

@@ -43,7 +43,7 @@ public class CrashesWindow extends JFrame {
         this.setLayout(new BorderLayout(5, 5));
         //this.add(crashList, BorderLayout.WEST);
         this.add(scrollable, BorderLayout.WEST);
-        this.add(detailsView, BorderLayout.EAST);
+        this.add(detailsView, BorderLayout.CENTER);
         this.pack();
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }

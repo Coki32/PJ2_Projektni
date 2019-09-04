@@ -32,7 +32,7 @@ public class CollisionChecker implements Runnable {
                         CollisionInfo collisionInfo = new CollisionInfo(x, y, a);
                         for (ObjectInfo info : collided)
                             collisionInfo.addPlane(info.getId());
-                        System.out.println("Sudareno " + collisionInfo.getNumberOfPlanes() + " aviona! " + collisionInfo.getSerializible().getPozicija());
+                        System.out.println("Sudareno " + collisionInfo.getNumberOfPlanes() + " aviona! " + collisionInfo.getSerializible().getPosition());
                         CollisionLogger.logCollision(collisionInfo);
                     }
                 }

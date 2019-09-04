@@ -26,9 +26,9 @@ public class CrashDetailsView extends JPanel {
         String time = "", description = "", position = "";
 
         if (info.getIDs() != null) {
-            time = info.getVrijeme();
-            description = info.getOpis();
-            position = info.getPozicija();
+            time = info.getTime();
+            description = info.getDescription();
+            position = info.getPosition();
         }
 
         taTime = new JTextArea(time);
@@ -37,10 +37,15 @@ public class CrashDetailsView extends JPanel {
         taDescription = new JTextArea(description);
         taDescription.setEnabled(false);
         taDescription.setMinimumSize(new Dimension(300, 30));
-
         taPosition = new JTextArea(position);
         taPosition.setEnabled(false);
         taPosition.setMinimumSize(new Dimension(300, 30));
+
+        Font font = new Font(taTime.getFont().getName(), taTime.getFont().getStyle(), 23);
+
+        taTime.setFont(font);
+        taDescription.setFont(font);
+        taPosition.setFont(font);
 
         this.setLayout(new GridLayout(6, 1, 5, 5));
         this.add(lTime);
@@ -59,11 +64,11 @@ public class CrashDetailsView extends JPanel {
     public void setCrash(String path) {
         try {
             TextCollisionInfo tci = (TextCollisionInfo) (new ObjectInputStream(new FileInputStream(path)).readObject());
-            taTime.setText(tci.getVrijeme());
-            taDescription.setText(tci.getOpis());
-            taPosition.setText(tci.getPozicija());
+            taTime.setText(tci.getTime());
+            taDescription.setText(tci.getDescription());
+            taPosition.setText(tci.getPosition());
         } catch (IOException | ClassNotFoundException ex) {
-            GenericLogger.log(this.getClass(), ex);//jeeebiga nece nikad...
+            GenericLogger.log(this.getClass(), ex);
         }
     }
 

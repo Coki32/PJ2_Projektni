@@ -57,7 +57,7 @@ class CrashConsumer extends Thread {
                 if (collisionInfo != null) {
                     TextCollisionInfo finalCollisionInfo = collisionInfo;
                     aerospace.getMap().values().forEach(yMap -> yMap.values().forEach(q -> q.removeIf(ao -> finalCollisionInfo.getIDs().contains(ao.getId()))));
-                    System.out.println(collisionInfo.getOpis() + ", uklanjam ih sa lokacije " + collisionInfo.getPozicija());
+                    System.out.println(collisionInfo.getDescription() + ", uklanjam ih sa lokacije " + collisionInfo.getPosition());
                 }
 
             }
